@@ -1,10 +1,12 @@
 import json
+import os
 import stripe
 from datetime import timedelta
 from types import SimpleNamespace
 from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
+from django.core.management import call_command, CommandError
 from django.test import Client, TestCase, override_settings
 from django.db import DatabaseError, connection
 from django.utils import timezone
@@ -15,6 +17,32 @@ from .models import (
 )
 
 User = get_user_model()
+
+
+class OwnerBootstrapTests(TestCase):
+    @patch.dict(os.environ, {"SOLE_OWNER_USERNAME": "store-owner", "SOLE_OWNER_EMAIL": "owner@example.test", "SOLE_OWNER_PASSWORD": "Cobalt7!Orbit-Glass-Piano"})
+    def test_creates_first_owner_and_never_resets_existing_owner_password(self):
+        call_command("bootstrap_owner")
+        owner = User.objects.get(username="store-owner")
+        self.assertTrue(owner.is_superuser and owner.is_staff)
+        with patch.dict(os.environ, {"SOLE_OWNER_PASSWORD": "Changed9!Password-Should-Not-Apply"}):
+            call_command("bootstrap_owner")
+        owner.refresh_from_db()
+        self.assertTrue(owner.check_password("Cobalt7!Orbit-Glass-Piano"))
+
+    @patch.dict(os.environ, {"SOLE_OWNER_USERNAME": "store-owner", "SOLE_OWNER_EMAIL": "", "SOLE_OWNER_PASSWORD": ""})
+    def test_partial_credentials_do_not_create_an_owner(self):
+        with self.assertRaises(CommandError):
+            call_command("bootstrap_owner")
+        self.assertEqual(User.objects.count(), 0)
+
+    @patch.dict(os.environ, {"SOLE_OWNER_USERNAME": "store-owner", "SOLE_OWNER_EMAIL": "owner@example.test", "SOLE_OWNER_PASSWORD": "Cobalt7!Orbit-Glass-Piano"})
+    def test_existing_customer_identity_cannot_be_promoted_by_bootstrap(self):
+        customer = User.objects.create_user(username="customer", email="owner@example.test")
+        with self.assertRaises(CommandError):
+            call_command("bootstrap_owner")
+        customer.refresh_from_db()
+        self.assertFalse(customer.is_superuser or customer.is_staff)
 
 
 class StoreApiTests(TestCase):
