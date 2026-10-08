@@ -107,9 +107,9 @@ npm run test:sites
 
 ## Deployment notes
 
-Host Django and PostgreSQL on a Python-capable service. Run `python manage.py collectstatic` and serve Django admin assets from `STATIC_ROOT`. Serve the Vite build on Vercel or another static host. Route browser /api/* requests through a same-origin rewrite to the Django host so the HttpOnly session and CSRF cookies remain first-party. A rewrite template is in vercel.json.example; replace its example API host before using it.
+The current `vercel.json` deploys React and Django as services in Singapore, with same-origin API/admin routing and a dedicated Neon production database. The build serializes migrations, seeds only missing illustrative products, initializes staff roles and collects admin assets. Production refuses an absent database; SQLite is for local development. `vercel.frontend-only.json.example` preserves the frontend-only rollback option.
 
-Set production DJANGO_SECRET_KEY, DEBUG=false, ALLOWED_HOSTS, CSRF_TRUSTED_ORIGINS, FRONTEND_ORIGIN, DATABASE_URL, Stripe secrets, and email settings in the backend host’s secret manager. Register the Stripe webhook directly with https://<api-host>/api/stripe/webhook/. Use HTTPS, backups, monitoring, rate limiting at the edge, and a scheduled reconciliation/retention process.
+Choose and enter `SOLE_OWNER_USERNAME`, `SOLE_OWNER_EMAIL` and a Sensitive `SOLE_OWNER_PASSWORD` directly in Production environment settings, then redeploy to create the first owner. Remove the bootstrap variables afterwards. The command never replaces an existing owner or resets a password. The [activation runbook](docs/COMMERCE_ACTIVATION.md) covers this setup and the remaining email, payment and operational requirements. Stripe keys and real email transport have not been configured.
 
 ## Current limits
 
