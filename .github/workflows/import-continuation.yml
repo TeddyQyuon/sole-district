@@ -43,6 +43,8 @@ jobs:
               manifest = json.loads(source.read('_sole_delta_manifest.json'))
               assert len(manifest) == 28
               assert set(source.namelist()) == set(manifest) | {'_sole_delta_manifest.json'}
+              manifest.pop('.github/workflows/commerce-checks.yml')
+              assert hashlib.sha256(pathlib.Path('.github/workflows/commerce-checks.yml').read_bytes()).hexdigest() == 'e32be39501f2fc8bcee122f01daa04a3f76d20bfee8821ddb333fe792d50e86c'
               for name, hashes in manifest.items():
                   path = pathlib.PurePosixPath(name)
                   assert not path.is_absolute() and '..' not in path.parts and '.git' not in path.parts
