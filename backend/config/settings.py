@@ -77,11 +77,13 @@ if DATABASE_URL:
     DATABASES = {
         "default": dj_database_url.parse(
             DATABASE_URL,
-            conn_max_age=600,
+            conn_max_age=int(os.getenv("DATABASE_CONN_MAX_AGE", "0")),
             conn_health_checks=True,
         )
     }
 else:
+    if not DEBUG:
+        raise ImproperlyConfigured("A persistent DATABASE_URL is required with DEBUG=false.")
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
@@ -106,7 +108,7 @@ TIME_ZONE = "Asia/Singapore"
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
