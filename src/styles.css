@@ -612,3 +612,45 @@ img { display: block; max-width: 100%; }
 .dialog fieldset { min-width: 0; margin-bottom: 16px; }
 
 .policy-text { white-space: pre-wrap; }
+
+/* Accessible storefront controls and responsive commerce panels */
+.category-tabs button, .sort-label select, .sizes button, .filter-button { min-height: 44px; }
+.wish { width: 44px; height: 44px; }
+.quantity button { width: 36px; height: 36px; }
+.product-copy { min-height: 68px; line-height: 1.5; }
+.product-copy > strong { font-size: 13px; }
+.product-card:focus-within .product-image { outline: 2px solid #566e00; outline-offset: 3px; }
+.filter-button { padding: 8px 0; }
+.filters { padding: 18px; border: 1px solid var(--line); background: #f0efea; }
+.filters select { min-height: 44px; }
+.filters .checkbox { min-height: 44px; }
+.bag-bottom { bottom: max(20px, env(safe-area-inset-bottom)); border-top: 1px solid var(--line); }
+.bag-items { overscroll-behavior: contain; padding-bottom: 18px; }
+.table-scroll { overscroll-behavior-inline: contain; }
+.search-panel:focus-within { border-bottom-color: #566e00; }
+@media (min-width: 821px) {
+  .purchase-panel { position: sticky; top: 24px; }
+}
+@media (max-width: 820px) {
+  .header-actions .icon, .mobile-menu { min-width: 44px; min-height: 44px; }
+  .bag-link { min-height: 44px; }
+  .shop-toolbar { grid-template-columns: 1fr auto; gap: 8px; padding: 8px 0; }
+  .category-tabs { grid-column: 1 / -1; grid-row: 2; justify-content: flex-start; overflow-x: auto; }
+  .category-tabs button { flex-shrink: 0; white-space: nowrap; }
+  .shop-layout.has-filters { grid-template-columns: 1fr; }
+  .filters { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .filters .checkbox, .filters > button { grid-column: 1 / -1; }
+}
+@media (max-width: 560px) {
+  .header { gap: 7px; padding-inline: 10px; }
+  .header-actions { gap: 0; }
+  .wordmark { font-size: 26px; }
+  .header-actions .icon { min-width: 40px; }
+  .wish { width: 44px; height: 44px; top: 5px; right: 5px; }
+  .product-copy > strong { font-size: 12px; }
+  .product-copy > div { font-size: 11px; }
+  .sizes button { min-height: 46px; font-size: 12px; }
+  .bag-items { max-height: calc(100dvh - 345px); }
+  .bag-bottom { gap: 10px; }
+  .order-summary { border: 1px solid var(--line); }
+}
