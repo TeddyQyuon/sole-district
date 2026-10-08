@@ -1,0 +1,40 @@
+name: Import reviewed SOLE DISTRICT source
+on:
+  push:
+    paths:
+      - sole-district-source.zip
+      - .github/workflows/import-source.yml
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Verify and unpack the reviewed source
+        run: |
+          python3 - <<'PY'
+          import hashlib, pathlib, zipfile
+          root = pathlib.Path.cwd().resolve()
+          archive = root / 'sole-district-source.zip'
+          expected = '82f7c52efd96a295cebc93ab53b5346c7673ac8d14258be1718c4ed6d061c107'
+          assert hashlib.sha256(archive.read_bytes()).hexdigest() == expected
+          with zipfile.ZipFile(archive) as source:
+              for item in source.infolist():
+                  path = (root / item.filename).resolve()
+                  assert path.is_relative_to(root)
+                  assert not item.filename.startswith(('.git/', 'node_modules/', 'backend/.venv/'))
+                  assert item.filename not in {'.env', 'backend/.env', 'backend/db.sqlite3'}
+              source.extractall(root)
+          archive.unlink()
+          (root / '.github/workflows/import-source.yml').unlink()
+          PY
+      - name: Commit the source and remove import files
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Publish SOLE DISTRICT storefront and Django commerce source'
+          git push origin HEAD:main
+          echo "Repository ID: $GITHUB_REPOSITORY_ID"
+          git rev-parse HEAD
