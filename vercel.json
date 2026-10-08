@@ -1,21 +1,77 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "vite",
-  "installCommand": "npm ci",
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist/client",
-  "regions": ["sin1"],
+  "regions": [
+    "sin1"
+  ],
+  "services": {
+    "storefront": {
+      "root": ".",
+      "framework": "vite",
+      "installCommand": "npm ci",
+      "buildCommand": "npm run build",
+      "outputDirectory": "dist/client",
+      "rewrites": [
+        {
+          "source": "/:path*",
+          "destination": "/index.html"
+        }
+      ]
+    },
+    "backend": {
+      "root": "backend",
+      "framework": "django",
+      "entrypoint": "config.asgi:application",
+      "buildCommand": "python vercel_build.py",
+      "functions": {
+        "config/asgi.py": {
+          "maxDuration": 60,
+          "excludeFiles": "{.venv/**,db.sqlite3,.env,**/__pycache__/**}"
+        }
+      }
+    }
+  },
   "rewrites": [
-    { "source": "/api/:path*", "destination": "/api/unavailable" },
-    { "source": "/:path*", "destination": "/index.html" }
+    {
+      "source": "/api/:path*",
+      "destination": {
+        "service": "backend"
+      }
+    },
+    {
+      "source": "/django-admin/:path*",
+      "destination": {
+        "service": "backend"
+      }
+    },
+    {
+      "source": "/static/:path*",
+      "destination": {
+        "service": "backend"
+      }
+    },
+    {
+      "source": "/:path*",
+      "destination": {
+        "service": "storefront"
+      }
+    }
   ],
   "headers": [
     {
       "source": "/:path*",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "X-Frame-Options", "value": "DENY" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        }
       ]
     }
   ]
