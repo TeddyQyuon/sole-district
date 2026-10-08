@@ -2,6 +2,7 @@ from django.urls import path
 from . import api, accounts, merchant, store
 
 urlpatterns = [
+    path("health/", api.health, name="health"),
     path("csrf/", api.csrf_token, name="api-csrf"),
     path("catalog/", api.catalog, name="catalog"),
     path("policies/", store.policies, name="policies"),
