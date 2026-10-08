@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.env
+.vercel/
+backend/.env
+backend/.venv/
+backend/db.sqlite3
+backend/staticfiles/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/**/*.pyc
+.venv/
+__pycache__/
+*.pyc
