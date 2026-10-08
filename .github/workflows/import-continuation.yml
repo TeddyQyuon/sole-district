@@ -1,0 +1,81 @@
+name: Verify and publish commerce continuation
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/import-continuation.yml']
+permissions:
+  contents: write
+concurrency:
+  group: sole-continuation-publish
+  cancel-in-progress: false
+jobs:
+  verify-and-publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: sole_test
+          POSTGRES_PASSWORD: ephemeral_ci_only
+          POSTGRES_DB: sole_test
+        ports: [5432:5432]
+        options: >-
+          --health-cmd "pg_isready -U sole_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://sole_test:ephemeral_ci_only@localhost:5432/sole_test
+      DEBUG: 'true'
+      STRIPE_CHECKOUT_ENABLED: 'false'
+      LIVE_COMMERCE_ENABLED: 'false'
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+      - name: Verify archive and preserve existing source
+        run: |
+          git merge-base --is-ancestor 3d84b98bb61c0e001b4789dcf643a0801f6fcb6e HEAD
+          python3.12 - <<'PY'
+          import hashlib, json, pathlib, zipfile
+          archive = pathlib.Path('sole-district-continuation.zip')
+          assert hashlib.sha256(archive.read_bytes()).hexdigest() == '6cd8ff3d7bbc68cee4af9c4a2bdf0a8fc1849671688c4c9cccd22c66882866e9', 'Archive digest changed'
+          with zipfile.ZipFile(archive) as source:
+              manifest = json.loads(source.read('_sole_delta_manifest.json'))
+              assert len(manifest) == 28
+              assert set(source.namelist()) == set(manifest) | {'_sole_delta_manifest.json'}
+              for name, hashes in manifest.items():
+                  path = pathlib.PurePosixPath(name)
+                  assert not path.is_absolute() and '..' not in path.parts and '.git' not in path.parts
+                  assert name.endswith(('.py', '.jsx', '.css', '.md', '.yml')) or name == 'backend/.env.example'
+                  target = pathlib.Path(name)
+                  assert not target.is_symlink()
+                  current = hashlib.sha256(target.read_bytes()).hexdigest() if target.exists() else None
+                  assert current == hashes['before'], f'Concurrent source change: {name}'
+                  content = source.read(name)
+                  assert len(content) < 2000000 and hashlib.sha256(content).hexdigest() == hashes['after']
+              for name in manifest:
+                  target = pathlib.Path(name)
+                  target.parent.mkdir(parents=True, exist_ok=True)
+                  target.write_bytes(source.read(name))
+          PY
+      - name: Install pinned backend dependencies
+        run: python3.12 -m pip install -r backend/requirements.lock
+      - name: Verify PostgreSQL commerce and real row-lock races
+        working-directory: backend
+        run: |
+          python3.12 manage.py check
+          python3.12 manage.py makemigrations --check --dry-run
+          python3.12 manage.py test --noinput --verbosity 2
+      - name: Verify frontend build and hosting
+        run: |
+          npm ci
+          npm run build
+          npm run test:sites
+      - name: Publish only verified source and remove temporary import files
+        run: |
+          rm sole-district-continuation.zip .github/workflows/import-continuation.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add --all
+          git commit -m 'Complete customer recovery, sourcing reviews and secure commerce workflows'
+          git push origin HEAD:main
