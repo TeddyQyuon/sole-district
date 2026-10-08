@@ -1,13 +1,20 @@
 # SOLE DISTRICT activation
 
-Source implements the customer storefront and merchant workspace. The public deployment remains a frontend preview with payments disabled while the persistent API database is awaiting approval. Creating a Stripe live account alone does not activate checkout.
+The React storefront and Django API are deployed together on Vercel in Singapore. The approved, dedicated Neon project `sole-district-production` is connected to Production only. Migrations and staff groups are installed, and `/api/health/` confirms PostgreSQL. The catalogue remains illustrative and payments are disabled. Owner credential setup, real email transport and Stripe verification remain pending. Creating a Stripe live account alone does not activate checkout.
 
 ## Infrastructure and initial setup
 
-1. Approve a persistent PostgreSQL database for this store. The proposed resource is the free Neon project `sole-district-production`, Singapore region. Do not reuse another application's credentials or data. GitHub CI uses disposable PostgreSQL and cannot replace the production database.
-2. Configure `DATABASE_URL`, a unique `DJANGO_SECRET_KEY`, `DEBUG=false`, actual `ALLOWED_HOSTS`, `CSRF_TRUSTED_ORIGINS` and `FRONTEND_ORIGIN` in protected backend environment settings. Run migrations, collect static files, create the owner account securely and bootstrap staff groups. Do not store SQLite, passwords or private invoice evidence in Git.
-3. Deploy the Python API and route `/api/*` through a same-origin proxy. The existing `vercel.services.json.example` and release notes describe the Python service option. Keep the current frontend-only fallback until the API has persistent storage. Verify HttpOnly secure cookies, CSRF rejection, role permissions and database backups against the deployed service.
-4. Configure a trusted client-IP source at the edge before launch. Database rate buckets currently use `REMOTE_ADDR` and never trust arbitrary forwarding headers. Confirm the hosting proxy preserves a usable client address or apply per-client rate limits at the edge; shared proxy addresses can throttle legitimate customers.
+1. Production already has `DATABASE_URL`, an independent `DJANGO_SECRET_KEY`, `DEBUG=false`, the storefront origin and allowed/CSRF hosts. Database secrets are protected and are not shared with another application. GitHub CI uses disposable PostgreSQL. `DEBUG=false` refuses an absent production database instead of silently writing ephemeral SQLite.
+2. `vercel.json` defines the storefront and Django services. Ordered public routes select the built `/django` function for API and admin requests without changing the path Django receives; static admin assets route to the backend and the root selects `index.html`. The frontend-only rollback configuration is `vercel.frontend-only.json.example`. The older templates are examples, not the active configuration.
+3. `backend/vercel_build.py` runs deployment security checks, migrations, non-overwriting catalogue seeding and role setup. It uses `DATABASE_URL_UNPOOLED` for build-time migrations and a PostgreSQL advisory lock to serialize concurrent builds. Runtime uses the pooled connection with `DATABASE_CONN_MAX_AGE=0`. Static assets are collected by the Django deployment builder.
+4. Complete first-owner setup below, then verify authenticated merchant workflows. Verify database recovery/backups against the actual Neon plan before a commercial launch.
+5. Configure a trusted client-IP source at the edge before launch. Database rate buckets currently use `REMOTE_ADDR` and never trust arbitrary forwarding headers. Confirm the hosting proxy preserves a usable client address or apply per-client rate limits at the edge; shared proxy addresses can throttle legitimate customers.
+
+## First owner
+
+In SOLE DISTRICT's Vercel Environment Variables, choose and enter `SOLE_OWNER_USERNAME`, `SOLE_OWNER_EMAIL` and `SOLE_OWNER_PASSWORD` yourself. Scope them to Production and mark the password Sensitive. Use a unique strong password; do not put it in chat or Git. Redeploy the current main commit. The build validates the values and Django's password rules before creating the initial superuser.
+
+The bootstrap requires all three fields together. If any owner or superuser already exists, it preserves that account and password. It refuses to promote an existing customer or reuse their email. After the deployment confirms account creation, remove the three bootstrap variables and redeploy. Sign in at `/manage`; Django record setup is at `/django-admin/`. Further staff should receive only their required role.
 
 ## Store content
 
@@ -41,4 +48,6 @@ Refunds made directly in the Stripe Dashboard raise a reconciliation alert for k
 
 ## Verification
 
-Local SQLite checks pass the application tests but skip two PostgreSQL-only races. Commerce CI executes the complete suite on PostgreSQL 16, including competing purchases of the last unit and concurrent payment confirmation. Frontend production build and four Sites packaging tests must pass. Hosted customer and authenticated merchant flows remain unverified until production API activation; the frontend preview can be inspected independently.
+Commerce CI run 37746172639 passed all 42 backend tests on PostgreSQL 16, including competing purchases of the last unit, concurrent payment confirmation, database-readiness failures and first-owner safeguards. The frontend production build, four Sites packaging tests and migration consistency checks passed.
+
+Hosted checks on 8 October 2026 confirmed the PostgreSQL health response, catalogue API, secure HttpOnly session cookie, CSRF rejection for unauthenticated login submissions without a token, a 401 response for a protected merchant endpoint, admin static CSS and the public account/recovery screens. A second deployment found no migrations to apply, confirming persistent storage across deployments. Authenticated merchant operations await first-owner credential entry. Email inbox delivery and real Stripe payment/refund flows remain unverified.
