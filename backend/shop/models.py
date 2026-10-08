@@ -64,7 +64,9 @@ class Product(models.Model):
 
     @property
     def sellable(self):
-        return self.status == "active" and not self.is_illustrative and self.sourcing_status == "verified"
+        return (self.status == "active" and not self.is_illustrative
+                and self.sourcing_status == "verified"
+                and self.sourcing_reviews.order_by("-reviewed_at", "-pk").values_list("status", flat=True).first() == "verified")
 
 
 class ProductImage(models.Model):
@@ -76,6 +78,85 @@ class ProductImage(models.Model):
 
     class Meta:
         ordering = ["sort_order", "id"]
+
+
+class SourcingReview(models.Model):
+    """Private evidence reference; never included in storefront responses."""
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name="sourcing_reviews")
+    supplier = models.CharField(max_length=180)
+    invoice_reference = models.CharField(max_length=180)
+    evidence_reference = models.CharField(max_length=500)
+    notes = models.TextField(blank=True)
+    status = models.CharField(max_length=24, default="in_review")
+    reviewed_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
+    reviewed_at = models.DateTimeField(default=timezone.now)
+
+
+class CustomerProfile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="store_profile")
+    email_verified_at = models.DateTimeField(null=True, blank=True)
+
+
+class AccessToken(models.Model):
+    digest = models.CharField(max_length=64, unique=True)
+    purpose = models.CharField(max_length=20)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
+    order = models.ForeignKey("Order", null=True, on_delete=models.CASCADE)
+    expires_at = models.DateTimeField()
+    used_at = models.DateTimeField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class RateBucket(models.Model):
+    key = models.CharField(max_length=64, unique=True)
+    count = models.PositiveIntegerField(default=0)
+    expires_at = models.DateTimeField(db_index=True)
+
+
+class EmailOutbox(models.Model):
+    key = models.CharField(max_length=180, unique=True)
+    recipient = models.EmailField()
+    subject = models.CharField(max_length=240)
+    body = models.TextField()
+    attempts = models.PositiveSmallIntegerField(default=0)
+    sent_at = models.DateTimeField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class OrderUpdate(models.Model):
+    order = models.ForeignKey("Order", on_delete=models.CASCADE, related_name="updates")
+    status = models.CharField(max_length=24)
+    message = models.CharField(max_length=240)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class RefundRecord(models.Model):
+    request = models.OneToOneField("ReturnRequest", on_delete=models.PROTECT)
+    stripe_id = models.CharField(max_length=100, unique=True)
+    amount_cents = models.PositiveIntegerField()
+    status = models.CharField(max_length=24)
+    restock = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class StorePolicy(models.Model):
+    slug = models.SlugField(max_length=24, unique=True)
+    title = models.CharField(max_length=120)
+    body = models.TextField()
+    published = models.BooleanField(default=False)
+    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
+    approved_at = models.DateTimeField(null=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+class ContactRequest(models.Model):
+    reference = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    email = models.EmailField()
+    subject = models.CharField(max_length=160)
+    message = models.TextField()
+    status = models.CharField(max_length=16, default="open")
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class ProductVariant(models.Model):
@@ -206,6 +287,7 @@ class Order(models.Model):
     shipping_address = models.JSONField(default=dict, blank=True)
     stripe_session_id = models.CharField(max_length=128, unique=True, null=True, blank=True)
     stripe_payment_intent_id = models.CharField(max_length=128, blank=True)
+    payment_mode = models.CharField(max_length=12, default="test")
     stripe_session_url = models.URLField(max_length=1000, blank=True)
     tracking_number = models.CharField(max_length=100, blank=True)
     carrier = models.CharField(max_length=80, blank=True)
@@ -241,6 +323,9 @@ class OrderItem(models.Model):
     brand_name = models.CharField(max_length=100)
     size = models.CharField(max_length=32)
     sku = models.CharField(max_length=64)
+    variant_key = models.CharField(max_length=260, blank=True)
+    colour = models.CharField(max_length=100, blank=True)
+    size_system = models.CharField(max_length=16, blank=True)
     quantity = models.PositiveSmallIntegerField()
     unit_price_cents = models.PositiveIntegerField()
     unit_cost_cents = models.PositiveIntegerField(null=True, blank=True)
@@ -275,6 +360,9 @@ class ReturnRequest(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+        constraints = [models.UniqueConstraint(fields=["order_item"],
+            condition=Q(status__in=["requested", "approved", "received"]),
+            name="one_open_return_per_item")]
 
 
 class StorefrontEvent(models.Model):

@@ -68,7 +68,7 @@ Stripe Checkout is disabled by default. For a test-mode integration:
 4. Set STRIPE_CHECKOUT_ENABLED=true in backend/.env, restart Django, and test completed, delayed, failed and expired Checkout Sessions.
 5. Stripe can display Apple Pay and Google Pay through hosted Checkout when enabled and available for the shopper’s device/browser. Apple Pay needs no extra configuration for hosted Checkout; Google Pay requires payment methods enabled, an HTTPS storefront, and domain registration in Stripe. Test the production domain before launch.
 
-The server builds line items from current database prices, reserves size-specific stock atomically, and verifies webhook signatures against the unmodified request body. A checkout redirect is not treated as proof of payment. Keep LIVE_COMMERCE_ENABLED=false until test-mode checks and launch requirements are complete. Live keys are rejected unless the live switch is explicitly enabled.
+The server builds line items from current database prices, reserves size-specific stock atomically, and verifies webhook signatures against the unmodified request body. A checkout redirect is not treated as proof of payment. Keep LIVE_COMMERCE_ENABLED=false until test-mode checks and launch requirements are complete. Live keys are rejected unless PostgreSQL, configured email transport, all five approved and published store policies, STORE_POLICIES_APPROVED, LIVE_TESTS_CONFIRMED and LIVE_COMMERCE_ENABLED are ready.
 
 Never place a Stripe secret or webhook signing secret in Vite variables, source control, screenshots or chat.
 
@@ -114,6 +114,17 @@ Set production DJANGO_SECRET_KEY, DEBUG=false, ALLOWED_HOSTS, CSRF_TRUSTED_ORIGI
 ## Current limits
 
 - Discount codes and automatic tax are not implemented.
-- Customer password-reset and transactional order-email flows are not implemented. SMTP settings are placeholders for a future provider integration.
+- Account verification, password reset, scoped guest-order links and order notifications use single-use hashed tokens and a durable email outbox. Configure SMTP and run `python manage.py send_store_emails` periodically before launch. Real email transport has not been activated.
 - Products in the starter catalogue use generated illustrative imagery and preview stock. Replace them with accurate, authorised product media and physical sourcing checks before selling.
 - Stripe credentials were not supplied, so real charges, PayNow, Apple Pay, Google Pay, refunds and production webhooks have not been run.
+
+## Commerce continuation — 8 October 2026
+
+- Customer accounts include email verification and password recovery. Guest orders have single-use links with 30-minute scoped access; links use URL fragments and are removed from browser history.
+- Supplier, invoice and private evidence references require owner review. A manual sourcing flag cannot make a product sale-ready; the latest review controls clearance. Product editing includes galleries, alternative text, SKU prices, costs and availability. Changing identity or media requires a new review.
+- Stripe webhooks validate order association, session identity, currency, expected amount and test/live mode. Durable event receipts survive failed processing. Delayed payments retain reservations. Refunds and inspected-return restocking complete only after a succeeded Stripe refund.
+- Fulfilment moves through paid → fulfilling → shipped → completed, with tracking required and customer-visible updates. Staff navigation uses API permissions. CSV exports escape spreadsheet formulas.
+- Sales reports exclude Stripe test orders, preserve fully refunded orders in their original sale period and show losses instead of clamping profit to zero. They include brand demand, return request rate and repeat customers within the selected period. External Stripe dashboard refunds require reconciliation; this is an operational report, not a tax ledger.
+- Store policies can be drafted and approved in merchant Settings. Contact enquiries are recorded and queued to STORE_SUPPORT_EMAIL once configured. No policies or supplier claims have been fabricated.
+
+See [the activation runbook](docs/COMMERCE_ACTIVATION.md) for the remaining production dependencies. Permanent GitHub Actions checks use an ephemeral PostgreSQL 16 service to exercise real row-lock races. No persistent production database is created by CI.

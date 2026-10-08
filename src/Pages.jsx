@@ -5,6 +5,8 @@ import {
   Plus, SlidersHorizontal, Truck, X,
 } from '@phosphor-icons/react';
 import { Button, Dialog, LineItem, ProductGrid, useShop } from './App';
+import { GuestAccess } from './Account';
+import { PublishedPolicy } from './StoreInformation';
 import { api, money, shipping, trackEvent } from './shop';
 
 export function Home() {
@@ -52,8 +54,12 @@ export function ShopPage() {
   const size = params.get('size') || '';
   const sort = params.get('sort') || 'new';
   const stockOnly = params.get('stock') === 'true';
+  const colour = params.get('colour') || '';
+  const maxPrice = Number(params.get('maxPrice')) || 0;
+  const requestedPage = Math.max(1, Number(params.get('page')) || 1);
   const change = (key, value) => {
     const next = new URLSearchParams(params);
+    if (key !== 'page') next.delete('page');
     if (value) next.set(key, value);
     else next.delete(key);
     setParams(next);
@@ -64,10 +70,14 @@ export function ShopPage() {
     (!brand || product.brand === brand) &&
     (!query || (product.brand + ' ' + product.name + ' ' + product.color).toLowerCase().includes(query.toLowerCase())) &&
     (!size || product.variants.some((variant) => variant.size === size && variant.available > 0)) &&
-    (!stockOnly || product.variants.some((variant) => variant.available > 0))
+    (!stockOnly || product.variants.some((variant) => variant.available > 0)) &&
+    (!colour || product.color === colour) && (!maxPrice || product.price <= maxPrice * 100)
   ));
   if (sort === 'low') found = [...found].sort((a, b) => a.price - b.price);
   if (sort === 'high') found = [...found].sort((a, b) => b.price - a.price);
+  const pages = Math.max(1, Math.ceil(found.length / 12));
+  const page = Math.min(requestedPage, pages);
+  const visibleProducts = found.slice((page - 1) * 12, page * 12);
 
   return (
     <main className="section shop-page">
@@ -86,14 +96,15 @@ export function ShopPage() {
           <aside className="filters">
             <label>Brand<select value={brand} onChange={(event) => change('brand', event.target.value)}><option value="">All brands</option>{[...new Set(products.map((product) => product.brand))].map((item) => <option key={item}>{item}</option>)}</select></label>
             <label>Size<select value={size} onChange={(event) => change('size', event.target.value)}><option value="">All sizes</option>{sizes.map((item) => <option key={item}>{item}</option>)}</select></label>
-            <label className="checkbox"><input type="checkbox" checked={stockOnly} onChange={(event) => change('stock', event.target.checked ? 'true' : '')} />Available sizes only</label>
+            <label>Colour<select value={colour} onChange={(event) => change('colour', event.target.value)}><option value="">All colours</option>{[...new Set(products.map((product) => product.color))].map((value) => <option key={value}>{value}</option>)}</select></label><label>Maximum price (SGD)<input type="number" min="0" step="1" value={maxPrice || ''} onChange={(event) => change('maxPrice', event.target.value)} /></label><label className="checkbox"><input type="checkbox" checked={stockOnly} onChange={(event) => change('stock', event.target.checked ? 'true' : '')} />Available sizes only</label>
             <button className="text-button" onClick={() => setParams(category ? { category } : {})}>Clear filters</button>
           </aside>
         )}
         <div className="shop-results">
-          {found.length ? <ProductGrid products={found} /> : <div className="empty"><h2>No pieces found.</h2><p>Try another search or clear your filters.</p><Button onClick={() => setParams({})}>See all pieces</Button></div>}
+          {found.length ? <ProductGrid products={visibleProducts} /> : <div className="empty"><h2>No pieces found.</h2><p>Try another search or clear your filters.</p><Button onClick={() => setParams({})}>See all pieces</Button></div>}
         </div>
       </div>
+      {pages > 1 && <nav className="catalogue-pagination" aria-label="Catalogue pages"><button className="text-button" disabled={page === 1} onClick={() => change('page', String(page - 1))}>Previous</button><span>Page {page} of {pages}</span><button className="text-button" disabled={page === pages} onClick={() => change('page', String(page + 1))}>Next</button></nav>}
     </main>
   );
 }
@@ -114,7 +125,7 @@ export function ProductPage() {
     if (product) trackEvent('product_viewed', { product_id: product.id });
   }, [product?.id]);
   if (!product) return <NotFound />;
-  const selectedVariant = product.variants.find((variant) => variant.size === selected);
+  const selectedVariant = product.variants.find((variant) => variant.id === selected);
   const images = product.images?.length ? product.images : [{ url: product.image, alt: product.brand + ' ' + product.name }];
   const currentImage = images[activeImage] || images[0];
   const sneaker = product.category === 'Sneakers';
@@ -141,14 +152,14 @@ export function ProductPage() {
           <p className="description">{product.description}</p>
           <div className="colour-row"><span>Colour</span><span>{product.color.split(' / ')[0]}</span></div>
           <div className="size-heading"><strong>Select size</strong><button className="underlined" onClick={() => setGuideOpen(true)}>Size guide</button></div>
-          <p className="size-system">{sneaker ? 'Sizes shown in UK sizing' : 'Sizes shown as listed'}</p>
+          <p className="size-system">Sizes shown with each variant’s recorded size system.</p>
           <div className="sizes">{product.variants.map((variant) => (
-            <button key={variant.id} className={selected === variant.size ? 'selected' : ''} disabled={variant.available < 1} aria-pressed={selected === variant.size} aria-label={variant.size + (variant.available < 1 ? ' — sold out' : '')} onClick={() => setSelected(variant.size)}>{variant.size}</button>
+            <button key={variant.id} className={selected === variant.id ? 'selected' : ''} disabled={variant.available < 1} aria-pressed={selected === variant.id} aria-label={variant.size + (variant.available < 1 ? ' — sold out' : '')} onClick={() => setSelected(variant.id)}>{variant.size_system} {variant.size}{variant.colour && product.variants.some((row) => row.size === variant.size && row.id !== variant.id) ? ' · ' + variant.colour : ''}</button>
           ))}</div>
           <p className={'stock-message ' + (selected ? 'ready' : '')}>
             {product.illustrative
               ? selectedVariant ? 'Preview availability only · not purchasable' : 'Illustrative sizes · preview only'
-              : selectedVariant ? selectedVariant.available + ' available in ' + selected : 'Choose your size to continue'}
+              : selectedVariant ? selectedVariant.available + ' available in ' + selectedVariant.size : 'Choose your size to continue'}
           </p>
           <div className="purchase-actions">
             <Button disabled={!selectedVariant || selectedVariant.available < 1} onClick={addToBag}>Add to bag <ArrowRight size={20} /></Button>
@@ -346,13 +357,13 @@ export function Orders() {
   return (
     <main className="section orders-page">
       <span className="eyebrow">YOUR DISTRICT</span><h1>Your orders</h1>
-      <p>Guest orders are available in the browser session used at checkout. Signed-in orders stay with your account.</p>
+      <p>Signed-in orders stay with your account. Use an email link to access a guest order on another device.</p><GuestAccess onAccess={load} />
       {loading ? <p role="status">Loading your orders…</p> : error ? <p className="form-error" role="alert">{error}</p> : orders.length ? (
         <div className="order-list">{orders.map((order) => (
           <article className="order-card" key={order.id}>
             <div className="order-card-heading"><span><strong>{order.reference}</strong><small>{new Date(order.created).toLocaleDateString('en-SG')}</small></span><span className="status-pill">{order.status.replace('_', ' ')}</span><strong>{money(order.total)}</strong></div>
             {order.items.map((item) => <div className="order-line" key={item.line_id}><span>{item.name} · {item.size} × {item.quantity}</span><span>{money(item.unit_price * item.quantity)}</span>{order.payment_status === 'paid' && <ReturnForm order={order} item={item} onSubmitted={load} />}</div>)}
-            {order.tracking_number && <p className="muted">Tracking: {order.carrier} · {order.tracking_number}</p>}
+            {order.timeline?.length > 0 && <ol className="order-timeline">{order.timeline.map((update, index) => <li key={index}>{update.message} <small>{new Date(update.created).toLocaleString('en-SG', { timeZone: 'Asia/Singapore' })}</small></li>)}</ol>}{order.returns?.map((row) => <p key={row.id} className="muted">Return #{row.id}: {row.status} · {row.quantity} unit(s)</p>)}{order.tracking_number && <p className="muted">Tracking: {order.carrier} · {order.tracking_number}</p>}
           </article>
         ))}</div>
       ) : (
@@ -362,91 +373,7 @@ export function Orders() {
   );
 }
 
-export function Account() {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [mode, setMode] = useState('login');
-  const [form, setForm] = useState({ email: '', password: '', name: '' });
-  const [addresses, setAddresses] = useState([]);
-  const [address, setAddress] = useState({ label: 'Home', recipient: '', phone: '', line1: '', line2: '', postal_code: '', is_default: true });
-  const [error, setError] = useState('');
-  const [message, setMessage] = useState('');
-  const load = async () => {
-    try {
-      const data = await api('auth/me/');
-      setUser(data.authenticated ? data.user : null);
-      if (data.authenticated) {
-        const addressData = await api('auth/addresses/');
-        setAddresses(addressData.addresses);
-      }
-    } catch (reason) {
-      setError(reason.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-  useEffect(() => { load(); }, []);
-  const submitAuth = async (event) => {
-    event.preventDefault();
-    setError('');
-    setMessage('');
-    try {
-      const endpoint = mode === 'register' ? 'auth/register/' : 'auth/login/';
-      await api(endpoint, { method: 'POST', body: JSON.stringify(form) });
-      await load();
-      setMessage(mode === 'register' ? 'Account created.' : 'You are signed in.');
-    } catch (reason) {
-      setError(reason.message);
-    }
-  };
-  const saveAddress = async (event) => {
-    event.preventDefault();
-    setError('');
-    try {
-      await api('auth/addresses/', { method: 'POST', body: JSON.stringify(address) });
-      setAddresses((items) => [...items.map((item) => ({ ...item, is_default: false })), address]);
-      setAddress({ label: 'Home', recipient: '', phone: '', line1: '', line2: '', postal_code: '', is_default: true });
-      setMessage('Address saved.');
-    } catch (reason) {
-      setError(reason.message);
-    }
-  };
-  const signOut = async () => {
-    await api('auth/logout/', { method: 'POST', body: '{}' });
-    setUser(null);
-    setAddresses([]);
-  };
-  if (loading) return <main className="section"><p role="status">Loading your account…</p></main>;
-  return (
-    <main className="section account-page">
-      <span className="eyebrow">YOUR DISTRICT</span><h1>{user ? 'Your account' : mode === 'register' ? 'Create an account' : 'Sign in'}</h1>
-      {error && <p role="alert" className="form-error">{error}</p>}{message && <p role="status" className="notice notice-soft">{message}</p>}
-      {user ? (
-        <div className="account-grid">
-          <section className="account-card"><h2>Welcome back</h2><p>{user.name || user.email}</p><Link className="underlined" to="/orders">View your orders</Link><button className="text-button" onClick={signOut}>Sign out</button></section>
-          <section className="account-card"><h2>Saved delivery addresses</h2>{addresses.length ? addresses.map((item) => <div className="address-row" key={item.id}><strong>{item.label}{item.is_default ? ' · Default' : ''}</strong><span>{item.recipient}, {item.line1} {item.line2}, Singapore {item.postal_code}</span></div>) : <p className="muted">No saved address yet.</p>}
-            <form className="form-grid" onSubmit={saveAddress}>
-              <label>Recipient<input required value={address.recipient} onChange={(event) => setAddress({ ...address, recipient: event.target.value })} /></label>
-              <label>Phone<input value={address.phone} onChange={(event) => setAddress({ ...address, phone: event.target.value })} /></label>
-              <label className="full">Address line 1<input required value={address.line1} onChange={(event) => setAddress({ ...address, line1: event.target.value })} /></label>
-              <label className="full">Address line 2<input value={address.line2} onChange={(event) => setAddress({ ...address, line2: event.target.value })} /></label>
-              <label>Postal code<input required inputMode="numeric" pattern="[0-9]{6}" value={address.postal_code} onChange={(event) => setAddress({ ...address, postal_code: event.target.value })} /></label>
-              <button className="button button-dark">Save address</button>
-            </form>
-          </section>
-        </div>
-      ) : (
-        <form className="auth-form" onSubmit={submitAuth}>
-          {mode === 'register' && <label>Name<input autoComplete="name" value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} /></label>}
-          <label>Email<input type="email" autoComplete="email" required value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} /></label>
-          <label>Password<input type="password" autoComplete={mode === 'register' ? 'new-password' : 'current-password'} required minLength={8} value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} /></label>
-          <button className="button button-dark">{mode === 'register' ? 'Create account' : 'Sign in'} <ArrowRight size={18} /></button>
-          <p>{mode === 'register' ? 'Already have an account?' : 'New to the district?'} <button type="button" className="underlined" onClick={() => { setMode(mode === 'register' ? 'login' : 'register'); setError(''); }}>{mode === 'register' ? 'Sign in' : 'Create an account'}</button></p>
-        </form>
-      )}
-    </main>
-  );
-}
+export { Account } from './Account';
 
 export function Wishlist() {
   const { products, wishlist } = useShop();
@@ -476,7 +403,7 @@ export function Help() {
     terms: ['Store information', 'SOLE DISTRICT is a prototype retailer project. Catalogue prices, images and stock are illustrative. Products cannot be purchased until sourcing, authentic product records, stock, policies and Stripe settings are verified.'],
   };
   const [title, copy] = content[kind] || content.store;
-  return <main className="section policy-page"><span className="eyebrow">GOOD TO KNOW</span><h1>{title}</h1><p>{copy}</p><Button to="/shop">Back to the collection <ArrowRight size={19} /></Button></main>;
+  return <main className="section policy-page"><span className="eyebrow">GOOD TO KNOW</span><PublishedPolicy kind={kind} fallbackTitle={title} fallbackCopy={copy} /><Button to="/shop">Back to the collection <ArrowRight size={19} /></Button></main>;
 }
 
 export function NotFound() {

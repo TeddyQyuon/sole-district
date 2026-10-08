@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
 
-from shop.api import _mark_order_paid, _release_reservations
+from shop.api import _process_stripe_event
 from shop.models import Order
 
 
@@ -32,14 +32,15 @@ class Command(BaseCommand):
             try:
                 session = stripe.checkout.Session.retrieve(order.stripe_session_id)
                 with transaction.atomic():
-                    locked = Order.objects.select_for_update().get(pk=order.pk)
                     if session.payment_status == "paid":
-                        _mark_order_paid(locked, session)
+                        _process_stripe_event({"type": "checkout.session.completed", "data": {"object": session}})
                         self.stdout.write(self.style.SUCCESS(f"{order.reference}: marked paid from Stripe."))
                     elif session.status == "expired":
-                        _release_reservations(locked, "expired", "unpaid")
+                        _process_stripe_event({"type": "checkout.session.expired", "data": {"object": session}})
                         self.stdout.write(f"{order.reference}: expired and stock released.")
                     else:
                         self.stdout.write(f"{order.reference}: still awaiting payment ({session.status}/{session.payment_status}).")
             except stripe.error.StripeError as exc:
                 self.stderr.write(f"{order.reference}: Stripe lookup failed: {exc.__class__.__name__}.")
+            except (ValueError, RuntimeError):
+                self.stderr.write(f"{order.reference}: saved order and Stripe disagree; manual reconciliation required.")
