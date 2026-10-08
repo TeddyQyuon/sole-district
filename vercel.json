@@ -12,7 +12,7 @@
       "outputDirectory": "dist/client",
       "rewrites": [
         {
-          "source": "/:path*",
+          "source": "/(.*)",
           "destination": "/index.html"
         }
       ]
@@ -32,25 +32,34 @@
   },
   "rewrites": [
     {
-      "source": "/api/:path*",
+      "source": "/api/(.*)",
+      "destination": {
+        "service": "backend",
+        "path": "/django"
+      }
+    },
+    {
+      "source": "/django-admin/(.*)",
+      "destination": {
+        "service": "backend",
+        "path": "/django"
+      }
+    },
+    {
+      "source": "/static/(.*)",
       "destination": {
         "service": "backend"
       }
     },
     {
-      "source": "/django-admin/:path*",
+      "source": "/",
       "destination": {
-        "service": "backend"
+        "service": "storefront",
+        "path": "/index.html"
       }
     },
     {
-      "source": "/static/:path*",
-      "destination": {
-        "service": "backend"
-      }
-    },
-    {
-      "source": "/:path*",
+      "source": "/(.*)",
       "destination": {
         "service": "storefront"
       }
