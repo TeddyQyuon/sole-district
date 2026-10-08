@@ -1,0 +1,484 @@
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import {
+  ArrowLeft, ArrowRight, ArrowUpRight, CaretDown, Check, Heart, LockSimple, Package,
+  Plus, SlidersHorizontal, Truck, X,
+} from '@phosphor-icons/react';
+import { Button, Dialog, LineItem, ProductGrid, useShop } from './App';
+import { api, money, shipping, trackEvent } from './shop';
+
+export function Home() {
+  const { products } = useShop();
+  const clothing = products.find((product) => product.category === 'Clothing') || products[0];
+  return (
+    <>
+      <section className="hero">
+        <img className="hero-photo" src="/assets/hero.webp" alt="Two models wearing neutral streetwear on concrete steps" fetchPriority="high" width="1586" height="992" />
+        <div className="hero-copy">
+          <span className="eyebrow">THE DISTRICT COLLECTION</span>
+          <h1>THE NEXT<br />STREET STANDARD.</h1>
+          <p>Sneakers, everyday essentials and the labels shaping what comes next.</p>
+          <Button to="/shop">Shop new arrivals <ArrowRight size={21} /></Button>
+        </div>
+      </section>
+      <section className="section fresh">
+        <div className="section-heading"><div><span className="eyebrow">IN THE DISTRICT</span><h2>Fresh rotation</h2></div><Link to="/shop">View all <ArrowRight size={19} /></Link></div>
+        <ProductGrid products={products.slice(0, 4)} />
+      </section>
+      <section className="edit">
+        <div><span className="eyebrow">THE EVERYDAY EDIT</span><h2>Good pieces.<br />Great rotation.</h2><p>Considered layers and familiar classics. Discover the pieces that work harder in your wardrobe.</p><Button to="/shop?category=Clothing">Explore clothing <ArrowRight size={20} /></Button></div>
+        {clothing && <Link to={'/product/' + clothing.id}><img src={clothing.image} alt={clothing.brand + ' ' + clothing.name} loading="lazy" /></Link>}
+      </section>
+      <section className="section labels">
+        <span className="eyebrow">LABELS IN THE DISTRICT</span>
+        <div>{[...new Set(products.map((product) => product.brand))].slice(0, 4).map((brand) => <Link key={brand} to={'/shop?brand=' + encodeURIComponent(brand)}>{brand}<ArrowRight size={19} /></Link>)}</div>
+      </section>
+      <section className="trust-strip">
+        <div><span>01</span><strong>Considered rotation</strong><p>Everyday sneakers, layers and accessories.</p></div>
+        <div><span>02</span><strong>Checked before launch</strong><p>Supplier and stock records are reviewed before sale.</p></div>
+        <div><span>03</span><strong>Clear at every step</strong><p>Delivery and return terms are shown before checkout.</p></div>
+      </section>
+    </>
+  );
+}
+
+export function ShopPage() {
+  const { products } = useShop();
+  const [params, setParams] = useSearchParams();
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const query = params.get('q') || '';
+  const category = params.get('category') || '';
+  const brand = params.get('brand') || '';
+  const size = params.get('size') || '';
+  const sort = params.get('sort') || 'new';
+  const stockOnly = params.get('stock') === 'true';
+  const change = (key, value) => {
+    const next = new URLSearchParams(params);
+    if (value) next.set(key, value);
+    else next.delete(key);
+    setParams(next);
+  };
+  const sizes = [...new Set(products.filter((product) => !category || product.category === category).flatMap((product) => product.sizes))];
+  let found = products.filter((product) => (
+    (!category || product.category === category) &&
+    (!brand || product.brand === brand) &&
+    (!query || (product.brand + ' ' + product.name + ' ' + product.color).toLowerCase().includes(query.toLowerCase())) &&
+    (!size || product.variants.some((variant) => variant.size === size && variant.available > 0)) &&
+    (!stockOnly || product.variants.some((variant) => variant.available > 0))
+  ));
+  if (sort === 'low') found = [...found].sort((a, b) => a.price - b.price);
+  if (sort === 'high') found = [...found].sort((a, b) => b.price - a.price);
+
+  return (
+    <main className="section shop-page">
+      <div className="breadcrumb"><Link to="/">Home</Link><span>/</span><span>{category || brand || 'New arrivals'}</span></div>
+      <div className="page-heading">
+        <div><span className="eyebrow">THE DISTRICT COLLECTION</span><h1>{query ? 'Results for “' + query + '”' : brand || category || 'New arrivals'}</h1><p>Find your next everyday favourite.</p></div>
+        <span>{found.length} {found.length === 1 ? 'piece' : 'pieces'}</span>
+      </div>
+      <div className="shop-toolbar">
+        <button className="text-button filter-button" onClick={() => setFiltersOpen(!filtersOpen)}><SlidersHorizontal size={19} />Filters {(brand || size || stockOnly) && <span className="filter-dot" />}</button>
+        <div className="category-tabs">{['', 'Sneakers', 'Clothing', 'Accessories'].map((item) => <button key={item || 'all'} className={category === item ? 'active' : ''} onClick={() => change('category', item)}>{item || 'All'}</button>)}</div>
+        <label className="sort-label">Sort by<select value={sort} onChange={(event) => change('sort', event.target.value)}><option value="new">Featured</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option></select></label>
+      </div>
+      <div className={'shop-layout ' + (filtersOpen ? 'has-filters' : '')}>
+        {filtersOpen && (
+          <aside className="filters">
+            <label>Brand<select value={brand} onChange={(event) => change('brand', event.target.value)}><option value="">All brands</option>{[...new Set(products.map((product) => product.brand))].map((item) => <option key={item}>{item}</option>)}</select></label>
+            <label>Size<select value={size} onChange={(event) => change('size', event.target.value)}><option value="">All sizes</option>{sizes.map((item) => <option key={item}>{item}</option>)}</select></label>
+            <label className="checkbox"><input type="checkbox" checked={stockOnly} onChange={(event) => change('stock', event.target.checked ? 'true' : '')} />Available sizes only</label>
+            <button className="text-button" onClick={() => setParams(category ? { category } : {})}>Clear filters</button>
+          </aside>
+        )}
+        <div className="shop-results">
+          {found.length ? <ProductGrid products={found} /> : <div className="empty"><h2>No pieces found.</h2><p>Try another search or clear your filters.</p><Button onClick={() => setParams({})}>See all pieces</Button></div>}
+        </div>
+      </div>
+    </main>
+  );
+}
+
+export function ProductPage() {
+  const { products, add, wishlist, toggleWish } = useShop();
+  const { pathname } = useLocation();
+  const product = products.find((item) => item.id === pathname.split('/').pop());
+  const [selected, setSelected] = useState('');
+  const [zoom, setZoom] = useState(false);
+  const [guideOpen, setGuideOpen] = useState(false);
+  const [activeImage, setActiveImage] = useState(0);
+  useEffect(() => {
+    setSelected('');
+    setActiveImage(0);
+  }, [pathname]);
+  useEffect(() => {
+    if (product) trackEvent('product_viewed', { product_id: product.id });
+  }, [product?.id]);
+  if (!product) return <NotFound />;
+  const selectedVariant = product.variants.find((variant) => variant.size === selected);
+  const images = product.images?.length ? product.images : [{ url: product.image, alt: product.brand + ' ' + product.name }];
+  const currentImage = images[activeImage] || images[0];
+  const sneaker = product.category === 'Sneakers';
+  const addToBag = () => {
+    if (!selectedVariant || selectedVariant.available < 1) return;
+    add(product, selected);
+  };
+
+  return (
+    <main className="section product-page">
+      <div className="breadcrumb"><Link to="/">Home</Link><span>/</span><Link to={'/shop?category=' + encodeURIComponent(product.category)}>{product.category}</Link><span>/</span><Link to={'/shop?brand=' + encodeURIComponent(product.brand)}>{product.brand}</Link><span>/</span><span>{product.name}</span></div>
+      <div className="product-layout">
+        <div className="gallery">
+          <div className="thumbs">
+            {images.map((image, index) => <button key={image.url + index} className={activeImage === index ? 'selected' : ''} onClick={() => setActiveImage(index)} aria-label={'Show product image ' + (index + 1)}><img src={image.url} alt="" /></button>)}
+          </div>
+          <button className="main-product-photo" onClick={() => setZoom(true)} aria-label="Enlarge product image"><img src={currentImage.url} alt={currentImage.alt} /><span><Plus size={17} />Enlarge</span></button>
+        </div>
+        <div className="purchase-panel">
+          <span className="eyebrow">{product.brand}</span>
+          <h1>{product.name}</h1>
+          <p className="color-name">{product.color}</p>
+          <p className="price">{money(product.price)}</p>
+          <p className="description">{product.description}</p>
+          <div className="colour-row"><span>Colour</span><span>{product.color.split(' / ')[0]}</span></div>
+          <div className="size-heading"><strong>Select size</strong><button className="underlined" onClick={() => setGuideOpen(true)}>Size guide</button></div>
+          <p className="size-system">{sneaker ? 'Sizes shown in UK sizing' : 'Sizes shown as listed'}</p>
+          <div className="sizes">{product.variants.map((variant) => (
+            <button key={variant.id} className={selected === variant.size ? 'selected' : ''} disabled={variant.available < 1} aria-pressed={selected === variant.size} aria-label={variant.size + (variant.available < 1 ? ' — sold out' : '')} onClick={() => setSelected(variant.size)}>{variant.size}</button>
+          ))}</div>
+          <p className={'stock-message ' + (selected ? 'ready' : '')}>
+            {product.illustrative
+              ? selectedVariant ? 'Preview availability only · not purchasable' : 'Illustrative sizes · preview only'
+              : selectedVariant ? selectedVariant.available + ' available in ' + selected : 'Choose your size to continue'}
+          </p>
+          <div className="purchase-actions">
+            <Button disabled={!selectedVariant || selectedVariant.available < 1} onClick={addToBag}>Add to bag <ArrowRight size={20} /></Button>
+            <button className="outline-icon" aria-label="Save to wishlist" aria-pressed={wishlist.includes(product.id)} onClick={() => toggleWish(product.id)}><Heart size={22} weight={wishlist.includes(product.id) ? 'fill' : 'regular'} /></button>
+          </div>
+          <div className="delivery-perks"><span><Truck size={21} />Tracked delivery</span><span><Package size={21} />Return requests</span></div>
+          <details><summary>Details & care <CaretDown size={16} /></summary><p>{product.detail}</p></details>
+          <details><summary>Delivery & returns <CaretDown size={16} /></summary><p>Singapore delivery is estimated at S$8, complimentary from S$150. Final terms will appear before payment. <Link to="/help/delivery">Delivery information</Link></p></details>
+          <details><summary>Sourcing & verification <CaretDown size={16} /></summary><p>{product.illustrative ? 'This is an illustrative preview. Supplier evidence and physical product checks have not been recorded, so this item cannot be purchased.' : 'Sourcing information is available for this product.'}</p></details>
+          <button className="underlined sizing-help" onClick={() => setGuideOpen(true)}>Need help with sizing?</button>
+        </div>
+      </div>
+      <section className="related"><div className="section-heading"><div><span className="eyebrow">MORE FROM THE DISTRICT</span><h2>Keep your rotation fresh</h2></div><Link to="/shop">Explore all <ArrowRight size={19} /></Link></div><ProductGrid products={products.filter((item) => item.id !== product.id).slice(0, 4)} /></section>
+      {guideOpen && <Dialog title="Find your fit" onClose={() => setGuideOpen(false)}><p>Size labels vary by brand. Check the brand’s own fit guidance and product measurements before purchase. Exact product sizing will be verified before launch.</p></Dialog>}
+      {zoom && <Dialog title={product.brand + ' ' + product.name} onClose={() => setZoom(false)}><img className="zoom-image" src={currentImage.url} alt={currentImage.alt} /></Dialog>}
+    </main>
+  );
+}
+
+function getCheckoutKey(lines) {
+  const fingerprint = JSON.stringify(lines.map((line) => [line.variantId, line.quantity]).sort());
+  const stored = sessionStorage.getItem('sd-checkout-attempt');
+  if (stored) {
+    try {
+      const value = JSON.parse(stored);
+      if (value.fingerprint === fingerprint) return value.key;
+    } catch {}
+  }
+  const key = crypto.randomUUID();
+  sessionStorage.setItem('sd-checkout-attempt', JSON.stringify({ fingerprint, key }));
+  return key;
+}
+
+export function Checkout() {
+  const { lines, subtotal, store } = useShop();
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const [cancelled, setCancelled] = useState(false);
+  const [params] = useSearchParams();
+  const cancellationSent = useRef(false);
+  const delivery = shipping(subtotal);
+
+  useEffect(() => {
+    const orderId = params.get('cancelled');
+    if (!orderId || cancellationSent.current) return;
+    cancellationSent.current = true;
+    api('checkout/cancel/', { method: 'POST', body: JSON.stringify({ order_id: orderId }) })
+      .then(() => setCancelled(true))
+      .catch((reason) => setError(reason.message));
+  }, [params]);
+
+  const pay = async () => {
+    if (busy || !lines.length) return;
+    setBusy(true);
+    setError('');
+    try {
+      const attemptKey = getCheckoutKey(lines);
+      const data = await api('checkout/', {
+        method: 'POST',
+        headers: { 'Idempotency-Key': attemptKey },
+        body: JSON.stringify({ items: lines.map((line) => ({ variant_id: line.variantId, quantity: line.quantity })) }),
+      });
+      const target = new URL(data.url);
+      if (target.protocol !== 'https:' || target.hostname !== 'checkout.stripe.com') throw new Error('The payment link could not be verified.');
+      sessionStorage.setItem('sd-last-order-reference', data.reference);
+      window.location.assign(target.href);
+    } catch (reason) {
+      setError(reason.message);
+      setBusy(false);
+    }
+  };
+
+  if (!lines.length) return <main className="section empty"><h1>Your bag is empty.</h1><p>Choose a piece before reviewing checkout.</p><Button to="/shop">Explore the collection</Button></main>;
+  return (
+    <main className="section checkout-page">
+      <Link className="back-link" to="/shop"><ArrowLeft size={18} />Continue shopping</Link>
+      <div className="page-heading"><div><span className="eyebrow">YOUR NEXT ROTATION</span><h1>Checkout</h1></div><span className="secure-label"><LockSimple size={18} />Secure payment</span></div>
+      {cancelled && <div className="notice notice-soft"><Check size={18} />Checkout was cancelled. Your bag is still here.</div>}
+      <div className="checkout-layout">
+        <section className="checkout-items">
+          <h2>Review your bag</h2>
+          {lines.map((line) => <LineItem key={line.variantId} line={line} />)}
+          <div className="payment-options">
+            <span className="eyebrow">PAY SECURELY WITH STRIPE</span>
+            <h2>Choose at checkout</h2>
+            <p>Stripe shows the methods available to your account and device. This store is planned to accept cards, PayNow, and Apple Pay or Google Pay when eligible.</p>
+            <div className="payment-method-chips"><span>Cards</span><span>PayNow QR</span><span>Apple Pay*</span><span>Google Pay*</span></div>
+            <small>*Wallet buttons depend on device, browser, wallet setup, and Stripe account settings.</small>
+          </div>
+        </section>
+        <aside className="order-summary">
+          <h2>Order summary</h2>
+          <div><span>Subtotal</span><span>{money(subtotal)}</span></div>
+          <div><span>Singapore delivery</span><span>{delivery ? money(delivery) : 'Complimentary'}</span></div>
+          <div className="total"><strong>Total</strong><strong>{money(subtotal + delivery)}</strong></div>
+          <p>Amounts shown in SGD. Shipping is calculated using the current store rule. Tax settings are not configured.</p>
+          {!store.checkout_ready && <div className="checkout-notice">Preview only. Payments are disabled until Stripe is configured and the catalogue is verified.</div>}
+          {error && <p className="form-error" role="alert">{error}</p>}
+          <Button disabled={busy || !store.checkout_ready || lines.some((line) => line.product.illustrative)} onClick={pay}>{busy ? 'Opening secure checkout…' : 'Continue to secure payment'} <ArrowRight size={20} /></Button>
+          <span className="payment-note"><LockSimple size={15} />Payment details stay on Stripe.</span>
+          <Link className="underlined" to="/help/returns">Delivery & returns</Link>
+        </aside>
+      </div>
+    </main>
+  );
+}
+
+export function Complete() {
+  const [params] = useSearchParams();
+  const { setCart } = useShop();
+  const [order, setOrder] = useState(null);
+  const [error, setError] = useState('');
+  const sessionId = params.get('session_id');
+  const cleared = useRef(false);
+  useEffect(() => {
+    let alive = true;
+    let timer;
+    async function load() {
+      try {
+        const data = await api('orders/by-session/?session_id=' + encodeURIComponent(sessionId || ''));
+        if (!alive) return;
+        setOrder(data);
+        if (data.payment_status === 'paid' && !cleared.current) {
+          cleared.current = true;
+          const purchased = new Map(data.items.map((item) => [item.variant_id, item.quantity]));
+          setCart((items) => items.map((item) => ({ ...item, quantity: item.quantity - (purchased.get(item.variantId) || 0) })).filter((item) => item.quantity > 0));
+          sessionStorage.removeItem('sd-checkout-attempt');
+        } else if (['pending', 'payment_pending'].includes(data.status)) {
+          timer = window.setTimeout(load, 4000);
+        }
+      } catch (reason) {
+        if (alive) setError(reason.message);
+      }
+    }
+    if (sessionId) load();
+    else setError('No Stripe checkout reference was provided.');
+    return () => { alive = false; window.clearTimeout(timer); };
+  }, [sessionId, setCart]);
+
+  const paid = order?.payment_status === 'paid';
+  const pending = order && ['pending', 'payment_pending'].includes(order.status);
+  return (
+    <main className="section complete-page">
+      <span className="eyebrow">SOLE DISTRICT</span>
+      <h1>{paid ? 'Your order is confirmed.' : order?.status === 'expired' || order?.status === 'payment_failed' ? 'Payment was not completed.' : error ? 'Order unavailable.' : 'Checking your payment.'}</h1>
+      <p>{paid ? 'Thank you. Your order is being prepared.' : pending ? 'Stripe is confirming your payment. This page will update when the verified payment event arrives.' : 'The store checks payment status with its server. A redirect by itself does not confirm a purchase.'}</p>
+      {error && <p role="alert" className="form-error">{error}</p>}
+      {order && <div className="receipt"><div><strong>Order {order.reference}</strong><span className="status-pill">{order.status.replace('_', ' ')}</span></div><strong>{money(order.total)}</strong>{order.items.map((item) => <div key={item.line_id}><span>{item.name} · {item.size} × {item.quantity}</span><span>{money(item.unit_price * item.quantity)}</span></div>)}</div>}
+      <Button to="/orders">View your orders <ArrowRight size={19} /></Button>
+      <Link className="underlined" to="/shop">Continue shopping</Link>
+    </main>
+  );
+}
+
+function ReturnForm({ order, item, onSubmitted }) {
+  const [open, setOpen] = useState(false);
+  const [reason, setReason] = useState('Wrong size');
+  const [details, setDetails] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const submit = async (event) => {
+    event.preventDefault();
+    setBusy(true);
+    setError('');
+    try {
+      await api('orders/' + order.id + '/returns/', {
+        method: 'POST',
+        body: JSON.stringify({ item_id: item.line_id, quantity: 1, reason, details }),
+      });
+      setOpen(false);
+      onSubmitted();
+    } catch (reasonError) {
+      setError(reasonError.message);
+    } finally {
+      setBusy(false);
+    }
+  };
+  if (!open) return <button className="underlined" onClick={() => setOpen(true)}>Request a return</button>;
+  return (
+    <form className="return-form" onSubmit={submit}>
+      <label>Reason<select value={reason} onChange={(event) => setReason(event.target.value)}><option>Wrong size</option><option>Changed my mind</option><option>Item issue</option><option>Other</option></select></label>
+      <label>Details (optional)<textarea value={details} onChange={(event) => setDetails(event.target.value)} maxLength={1500} rows={3} /></label>
+      {error && <p className="form-error" role="alert">{error}</p>}
+      <div><button className="button button-dark" disabled={busy}>{busy ? 'Sending…' : 'Submit request'}</button><button type="button" className="text-button" onClick={() => setOpen(false)}>Cancel</button></div>
+    </form>
+  );
+}
+
+export function Orders() {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const load = () => api('orders/').then((data) => setOrders(data.orders)).catch((reason) => setError(reason.message)).finally(() => setLoading(false));
+  useEffect(() => { load(); }, []);
+  return (
+    <main className="section orders-page">
+      <span className="eyebrow">YOUR DISTRICT</span><h1>Your orders</h1>
+      <p>Guest orders are available in the browser session used at checkout. Signed-in orders stay with your account.</p>
+      {loading ? <p role="status">Loading your orders…</p> : error ? <p className="form-error" role="alert">{error}</p> : orders.length ? (
+        <div className="order-list">{orders.map((order) => (
+          <article className="order-card" key={order.id}>
+            <div className="order-card-heading"><span><strong>{order.reference}</strong><small>{new Date(order.created).toLocaleDateString('en-SG')}</small></span><span className="status-pill">{order.status.replace('_', ' ')}</span><strong>{money(order.total)}</strong></div>
+            {order.items.map((item) => <div className="order-line" key={item.line_id}><span>{item.name} · {item.size} × {item.quantity}</span><span>{money(item.unit_price * item.quantity)}</span>{order.payment_status === 'paid' && <ReturnForm order={order} item={item} onSubmitted={load} />}</div>)}
+            {order.tracking_number && <p className="muted">Tracking: {order.carrier} · {order.tracking_number}</p>}
+          </article>
+        ))}</div>
+      ) : (
+        <div className="empty"><Package size={34} /><h2>A fresh start.</h2><p>Your orders appear here after a confirmed payment.</p><Button to="/shop">Find your next favourite</Button></div>
+      )}
+    </main>
+  );
+}
+
+export function Account() {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [mode, setMode] = useState('login');
+  const [form, setForm] = useState({ email: '', password: '', name: '' });
+  const [addresses, setAddresses] = useState([]);
+  const [address, setAddress] = useState({ label: 'Home', recipient: '', phone: '', line1: '', line2: '', postal_code: '', is_default: true });
+  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
+  const load = async () => {
+    try {
+      const data = await api('auth/me/');
+      setUser(data.authenticated ? data.user : null);
+      if (data.authenticated) {
+        const addressData = await api('auth/addresses/');
+        setAddresses(addressData.addresses);
+      }
+    } catch (reason) {
+      setError(reason.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => { load(); }, []);
+  const submitAuth = async (event) => {
+    event.preventDefault();
+    setError('');
+    setMessage('');
+    try {
+      const endpoint = mode === 'register' ? 'auth/register/' : 'auth/login/';
+      await api(endpoint, { method: 'POST', body: JSON.stringify(form) });
+      await load();
+      setMessage(mode === 'register' ? 'Account created.' : 'You are signed in.');
+    } catch (reason) {
+      setError(reason.message);
+    }
+  };
+  const saveAddress = async (event) => {
+    event.preventDefault();
+    setError('');
+    try {
+      await api('auth/addresses/', { method: 'POST', body: JSON.stringify(address) });
+      setAddresses((items) => [...items.map((item) => ({ ...item, is_default: false })), address]);
+      setAddress({ label: 'Home', recipient: '', phone: '', line1: '', line2: '', postal_code: '', is_default: true });
+      setMessage('Address saved.');
+    } catch (reason) {
+      setError(reason.message);
+    }
+  };
+  const signOut = async () => {
+    await api('auth/logout/', { method: 'POST', body: '{}' });
+    setUser(null);
+    setAddresses([]);
+  };
+  if (loading) return <main className="section"><p role="status">Loading your account…</p></main>;
+  return (
+    <main className="section account-page">
+      <span className="eyebrow">YOUR DISTRICT</span><h1>{user ? 'Your account' : mode === 'register' ? 'Create an account' : 'Sign in'}</h1>
+      {error && <p role="alert" className="form-error">{error}</p>}{message && <p role="status" className="notice notice-soft">{message}</p>}
+      {user ? (
+        <div className="account-grid">
+          <section className="account-card"><h2>Welcome back</h2><p>{user.name || user.email}</p><Link className="underlined" to="/orders">View your orders</Link><button className="text-button" onClick={signOut}>Sign out</button></section>
+          <section className="account-card"><h2>Saved delivery addresses</h2>{addresses.length ? addresses.map((item) => <div className="address-row" key={item.id}><strong>{item.label}{item.is_default ? ' · Default' : ''}</strong><span>{item.recipient}, {item.line1} {item.line2}, Singapore {item.postal_code}</span></div>) : <p className="muted">No saved address yet.</p>}
+            <form className="form-grid" onSubmit={saveAddress}>
+              <label>Recipient<input required value={address.recipient} onChange={(event) => setAddress({ ...address, recipient: event.target.value })} /></label>
+              <label>Phone<input value={address.phone} onChange={(event) => setAddress({ ...address, phone: event.target.value })} /></label>
+              <label className="full">Address line 1<input required value={address.line1} onChange={(event) => setAddress({ ...address, line1: event.target.value })} /></label>
+              <label className="full">Address line 2<input value={address.line2} onChange={(event) => setAddress({ ...address, line2: event.target.value })} /></label>
+              <label>Postal code<input required inputMode="numeric" pattern="[0-9]{6}" value={address.postal_code} onChange={(event) => setAddress({ ...address, postal_code: event.target.value })} /></label>
+              <button className="button button-dark">Save address</button>
+            </form>
+          </section>
+        </div>
+      ) : (
+        <form className="auth-form" onSubmit={submitAuth}>
+          {mode === 'register' && <label>Name<input autoComplete="name" value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} /></label>}
+          <label>Email<input type="email" autoComplete="email" required value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} /></label>
+          <label>Password<input type="password" autoComplete={mode === 'register' ? 'new-password' : 'current-password'} required minLength={8} value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} /></label>
+          <button className="button button-dark">{mode === 'register' ? 'Create account' : 'Sign in'} <ArrowRight size={18} /></button>
+          <p>{mode === 'register' ? 'Already have an account?' : 'New to the district?'} <button type="button" className="underlined" onClick={() => { setMode(mode === 'register' ? 'login' : 'register'); setError(''); }}>{mode === 'register' ? 'Sign in' : 'Create an account'}</button></p>
+        </form>
+      )}
+    </main>
+  );
+}
+
+export function Wishlist() {
+  const { products, wishlist } = useShop();
+  const saved = products.filter((product) => wishlist.includes(product.id));
+  return <main className="section"><div className="page-heading"><div><span className="eyebrow">ON YOUR RADAR</span><h1>Your wishlist</h1></div><span>{saved.length} saved</span></div>{saved.length ? <ProductGrid products={saved} /> : <div className="empty"><Heart size={34} /><h2>Keep your favourites close.</h2><p>Tap the heart on any piece to save it here.</p><Button to="/shop">Explore the collection</Button></div>}</main>;
+}
+
+export function Brands() {
+  const { products } = useShop();
+  const brands = [...new Set(products.map((product) => product.brand))];
+  return <main className="section brands-page"><span className="eyebrow">LABELS IN THE DISTRICT</span><h1>The brands</h1><p>Familiar classics. Fresh perspectives.</p><div>{brands.map((brand, index) => <Link key={brand} to={'/shop?brand=' + encodeURIComponent(brand)}><span className="muted">{String(index + 1).padStart(2, '0')}</span><h2>{brand}</h2><ArrowUpRight size={28} /></Link>)}</div></main>;
+}
+
+export function Journal() {
+  const { products } = useShop();
+  return <main className="section journal-page"><span className="eyebrow">THE DISTRICT JOURNAL</span><h1>Wear it your way.</h1><img src="/assets/hero.webp" alt="Neutral streetwear editorial" /><div className="journal-copy"><h2>Build a rotation, not a collection.</h2><p>Start with pieces you reach for every day: a familiar pair of sneakers, an easy layer and a fit that feels like you. A thoughtful wardrobe is built around what you actually wear.</p><p>Neutral colours make mixing easier. Let texture do the work: soft fleece, worn-in suede and structured cotton. Choose fewer pieces, then find more ways to wear them.</p><Button to="/shop">Find your everyday pieces <ArrowRight size={19} /></Button><span className="muted">{products.length} preview pieces in the collection</span></div></main>;
+}
+
+export function Help() {
+  const { pathname } = useLocation();
+  const kind = pathname.split('/').pop();
+  const content = {
+    delivery: ['Delivery', 'Singapore delivery is estimated at S$8, complimentary from S$150. Final delivery methods and dates will be shown before payment.'],
+    returns: ['Returns & exchanges', 'Return requests are reviewed by the store team. Requesting a return does not approve a refund. The final return window and policy must be published before live sales.'],
+    privacy: ['Privacy', 'Your bag and wishlist are saved in this browser. Optional storefront analytics remain off unless you allow them. Confirmed purchases come from the payment webhook, not browser events. Stripe handles payment details.'],
+    store: ['Store information', 'SOLE DISTRICT is a prototype retailer project. Catalogue prices, images and stock are illustrative. Products cannot be purchased until sourcing, authentic product records, stock, policies and Stripe settings are verified. This site does not claim brand authorisation.'],
+    terms: ['Store information', 'SOLE DISTRICT is a prototype retailer project. Catalogue prices, images and stock are illustrative. Products cannot be purchased until sourcing, authentic product records, stock, policies and Stripe settings are verified.'],
+  };
+  const [title, copy] = content[kind] || content.store;
+  return <main className="section policy-page"><span className="eyebrow">GOOD TO KNOW</span><h1>{title}</h1><p>{copy}</p><Button to="/shop">Back to the collection <ArrowRight size={19} /></Button></main>;
+}
+
+export function NotFound() {
+  return <main className="section empty"><h1>This piece is out of sight.</h1><p>Let’s get you back to the collection.</p><Button to="/shop">Explore the collection</Button></main>;
+}
