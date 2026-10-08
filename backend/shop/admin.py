@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (
     Brand, Category, CustomerAddress, InventoryMovement, Order, OrderItem,
     Product, ProductImage, ProductVariant, ReturnRequest, StockLot, StorefrontEvent,
-    StripeWebhookEvent,
+    StripeWebhookEvent, StorePolicy, ContactRequest,
 )
 
 
@@ -30,3 +30,5 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 admin.site.register([Brand, Category, ProductImage, InventoryMovement, OrderItem, ReturnRequest, StockLot, CustomerAddress, StorefrontEvent, StripeWebhookEvent])
+
+admin.site.register([StorePolicy, ContactRequest])

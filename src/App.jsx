@@ -48,6 +48,17 @@ function Provider({ children }) {
     api('catalog/').then((data) => {
       if (!active) return;
       setProducts(data.products);
+      const variants = data.products.flatMap((product) => product.variants);
+      setCart((items) => {
+        const merged = new Map();
+        for (const item of items) {
+          const matches = variants.filter((variant) => variant.id === item.variantId || variant.legacy_id === item.variantId);
+          const id = matches.length === 1 ? matches[0].id : item.variantId;
+          const quantity = (merged.get(id)?.quantity || 0) + item.quantity;
+          merged.set(id, { variantId: id, quantity: Math.min(10, quantity) });
+        }
+        return [...merged.values()];
+      });
       setStore(data.store);
     }).catch(() => {});
     return () => { active = false; };
@@ -62,7 +73,7 @@ function Provider({ children }) {
   }, [toast]);
 
   const add = (product, size) => {
-    const variant = product.variants.find((item) => item.size === size);
+    const variant = product.variants.find((item) => item.id === size) || product.variants.find((item) => item.size === size);
     if (!variant || variant.available < 1) return;
     const prior = cart.find((item) => item.variantId === variant.id);
     if ((prior?.quantity || 0) >= Math.min(variant.available, 10)) {
@@ -270,6 +281,7 @@ function Bag() {
 }
 
 function Footer() {
+  const { store } = useShop();
   return (
     <footer className="footer">
       <div className="footer-top">
@@ -280,7 +292,7 @@ function Footer() {
       </div>
       <div className="footer-bottom">
         <span>© {new Date().getFullYear()} SOLE DISTRICT</span>
-        <span>Illustrative catalogue · No brand authorisation claimed · Purchases disabled</span>
+        <span>{store.preview ? 'Preview catalogue · Purchases disabled' : 'Singapore store · Payments handled by Stripe'}</span>
         <span>SG / SGD</span>
       </div>
     </footer>

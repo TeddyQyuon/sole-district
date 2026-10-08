@@ -13,7 +13,6 @@ import stripe
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.password_validation import validate_password
-from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
 from django.db.models import Count, F, Max, Q, Sum
@@ -27,7 +26,10 @@ from .models import (
     Brand, Category, CustomerAddress, InventoryMovement, Order, OrderItem,
     Product, ProductVariant, ReturnRequest, StockLot, StorefrontEvent,
     StripeWebhookEvent,
+    RefundRecord, SourcingReview, OrderUpdate,
+    StorePolicy,
 )
+from .security import rate_limit as _rate_limit, order_email
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
@@ -77,7 +79,15 @@ def _session_hash(session_key):
 def _stripe_ready():
     if not (settings.STRIPE_CHECKOUT_ENABLED and settings.STRIPE_SECRET_KEY and settings.STRIPE_WEBHOOK_SECRET):
         return False
-    if settings.STRIPE_SECRET_KEY.startswith("sk_live_") and not settings.LIVE_COMMERCE_ENABLED:
+    if not settings.STRIPE_SECRET_KEY.startswith(("sk_live_", "sk_test_")):
+        return False
+    if settings.STRIPE_SECRET_KEY.startswith("sk_live_") and not (
+        settings.LIVE_COMMERCE_ENABLED and settings.STORE_POLICIES_APPROVED
+        and settings.LIVE_TESTS_CONFIRMED
+        and settings.DATABASES["default"]["ENGINE"].endswith("postgresql")
+        and settings.EMAIL_HOST and "example.invalid" not in settings.DEFAULT_FROM_EMAIL
+        and StorePolicy.objects.filter(slug__in=["delivery", "returns", "privacy", "terms", "store"],
+            published=True, approved_at__isnull=False).count() == 5):
         return False
     return True
 
@@ -90,6 +100,7 @@ def _store_state():
         "mode": mode,
         "preview": not _stripe_ready(),
         "sample_catalogue": Product.objects.filter(status="active", is_illustrative=True).exists(),
+        "contact_ready": bool(settings.STORE_SUPPORT_EMAIL),
     }
 
 
@@ -119,7 +130,9 @@ def _product_payload(product):
         "unavailable": [variant.size for variant in variants if variant.available <= 0],
         "variants": [
             {
-                "id": product.slug + ":" + variant.size,
+                "id": "sku:" + variant.sku,
+                "legacy_id": product.slug + ":" + variant.size,
+                "colour": variant.colour,
                 "sku": variant.sku,
                 "size": variant.size,
                 "size_system": variant.size_system,
@@ -133,6 +146,9 @@ def _product_payload(product):
 
 
 def _order_visible_to_request(order, request):
+    grant = request.session.get("order_grants", {}).get(str(order.public_id), 0)
+    if isinstance(grant, int) and grant > timezone.now().timestamp():
+        return True
     if request.user.is_authenticated:
         return order.user_id == request.user.id or order.session_key == request.session.session_key
     return bool(order.session_key and order.session_key == request.session.session_key)
@@ -152,12 +168,17 @@ def _order_payload(order, include_items=True):
         "currency": order.currency,
         "tracking_number": order.tracking_number,
         "carrier": order.carrier,
+        "timeline": [{"status": row.status, "message": row.message, "created": row.created_at.isoformat()} for row in order.updates.all()],
+        "returns": [{"id": row.pk, "line_id": row.order_item_id, "status": row.status, "quantity": row.requested_quantity} for row in order.return_requests.all()],
     }
     if include_items:
         result["items"] = [
             {
                 "line_id": item.pk,
-                "variant_id": item.product.slug + ":" + item.size if item.product_id else item.sku,
+                "variant_id": item.variant_key or (item.product.slug + ":" + item.size if item.product_id else item.sku),
+                "colour": item.colour,
+                "size_system": item.size_system,
+                "returned_quantity": item.returned_quantity,
                 "sku": item.sku,
                 "name": item.brand_name + " " + item.product_name,
                 "size": item.size,
@@ -167,16 +188,6 @@ def _order_payload(order, include_items=True):
             for item in order.items.all()
         ]
     return result
-
-
-def _rate_limit(request, label, limit, seconds):
-    address = request.META.get("REMOTE_ADDR", "unknown")[:64]
-    key = "sole-rate:" + label + ":" + hashlib.sha256(address.encode()).hexdigest()[:32]
-    current = cache.get(key, 0)
-    if current >= limit:
-        return False
-    cache.set(key, current + 1, timeout=seconds)
-    return True
 
 
 def _require_staff(request, scope):
@@ -298,6 +309,12 @@ def track_event(request):
 
 
 def _resolve_variant_key(value):
+    if isinstance(value, str) and value.startswith("sku:"):
+        try:
+            return ProductVariant.objects.select_related("product", "product__brand", "product__category").get(
+                sku=value[4:], active=True, product__status="active")
+        except ProductVariant.DoesNotExist:
+            raise ValueError("This variant is no longer available.")
     if not isinstance(value, str) or ":" not in value:
         raise ValueError("Each cart item needs a valid size variant.")
     slug, size = value.split(":", 1)
@@ -307,7 +324,7 @@ def _resolve_variant_key(value):
         return ProductVariant.objects.select_related("product", "product__brand", "product__category").get(
             product__slug=slug, size=size, active=True, product__status="active"
         )
-    except ProductVariant.DoesNotExist:
+    except (ProductVariant.DoesNotExist, ProductVariant.MultipleObjectsReturned):
         raise ValueError("One of the selected sizes is no longer available.")
 
 
@@ -344,9 +361,11 @@ def _create_or_reuse_order(request, items, checkout_key):
 
     with transaction.atomic():
         locked = {}
-        for key in sorted(quantities):
-            variant = _resolve_variant_key(key)
-            locked[key] = ProductVariant.objects.select_for_update().select_related(
+        resolved = {key: _resolve_variant_key(key) for key in quantities}
+        if len({variant.pk for variant in resolved.values()}) != len(resolved):
+            raise ValueError("Your bag repeats the same SKU.")
+        for key, variant in sorted(resolved.items(), key=lambda pair: pair[1].pk):
+            locked[key] = ProductVariant.objects.select_for_update(of=("self",)).select_related(
                 "product", "product__brand", "product__category"
             ).get(pk=variant.pk)
         subtotal = 0
@@ -376,6 +395,7 @@ def _create_or_reuse_order(request, items, checkout_key):
             subtotal_cents=subtotal,
             delivery_cents=delivery,
             total_cents=subtotal + delivery,
+            payment_mode="live" if settings.STRIPE_SECRET_KEY.startswith("sk_live_") else "test",
             customer_email=request.user.email if request.user.is_authenticated else "",
             analytics_consent=bool(request.session.get("analytics_consent", False)) and not (request.user.is_authenticated and request.user.is_staff),
             campaign_source=(request.session.get("campaign_attribution") or {}).get("source", ""),
@@ -393,6 +413,9 @@ def _create_or_reuse_order(request, items, checkout_key):
                 brand_name=variant.product.brand.name,
                 size=variant.size,
                 sku=variant.sku,
+                variant_key=next(key for key, value in locked.items() if value.pk == variant.pk),
+                colour=variant.colour,
+                size_system=variant.size_system,
                 quantity=quantity,
                 unit_price_cents=unit_price,
                 unit_cost_cents=cost,
@@ -469,7 +492,11 @@ def checkout(request):
         return _error(str(exc), 400)
     except IntegrityError:
         return _error("This checkout attempt is already being processed. Retry with the same key.", 409)
+    if order.stock_finalized_at or order.status not in {"pending", "payment_pending"}:
+        return _error("This checkout is closed. Start a new checkout from your bag.", 409)
     if order.stripe_session_url and order.stripe_session_id:
+        if order.status not in {"pending", "payment_pending"} or order.stock_finalized_at:
+            return _error("This checkout is closed. Start a new checkout from your bag.", 409)
         return JsonResponse({"url": order.stripe_session_url, "order_id": str(order.public_id), "reference": order.reference})
     try:
         session = _stripe_checkout(order)
@@ -480,18 +507,22 @@ def checkout(request):
         order.save(update_fields=["stripe_session_id", "stripe_session_url", "customer_email", "updated_at"])
         return JsonResponse({"url": session.url, "order_id": str(order.public_id), "reference": order.reference})
     except stripe.error.StripeError:
-        logger.exception("Stripe checkout request failed for order %s", order.reference)
+        logger.warning("Stripe checkout request failed for order %s", order.reference)
         return _error("Stripe could not open checkout. Retry this same checkout attempt; your cart and stock reservation are being held safely.", 502, retry_same_attempt=True)
     except Exception:
-        logger.exception("Unexpected checkout failure for order %s", order.reference)
+        logger.error("Checkout failed for order %s", order.reference)
         return _error("Checkout could not be opened. Retry this same checkout attempt.", 502, retry_same_attempt=True)
 
 
 def _release_reservations(order, final_status, payment_status):
-    for item in order.items.select_related("variant").select_for_update().all():
+    if order.stock_finalized_at or order.paid_at:
+        return
+    for item in order.items.select_for_update().order_by("variant_id", "id"):
         if item.reserved and item.variant_id:
             variant = ProductVariant.objects.select_for_update().get(pk=item.variant_id)
-            variant.reserved_stock = max(0, variant.reserved_stock - item.quantity)
+            if variant.reserved_stock < item.quantity:
+                raise RuntimeError("Stock reservation mismatch")
+            variant.reserved_stock -= item.quantity
             variant.save(update_fields=["reserved_stock"])
             item.reserved = False
             item.save(update_fields=["reserved"])
@@ -519,13 +550,15 @@ def _consume_stock_lots(variant, quantity):
             lots.pop(0)
     if remaining:
         return None
-    return int(total_cost / total_cost_units) if total_cost_units == quantity else None
+    return total_cost // total_cost_units if total_cost_units == quantity else None
 
 
 def _mark_order_paid(order, checkout_session):
-    if order.payment_status == "paid":
+    if order.paid_at:
         return
-    for item in order.items.select_related("variant").select_for_update().all():
+    if order.stock_finalized_at:
+        raise ValueError("Payment arrived after stock release; manual reconciliation required")
+    for item in order.items.select_for_update().order_by("variant_id", "id"):
         if item.variant_id:
             variant = ProductVariant.objects.select_for_update().get(pk=item.variant_id)
             if variant.reserved_stock < item.quantity or variant.stock_on_hand < item.quantity:
@@ -549,25 +582,24 @@ def _mark_order_paid(order, checkout_session):
     order.status = "paid"
     order.paid_at = timezone.now()
     order.stock_finalized_at = timezone.now()
-    order.customer_email = getattr(checkout_session, "customer_details", {}).get("email", "") or getattr(checkout_session, "customer_email", "") or order.customer_email
-    order.customer_phone = getattr(getattr(checkout_session, "customer_details", {}), "phone", "") or order.customer_phone
-    details = getattr(checkout_session, "customer_details", None)
-    if details and getattr(details, "address", None):
-        address = details.address
+    details = checkout_session.get("customer_details") or {}
+    order.customer_email = details.get("email") or checkout_session.get("customer_email") or order.customer_email
+    order.customer_phone = details.get("phone") or order.customer_phone
+    shipping = (checkout_session.get("collected_information") or {}).get("shipping_details") or checkout_session.get("shipping_details") or {}
+    if shipping.get("address"):
+        address = shipping["address"]
         order.shipping_address = {
-            "name": getattr(details, "name", ""),
-            "line1": getattr(address, "line1", ""),
-            "line2": getattr(address, "line2", ""),
-            "city": getattr(address, "city", ""),
-            "postal_code": getattr(address, "postal_code", ""),
-            "country": getattr(address, "country", ""),
+            "name": shipping.get("name", ""),
+            **{key: address.get(key, "") for key in ["line1", "line2", "city", "postal_code", "country"]},
         }
-    order.stripe_payment_intent_id = str(getattr(checkout_session, "payment_intent", "") or "")
+    order.stripe_payment_intent_id = str(checkout_session.get("payment_intent") or "")
     order.save(update_fields=[
         "payment_status", "status", "paid_at", "stock_finalized_at",
         "customer_email", "customer_phone", "shipping_address",
         "stripe_payment_intent_id", "updated_at",
     ])
+    OrderUpdate.objects.create(order=order, status="paid", message="Payment confirmed by Stripe.")
+    order_email(order, "paid")
     if order.analytics_consent:
         StorefrontEvent.objects.get_or_create(
             event_id=uuid.uuid5(uuid.NAMESPACE_URL, "sole-district-order:" + str(order.public_id)),
@@ -587,32 +619,48 @@ def _mark_order_paid(order, checkout_session):
 def _process_stripe_event(event):
     event_type = event["type"]
     data = event["data"]["object"]
+    if event_type in {"refund.created", "refund.updated", "refund.failed"}:
+        from .merchant import reconcile_refund
+        reconcile_refund(data)
+        return
+    if event_type not in {"checkout.session.completed", "checkout.session.async_payment_succeeded", "checkout.session.async_payment_failed", "checkout.session.expired"}:
+        return
     session_id = data.get("id") if event_type.startswith("checkout.session.") else None
     order = None
     metadata = data.get("metadata") or {}
     public_id = metadata.get("order_id") or data.get("client_reference_id")
     if public_id:
-        order = Order.objects.select_for_update().filter(public_id=public_id).first()
+        try:
+            order = Order.objects.select_for_update().filter(public_id=uuid.UUID(str(public_id))).first()
+        except (ValueError, TypeError):
+            raise ValueError("Invalid order association")
     if order is None and session_id:
         order = Order.objects.select_for_update().filter(stripe_session_id=session_id).first()
     if order is None:
-        logger.warning("Stripe event %s did not match an order", event.get("id"))
-        return
+        raise ValueError("Order association missing; retry or reconcile")
+    if (not session_id or (order.stripe_session_id and session_id != order.stripe_session_id)
+        or str(data.get("client_reference_id")) != str(order.public_id)
+        or str(metadata.get("order_id")) != str(order.public_id)
+        or data.get("mode") != "payment" or data.get("currency") != order.currency.lower()
+        or data.get("amount_total") != order.total_cents
+        or data.get("livemode") is not (order.payment_mode == "live")
+        or metadata.get("commerce_mode") != order.payment_mode):
+        raise ValueError("Payment does not match saved order")
     if session_id and not order.stripe_session_id:
         order.stripe_session_id = session_id
         order.save(update_fields=["stripe_session_id", "updated_at"])
     if event_type in {"checkout.session.completed", "checkout.session.async_payment_succeeded"}:
-        if data.get("payment_status") == "paid" or event_type == "checkout.session.async_payment_succeeded":
+        if data.get("payment_status") == "paid":
             _mark_order_paid(order, data)
-        elif order.payment_status != "paid":
+        elif not order.paid_at and not order.stock_finalized_at:
             order.status = "payment_pending"
             order.payment_status = "pending"
             order.save(update_fields=["status", "payment_status", "updated_at"])
     elif event_type == "checkout.session.async_payment_failed":
-        if order.payment_status != "paid":
+        if not order.paid_at:
             _release_reservations(order, "payment_failed", "failed")
     elif event_type == "checkout.session.expired":
-        if order.payment_status != "paid":
+        if not order.paid_at and order.payment_status != "pending":
             _release_reservations(order, "expired", "unpaid")
 
 
@@ -627,13 +675,12 @@ def stripe_webhook(request):
     except (ValueError, stripe.error.SignatureVerificationError):
         return _error("Invalid Stripe webhook signature.", 400)
     event_id = event["id"]
+    record, _ = StripeWebhookEvent.objects.get_or_create(event_id=event_id,
+        defaults={"event_type": event["type"], "status": "received"})
     try:
         with transaction.atomic():
-            record, created = StripeWebhookEvent.objects.get_or_create(
-                event_id=event_id,
-                defaults={"event_type": event["type"], "status": "processing"},
-            )
-            if not created and record.status == "processed":
+            record = StripeWebhookEvent.objects.select_for_update().get(pk=record.pk)
+            if record.status == "processed":
                 return JsonResponse({"received": True, "duplicate": True})
             record.status = "processing"
             record.error_message = ""
@@ -643,8 +690,8 @@ def stripe_webhook(request):
             record.processed_at = timezone.now()
             record.save(update_fields=["status", "processed_at"])
     except Exception as exc:
-        logger.exception("Stripe webhook event %s failed", event_id)
-        StripeWebhookEvent.objects.filter(event_id=event_id).update(status="failed", error_message=str(exc)[:240])
+        logger.warning("Stripe webhook %s requires retry/reconciliation (%s)", event_id, type(exc).__name__)
+        StripeWebhookEvent.objects.filter(event_id=event_id).update(status="failed", error_message=type(exc).__name__)
         return _error("Webhook processing failed; Stripe can safely retry this event.", 500)
     return JsonResponse({"received": True})
 
@@ -659,31 +706,40 @@ def cancel_checkout(request):
     order = Order.objects.filter(public_id=public_id).first()
     if not order or not _order_visible_to_request(order, request):
         return _error("Order not found.", 404)
-    if order.payment_status == "paid":
+    if order.paid_at or order.payment_status == "pending":
         return _error("Payment is already confirmed. Contact support to request a return.", 409)
+    if not order.stripe_session_id:
+        return _error("Stripe checkout status is uncertain. Retry the same checkout attempt; stock remains reserved.", 409)
     if order.stripe_session_id:
         try:
             stripe.api_key = settings.STRIPE_SECRET_KEY
-            stripe.checkout.Session.expire(order.stripe_session_id)
+            session = stripe.checkout.Session.expire(order.stripe_session_id)
         except stripe.error.InvalidRequestError:
-            session = stripe.checkout.Session.retrieve(order.stripe_session_id)
-            if session.payment_status == "paid":
-                return _error("Payment is already confirmed.", 409)
+            try:
+                session = stripe.checkout.Session.retrieve(order.stripe_session_id)
+            except stripe.error.StripeError:
+                return _error("Stripe status could not be checked. Stock remains reserved.", 502)
         except stripe.error.StripeError:
             return _error("Stripe could not confirm cancellation. Your stock remains reserved while payment status is checked.", 502)
+        if session.get("status") != "expired" or session.get("payment_status") == "paid":
+            return _error("This payment may still be processing. Stock remains reserved.", 409)
     with transaction.atomic():
         locked = Order.objects.select_for_update().get(pk=order.pk)
-        if locked.payment_status != "paid":
+        if not locked.paid_at and locked.payment_status != "pending":
             _release_reservations(locked, "cancelled", "unpaid")
     return JsonResponse({"cancelled": True})
 
 
 @require_GET
 def orders(request):
+    grants = request.session.get("order_grants", {})
+    allowed = [key for key, expiry in grants.items() if isinstance(expiry, int) and expiry > timezone.now().timestamp()]
+    visible = Q(public_id__in=allowed)
+    if request.session.session_key:
+        visible |= Q(session_key=request.session.session_key)
     if request.user.is_authenticated:
-        queryset = Order.objects.filter(Q(user=request.user) | Q(session_key=request.session.session_key))
-    else:
-        queryset = Order.objects.filter(session_key=request.session.session_key or "")
+        visible |= Q(user=request.user)
+    queryset = Order.objects.filter(visible)
     return JsonResponse({"orders": [_order_payload(order) for order in queryset.prefetch_related("items")[:100]]})
 
 
@@ -699,19 +755,24 @@ def order_by_session(request):
 
 
 @require_POST
+@transaction.atomic
 def create_return(request, public_id):
+    if not _rate_limit(request, "return", 10, 3600):
+        return _error("Too many return requests. Try again later.", 429)
     order = Order.objects.filter(public_id=public_id).prefetch_related("items").first()
     if not order or not _order_visible_to_request(order, request) or order.payment_status != "paid":
         return _error("A paid order in this browser is required.", 404)
     try:
         body = _json_body(request)
         item_id = int(body.get("item_id"))
-        quantity = int(body.get("quantity", 1))
+        quantity = body.get("quantity", 1)
+        if not isinstance(quantity, int) or isinstance(quantity, bool):
+            raise ValueError("Invalid return quantity")
         reason = str(body.get("reason", "")).strip()[:60]
         details = str(body.get("details", "")).strip()[:1500]
     except (ValueError, TypeError):
         return _error("Please check the return details.")
-    item = order.items.filter(pk=item_id).first()
+    item = order.items.select_for_update().filter(pk=item_id).first()
     if not item or quantity < 1 or quantity > item.quantity - item.returned_quantity:
         return _error("The selected quantity is not available for return.")
     allowed_reasons = {"Wrong size", "Changed my mind", "Item issue", "Other"}
@@ -729,56 +790,10 @@ def create_return(request, public_id):
     return JsonResponse({"id": result.id, "status": result.status}, status=201)
 
 
-@require_GET
-def auth_me(request):
-    if not request.user.is_authenticated:
-        return JsonResponse({"authenticated": False})
-    return JsonResponse({
-        "authenticated": True,
-        "user": {"id": request.user.pk, "email": request.user.email, "name": request.user.get_full_name()},
-    })
 
 
-@require_POST
-def register(request):
-    if not _rate_limit(request, "register", 5, 3600):
-        return _error("Too many sign-up attempts. Try again later.", 429)
-    try:
-        body = _json_body(request)
-        email = str(body.get("email", "")).strip().lower()
-        password = str(body.get("password", ""))
-        name = str(body.get("name", "")).strip()[:120]
-        if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email) or len(email) > 254:
-            return _error("Enter a valid email address.")
-        if User.objects.filter(email__iexact=email).exists() or User.objects.filter(username__iexact=email).exists():
-            return _error("An account with this email already exists.", 409)
-        validate_password(password)
-    except ValueError as exc:
-        return _error(str(exc))
-    except ValidationError as exc:
-        return _error(" ".join(exc.messages))
-    first_name = name.split(" ", 1)[0] if name else ""
-    last_name = name.split(" ", 1)[1] if " " in name else ""
-    user = User.objects.create_user(username=email, email=email, password=password, first_name=first_name, last_name=last_name)
-    login(request, user)
-    return JsonResponse({"authenticated": True, "user": {"id": user.pk, "email": email, "name": name}}, status=201)
 
 
-@require_POST
-def login_view(request):
-    if not _rate_limit(request, "login", 10, 900):
-        return _error("Too many sign-in attempts. Wait 15 minutes and try again.", 429)
-    try:
-        body = _json_body(request)
-    except ValueError as exc:
-        return _error(str(exc))
-    identifier = str(body.get("email", "")).strip().lower()
-    password = str(body.get("password", ""))
-    user = authenticate(request, username=identifier, password=password)
-    if user is None:
-        return _error("Email or password is incorrect.", 400)
-    login(request, user)
-    return JsonResponse({"authenticated": True, "user": {"id": user.pk, "email": user.email, "name": user.get_full_name()}})
 
 
 @require_POST
@@ -787,7 +802,7 @@ def logout_view(request):
     return JsonResponse({"authenticated": False})
 
 
-@require_http_methods(["GET", "POST", "DELETE"])
+@require_http_methods(["GET", "POST", "PATCH", "DELETE"])
 def addresses(request):
     if not request.user.is_authenticated:
         return _error("Sign in to manage saved addresses.", 401)
@@ -814,16 +829,31 @@ def addresses(request):
         phone = str(body.get("phone", "")).strip()[:32]
         if not recipient or not line1 or not re.fullmatch(r"\d{6}", postal):
             return _error("Recipient, street address, and a valid 6-digit Singapore postal code are required.")
-        make_default = bool(body.get("is_default", False))
+        make_default = body.get("is_default", False)
+        if not isinstance(make_default, bool):
+            return _error("Default address must be true or false.")
         with transaction.atomic():
+            User.objects.select_for_update().get(pk=request.user.pk)
+            if request.method == "POST" and CustomerAddress.objects.filter(user=request.user).count() >= 20:
+                return _error("You can save up to 20 delivery addresses.")
+            row = None
+            if request.method == "PATCH":
+                row = CustomerAddress.objects.filter(user=request.user, pk=body.get("id")).first()
+                if not row:
+                    return _error("Address not found.", 404)
             if make_default:
                 CustomerAddress.objects.filter(user=request.user).update(is_default=False)
-            row = CustomerAddress.objects.create(
-                user=request.user, label=str(body.get("label", "Home"))[:40],
+            values = dict(label=str(body.get("label", "Home"))[:40],
                 recipient=recipient, phone=phone, line1=line1, line2=line2,
                 postal_code=postal, is_default=make_default,
             )
-    except ValueError as exc:
+            if row:
+                for key, value in values.items():
+                    setattr(row, key, value)
+                row.save()
+            else:
+                row = CustomerAddress.objects.create(user=request.user, **values)
+    except (ValueError, TypeError) as exc:
         return _error(str(exc))
     return JsonResponse({"id": row.id, "saved": True}, status=201)
 
@@ -842,7 +872,9 @@ def manage_login(request):
     if not user or not user.is_staff:
         return _error("Staff username or password is incorrect.", 400)
     login(request, user)
-    return JsonResponse({"authenticated": True, "name": user.get_full_name() or user.get_username()})
+    return JsonResponse({"authenticated": True, "name": user.get_full_name() or user.get_username(),
+        "roles": ["owner"] if user.is_superuser else list(user.groups.values_list("name", flat=True)),
+        "permissions": [key for key, groups in ROLE_GROUPS.items() if user.is_superuser or user.groups.filter(name__in=groups).exists()]})
 
 
 @require_POST
@@ -860,6 +892,7 @@ def manage_session(request):
         "authenticated": True,
         "name": request.user.get_full_name() or request.user.get_username(),
         "roles": ["owner"] if request.user.is_superuser else list(request.user.groups.values_list("name", flat=True)),
+        "permissions": [key for key, groups in ROLE_GROUPS.items() if request.user.is_superuser or request.user.groups.filter(name__in=groups).exists()],
     })
 
 
@@ -891,15 +924,15 @@ def _analytics_data(start, end, start_dt, end_dt):
     previous_start = previous_end - timedelta(days=length - 1)
     previous_start_dt = timezone.make_aware(datetime.combine(previous_start, time.min), timezone.get_current_timezone())
     previous_end_dt = timezone.make_aware(datetime.combine(start, time.min), timezone.get_current_timezone())
-    current_orders = Order.objects.filter(payment_status="paid", paid_at__gte=start_dt, paid_at__lt=end_dt)
-    previous_orders = Order.objects.filter(payment_status="paid", paid_at__gte=previous_start_dt, paid_at__lt=previous_end_dt)
+    current_orders = Order.objects.filter(payment_mode="live", paid_at__gte=start_dt, paid_at__lt=end_dt)
+    previous_orders = Order.objects.filter(payment_mode="live", paid_at__gte=previous_start_dt, paid_at__lt=previous_end_dt)
     current_agg = current_orders.aggregate(sales=Sum(F("subtotal_cents") - F("refunded_cents")), count=Count("id"))
     previous_agg = previous_orders.aggregate(sales=Sum(F("subtotal_cents") - F("refunded_cents")), count=Count("id"))
     current_sales = _money(current_agg["sales"])
     previous_sales = _money(previous_agg["sales"])
     order_count = current_agg["count"] or 0
     previous_count = previous_agg["count"] or 0
-    current_events = StorefrontEvent.objects.filter(consented=True, created_at__gte=start_dt, created_at__lt=end_dt)
+    current_events = StorefrontEvent.objects.filter(consented=True, created_at__gte=start_dt, created_at__lt=end_dt).filter(Q(order__isnull=True) | Q(order__payment_mode="live"))
     session_count = current_events.values("session_hash").distinct().count()
     purchases = current_events.filter(event_type="purchase_confirmed").values("session_hash").distinct().count()
     funnel = {}
@@ -925,7 +958,7 @@ def _analytics_data(start, end, start_dt, end_dt):
         units=Sum(F("quantity") - F("returned_quantity")),
         net_sales=Sum(F("unit_price_cents") * (F("quantity") - F("returned_quantity"))),
     ).order_by("-net_sales")[:8]
-    size_rows = OrderItem.objects.filter(order__in=current_orders).values("size").annotate(units=Sum("quantity")).order_by("-units")[:12]
+    size_rows = OrderItem.objects.filter(order__in=current_orders).values("size").annotate(units=Sum(F("quantity") - F("returned_quantity"))).order_by("-units")[:12]
     variant_alerts = [
         {
             "sku": variant.sku,
@@ -944,8 +977,8 @@ def _analytics_data(start, end, start_dt, end_dt):
     if current_orders.exists():
         missing_cost = OrderItem.objects.filter(order__in=current_orders, unit_cost_cents__isnull=True).exists()
         if not missing_cost:
-            cost_total = OrderItem.objects.filter(order__in=current_orders).aggregate(value=Sum(F("unit_cost_cents") * F("quantity")))["value"] or 0
-            gross_profit = max(0, current_sales - cost_total)
+            cost_total = OrderItem.objects.filter(order__in=current_orders).aggregate(value=Sum(F("unit_cost_cents") * (F("quantity") - F("returned_quantity"))))["value"] or 0
+            gross_profit = current_sales - cost_total
     campaign_rows = current_events.filter(event_type="purchase_confirmed").exclude(
         campaign_source="", campaign_medium="", campaign_name=""
     ).values("campaign_source", "campaign_medium", "campaign_name").annotate(
@@ -979,13 +1012,17 @@ def _analytics_data(start, end, start_dt, end_dt):
             "purchased": funnel["purchase_confirmed"],
         },
         "best_sellers": list(item_rows),
+        "brand_performance": list(OrderItem.objects.filter(order__in=current_orders).values("brand_name").annotate(
+            units=Sum(F("quantity") - F("returned_quantity")), revenue=Sum(F("unit_price_cents") * (F("quantity") - F("returned_quantity")))).order_by("-revenue")),
+        "return_rate": round(ReturnRequest.objects.filter(order__in=current_orders).values("order_id").distinct().count() / order_count * 100, 2) if order_count else None,
+        "repeat_customers": current_orders.exclude(customer_email="").values("customer_email").annotate(count=Count("id")).filter(count__gt=1).count(),
         "size_demand": list(size_rows),
         "campaign_performance": list(campaign_rows),
         "stock_alerts": variant_alerts,
         "orders_awaiting_dispatch": pending_orders,
         "return_requests": return_requests,
         "last_updated": timezone.now().isoformat(),
-        "data_note": "Sales use confirmed paid orders. Shopping funnel uses consented, deduplicated browser events. Profit is omitted when product costs are missing.",
+        "data_note": "Sales use confirmed live-mode payments and recorded merchandise refunds, attributed to the original sale date. Test orders are excluded. Funnel counts consented browser identities within this range, not visits; stages are not a cohort conversion study. Profit uses recorded unit costs and retained units; missing costs are omitted. External dashboard refunds need reconciliation.",
     }
 
 
@@ -1013,37 +1050,6 @@ def manage_orders(request):
     return JsonResponse({"orders": [_order_payload(order) for order in queryset[:200]]})
 
 
-@require_http_methods(["GET", "PATCH"])
-@staff_endpoint("orders")
-def manage_order_detail(request, public_id):
-    order = Order.objects.filter(public_id=public_id).prefetch_related("items").first()
-    if not order:
-        return _error("Order not found.", 404)
-    if request.method == "GET":
-        result = _order_payload(order)
-        result["customer_email"] = order.customer_email
-        result["shipping_address"] = order.shipping_address
-        result["refunds"] = order.refunded_cents
-        result["created"] = order.created_at.isoformat()
-        return JsonResponse(result)
-    try:
-        body = _json_body(request)
-    except ValueError as exc:
-        return _error(str(exc))
-    next_status = body.get("status")
-    if next_status:
-        if next_status not in {"fulfilling", "shipped", "completed"}:
-            return _error("Choose a valid fulfilment status.")
-        if order.payment_status != "paid":
-            return _error("Only paid orders can move through fulfilment.", 409)
-        order.status = next_status
-        if next_status in {"shipped", "completed"}:
-            order.tracking_number = str(body.get("tracking_number", order.tracking_number))[:100]
-            order.carrier = str(body.get("carrier", order.carrier))[:80]
-        if next_status == "completed":
-            order.fulfilled_at = timezone.now()
-        order.save(update_fields=["status", "tracking_number", "carrier", "fulfilled_at", "updated_at"])
-    return JsonResponse(_order_payload(order))
 
 
 @transaction.atomic
@@ -1128,42 +1134,6 @@ def manage_products(request):
     return JsonResponse(_product_payload(product), status=201)
 
 
-@require_http_methods(["GET", "PATCH"])
-@staff_endpoint("catalogue")
-def manage_product_detail(request, slug):
-    product = Product.objects.filter(slug=slug).select_related("brand", "category").prefetch_related("variants", "images").first()
-    if not product:
-        return _error("Product not found.", 404)
-    if request.method == "GET":
-        return JsonResponse(_product_payload(product))
-    try:
-        body = _json_body(request)
-        for key, attr, limit in [
-            ("name", "name", 180), ("colour", "colour", 120),
-            ("description", "description", 4000), ("details", "details", 4000),
-            ("image_url", "image_url", 500), ("image_alt", "image_alt", 240),
-        ]:
-            if key in body:
-                setattr(product, attr, str(body[key])[:limit])
-        if "price_cents" in body:
-            price = int(body["price_cents"])
-            if price < 1 or price > 100000000:
-                return _error("Enter a valid price in cents.")
-            product.price_cents = price
-        if "cost_cents" in body:
-            product.cost_cents = int(body["cost_cents"]) if body["cost_cents"] not in (None, "") else None
-        if "status" in body and body["status"] in {"draft", "active", "archived"}:
-            product.status = body["status"]
-        if "is_illustrative" in body:
-            product.is_illustrative = bool(body["is_illustrative"])
-        if "sourcing_status" in body and body["sourcing_status"] in {"not_reviewed", "in_review", "verified", "rejected"}:
-            product.sourcing_status = body["sourcing_status"]
-        if "featured" in body:
-            product.featured = bool(body["featured"])
-        product.save()
-    except (ValueError, TypeError) as exc:
-        return _error(str(exc))
-    return JsonResponse(_product_payload(product))
 
 
 @require_GET
@@ -1203,9 +1173,13 @@ def manage_inventory_adjust(request):
     try:
         body = _json_body(request)
         sku = str(body.get("sku", "")).strip()[:64]
-        change = int(body.get("quantity_change", 0))
+        change = body.get("quantity_change", 0)
+        if not isinstance(change, int) or isinstance(change, bool):
+            raise ValueError("Whole-number stock change required")
         reason = str(body.get("reason", "")).strip()[:240]
         cost = int(body["unit_cost_cents"]) if body.get("unit_cost_cents") not in (None, "") else None
+        if cost is not None and (isinstance(body["unit_cost_cents"], bool) or cost < 0 or cost > 100000000):
+            raise ValueError("Invalid cost")
         supplier = str(body.get("supplier_reference", "")).strip()[:100]
     except (ValueError, TypeError, KeyError) as exc:
         return _error("Enter a SKU, whole-number quantity change, and reason.")
@@ -1258,86 +1232,13 @@ def manage_returns(request):
             "refund_amount_cents": row.order_item.unit_price_cents * row.requested_quantity,
             "email": row.customer_email, "reason": row.reason,
             "details": row.details, "status": row.status,
+            "refund_status": RefundRecord.objects.filter(request=row).values_list("status", flat=True).first(),
             "created_at": row.created_at.isoformat(),
         }
         for row in rows[:200]
     ]})
 
 
-@require_http_methods(["PATCH"])
-@staff_endpoint("returns")
-def manage_return_detail(request, return_id):
-    row = ReturnRequest.objects.select_related("order", "order_item", "order_item__variant").filter(pk=return_id).first()
-    if not row:
-        return _error("Return request not found.", 404)
-    try:
-        body = _json_body(request)
-    except ValueError as exc:
-        return _error(str(exc))
-    action = body.get("status")
-    if action == "approved" and row.status == "requested":
-        row.status = "approved"
-        row.save(update_fields=["status", "updated_at"])
-    elif action == "rejected" and row.status == "requested":
-        row.status = "rejected"
-        row.save(update_fields=["status", "updated_at"])
-    elif action == "received" and row.status == "approved":
-        row.status = "received"
-        row.save(update_fields=["status", "updated_at"])
-    elif action == "refunded" and row.status == "received":
-        if not settings.STRIPE_SECRET_KEY or not row.order.stripe_payment_intent_id:
-            return _error("Stripe refund is unavailable for this order.", 503)
-        amount = row.order_item.unit_price_cents * row.requested_quantity
-        try:
-            stripe.api_key = settings.STRIPE_SECRET_KEY
-            stripe.Refund.create(
-                payment_intent=row.order.stripe_payment_intent_id,
-                amount=amount,
-                reason="requested_by_customer",
-                idempotency_key="sole-refund-" + str(row.id),
-            )
-        except stripe.error.StripeError:
-            logger.exception("Refund failed for %s", row.order.reference)
-            return _error("Stripe could not complete the refund. The request remains received for retry.", 502)
-        with transaction.atomic():
-            locked_request = ReturnRequest.objects.select_for_update().get(pk=row.pk)
-            if locked_request.status == "refunded":
-                return JsonResponse({"id": locked_request.id, "status": locked_request.status, "duplicate": True})
-            if locked_request.status != "received":
-                return _error("This return changed while the refund was being processed.", 409)
-            item = OrderItem.objects.select_for_update().get(pk=locked_request.order_item_id)
-            if item.returned_quantity + locked_request.requested_quantity > item.quantity:
-                return _error("This quantity has already been refunded.", 409)
-            order = Order.objects.select_for_update().get(pk=locked_request.order_id)
-            item.returned_quantity += locked_request.requested_quantity
-            item.save(update_fields=["returned_quantity"])
-            order.refunded_cents = min(order.total_cents, order.refunded_cents + amount)
-            if order.refunded_cents >= order.total_cents:
-                order.payment_status = "refunded"
-                order.status = "refunded"
-            order.save(update_fields=["refunded_cents", "payment_status", "status", "updated_at"])
-            if body.get("restock") is True and item.variant_id:
-                variant = ProductVariant.objects.select_for_update().get(pk=item.variant_id)
-                variant.stock_on_hand += locked_request.requested_quantity
-                variant.save(update_fields=["stock_on_hand"])
-                InventoryMovement.objects.create(
-                    variant=variant, movement_type="return",
-                    quantity_change=locked_request.requested_quantity,
-                    reason="Inspected return " + str(locked_request.id),
-                    created_by=request.user,
-                )
-                StockLot.objects.create(
-                    variant=variant, quantity_received=locked_request.requested_quantity,
-                    quantity_remaining=locked_request.requested_quantity,
-                    unit_cost_cents=item.unit_cost_cents,
-                    supplier_reference="Customer return " + str(locked_request.id),
-                )
-            locked_request.status = "refunded"
-            locked_request.save(update_fields=["status", "updated_at"])
-            return JsonResponse({"id": locked_request.id, "status": locked_request.status})
-    else:
-        return _error("This return cannot move to that status.", 409)
-    return JsonResponse({"id": row.id, "status": row.status})
 
 
 @require_GET

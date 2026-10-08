@@ -1,4 +1,5 @@
 import json
+import stripe
 from datetime import timedelta
 from types import SimpleNamespace
 from unittest.mock import patch
@@ -9,7 +10,7 @@ from django.utils import timezone
 
 from .models import (
     Brand, Category, InventoryMovement, Order, OrderItem, Product,
-    ProductVariant, ReturnRequest, StockLot, StorefrontEvent, StripeWebhookEvent,
+    ProductVariant, ReturnRequest, StockLot, StorefrontEvent, StripeWebhookEvent, SourcingReview,
 )
 
 User = get_user_model()
@@ -31,6 +32,7 @@ class StoreApiTests(TestCase):
             sourcing_status="verified",
             image_url="/assets/new-balance.webp",
         )
+        SourcingReview.objects.create(product=self.product, supplier="Fixture supplier", invoice_reference="TEST-INVOICE", evidence_reference="Mock evidence only", status="verified")
         self.variant = ProductVariant.objects.create(
             product=self.product,
             sku="TEST-RUNNER-UK-8",
@@ -44,7 +46,7 @@ class StoreApiTests(TestCase):
         self.assertEqual(response.status_code, 200)
         product = response.json()["products"][0]
         self.assertEqual(product["id"], "test-runner-1")
-        self.assertEqual(product["variants"][0]["id"], "test-runner-1:8")
+        self.assertEqual(product["variants"][0]["id"], "sku:TEST-RUNNER-UK-8")
         self.assertEqual(product["variants"][0]["available"], 3)
         self.assertFalse(response.json()["store"]["checkout_ready"])
 
@@ -132,7 +134,8 @@ class StoreApiTests(TestCase):
             "data": {"object": {
                 "id": "cs_test_paid",
                 "client_reference_id": str(order.public_id),
-                "metadata": {"order_id": str(order.public_id)},
+                "metadata": {"order_id": str(order.public_id), "commerce_mode": "test"},
+                "mode": "payment", "livemode": False, "currency": "sgd", "amount_total": order.total_cents,
                 "payment_status": "paid",
                 "payment_intent": "pi_test_paid",
                 "customer_email": "buyer@example.com",
@@ -193,6 +196,7 @@ class StoreApiTests(TestCase):
         order = Order.objects.create(
             session_key="guest-session",
             checkout_key="analytics-order-key",
+            payment_mode="live",
             cart_fingerprint="analytics-fingerprint",
             status="paid",
             payment_status="paid",
@@ -260,6 +264,7 @@ class StoreApiTests(TestCase):
             status="received",
             requested_quantity=1,
         )
+        create_refund.return_value = stripe.Refund.construct_from({"id": "re_fixture", "status": "succeeded", "amount": 12000, "payment_intent": "pi_test_return"}, "sk_test_refund")
         body = json.dumps({"status": "refunded", "restock": True})
         path = f"/api/manage/returns/{return_request.id}/"
         response = self.client.patch(path, data=body, content_type="application/json")
@@ -270,6 +275,7 @@ class StoreApiTests(TestCase):
             payment_intent="pi_test_return",
             amount=12000,
             reason="requested_by_customer",
+            metadata={"return_id": str(return_request.id)},
             idempotency_key="sole-refund-" + str(return_request.id),
         )
         item.refresh_from_db()

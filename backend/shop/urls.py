@@ -1,12 +1,16 @@
 from django.urls import path
-from . import api
+from . import api, accounts, merchant, store
 
 urlpatterns = [
     path("csrf/", api.csrf_token, name="api-csrf"),
     path("catalog/", api.catalog, name="catalog"),
-    path("auth/me/", api.auth_me, name="auth-me"),
-    path("auth/register/", api.register, name="auth-register"),
-    path("auth/login/", api.login_view, name="auth-login"),
+    path("policies/", store.policies, name="policies"),
+    path("contact/", store.contact, name="contact"),
+    path("auth/me/", accounts.me, name="auth-me"),
+    path("auth/register/", accounts.register, name="auth-register"),
+    path("auth/login/", accounts.sign_in, name="auth-login"),
+    path("auth/email/", accounts.request_email, name="auth-email"),
+    path("auth/token/", accounts.complete_token, name="auth-token"),
     path("auth/logout/", api.logout_view, name="auth-logout"),
     path("auth/addresses/", api.addresses, name="customer-addresses"),
     path("events/", api.track_event, name="storefront-events"),
@@ -22,13 +26,16 @@ urlpatterns = [
     path("manage/logout/", api.manage_logout, name="manage-logout"),
     path("manage/dashboard/", api.manage_dashboard, name="manage-dashboard"),
     path("manage/orders/", api.manage_orders, name="manage-orders"),
-    path("manage/orders/<uuid:public_id>/", api.manage_order_detail, name="manage-order-detail"),
+    path("manage/orders/<uuid:public_id>/", merchant.order_detail, name="manage-order-detail"),
+    path("manage/settings/", merchant.settings_status, name="manage-settings"),
+    path("manage/policies/", merchant.save_policy, name="manage-policies"),
+    path("manage/products/<slug:slug>/sourcing/", merchant.sourcing, name="manage-sourcing"),
     path("manage/products/", api.manage_products, name="manage-products"),
-    path("manage/products/<slug:slug>/", api.manage_product_detail, name="manage-product-detail"),
+    path("manage/products/<slug:slug>/", merchant.product_detail, name="manage-product-detail"),
     path("manage/inventory/", api.manage_inventory, name="manage-inventory"),
     path("manage/inventory/adjust/", api.manage_inventory_adjust, name="manage-inventory-adjust"),
     path("manage/returns/", api.manage_returns, name="manage-returns"),
-    path("manage/returns/<int:return_id>/", api.manage_return_detail, name="manage-return-detail"),
+    path("manage/returns/<int:return_id>/", merchant.return_detail, name="manage-return-detail"),
     path("manage/customers/", api.manage_customers, name="manage-customers"),
     path("manage/analytics/", api.manage_analytics, name="manage-analytics"),
 ]
