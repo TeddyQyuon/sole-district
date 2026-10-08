@@ -14,6 +14,8 @@ class Command(BaseCommand):
     @transaction.atomic
     def handle(self, *args, **options):
         source = Path(__file__).resolve().parents[4] / "data" / "catalog.json"
+        if not source.exists():
+            source = Path(__file__).resolve().parents[2] / "catalog_preview.json"
         records = json.loads(source.read_text(encoding="utf-8"))
         for row in records:
             brand_slug = re.sub(r"[^a-z0-9]+", "-", row["brand"].lower()).strip("-")
