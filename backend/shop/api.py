@@ -14,12 +14,13 @@ from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from django.db import IntegrityError, transaction
+from django.db import DatabaseError, IntegrityError, connection, transaction
 from django.db.models import Count, F, Max, Q, Sum
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_GET, require_POST, require_http_methods
 
 from .models import (
@@ -102,6 +103,19 @@ def _store_state():
         "sample_catalogue": Product.objects.filter(status="active", is_illustrative=True).exists(),
         "contact_ready": bool(settings.STORE_SUPPORT_EMAIL),
     }
+
+
+@require_GET
+@never_cache
+def health(request):
+    try:
+        # Check an application table so an unmigrated database cannot report readiness.
+        Product.objects.exists()
+        ready = _stripe_ready()
+    except DatabaseError:
+        logger.warning("Store database readiness check failed.")
+        return _error("The store is temporarily unavailable.", 503)
+    return JsonResponse({"status": "ok", "database": connection.vendor, "checkout_ready": ready})
 
 
 def _product_payload(product):

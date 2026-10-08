@@ -6,6 +6,7 @@ from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase, override_settings
+from django.db import DatabaseError, connection
 from django.utils import timezone
 
 from .models import (
@@ -49,6 +50,19 @@ class StoreApiTests(TestCase):
         self.assertEqual(product["variants"][0]["id"], "sku:TEST-RUNNER-UK-8")
         self.assertEqual(product["variants"][0]["available"], 3)
         self.assertFalse(response.json()["store"]["checkout_ready"])
+
+    @override_settings(STRIPE_CHECKOUT_ENABLED=False)
+    def test_health_checks_application_database_and_disables_caching(self):
+        response = self.client.get("/api/health/")
+        self.assertEqual(response.json(), {"status": "ok", "database": connection.vendor, "checkout_ready": False})
+        self.assertIn("no-store", response.headers["Cache-Control"])
+        self.assertEqual(self.client.post("/api/health/").status_code, 405)
+
+    @patch("shop.api.Product.objects.exists", side_effect=DatabaseError("private connection detail"))
+    def test_health_fails_closed_without_exposing_database_errors(self, query):
+        response = self.client.get("/api/health/")
+        self.assertEqual(response.status_code, 503)
+        self.assertNotIn("private", response.content.decode())
 
     @override_settings(STRIPE_CHECKOUT_ENABLED=False)
     def test_checkout_stays_disabled_without_configuration(self):
