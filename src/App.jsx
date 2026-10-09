@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, createContext, useContext, useEffect, useRef, useState } from 'react';
 import { BrowserRouter, Link, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import {
   ArrowRight, Check, Heart, List, MagnifyingGlass, Minus, Plus, Trash, User, X,
@@ -10,7 +10,7 @@ import {
   Account, Brands, Checkout, Complete, Help, Home, Journal, Orders, ProductPage,
   ShopPage, Wishlist, NotFound,
 } from './Pages';
-import { AdminApp } from './Admin';
+const AdminApp = lazy(() => import('./Admin').then(module => ({ default: module.AdminApp }))); 
 import '@fontsource/barlow-condensed/700.css';
 import '@fontsource/inter/400.css';
 import '@fontsource/inter/500.css';
@@ -326,7 +326,7 @@ function ConsentBanner() {
 
 function StoreRoutes() {
   const { pathname } = useLocation();
-  if (pathname.startsWith('/manage')) return <AdminApp />;
+  if (pathname.startsWith('/manage')) return <Suspense fallback={<main id="main" className="section"><p role="status">Opening management workspace…</p></main>}><AdminApp /></Suspense>;
   return (
     <>
       <Header />
