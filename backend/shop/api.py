@@ -181,6 +181,8 @@ def _order_payload(order, include_items=True):
         "delivery": order.delivery_cents,
         "total": order.total_cents,
         "currency": order.currency,
+        "shipping_address": order.shipping_address or {},
+        "promo_code": order.campaign_name if order.campaign_name in {"DISTRICT10", "SOLE20"} else None,
         "tracking_number": order.tracking_number,
         "carrier": order.carrier,
         "timeline": [{"status": row.status, "message": row.message, "created": row.created_at.isoformat()} for row in order.updates.all()],
@@ -348,7 +350,36 @@ def _cart_fingerprint(items):
     return hashlib.sha256(packed.encode()).hexdigest()
 
 
-def _create_or_reuse_order(request, items, checkout_key):
+def _sanitize_shipping_address(raw):
+    if not isinstance(raw, dict):
+        return {}
+    allowed = ["name", "recipient", "phone", "line1", "line2", "city", "state", "postal_code", "country", "unit", "building", "block_no", "road_name", "email"]
+    clean = {}
+    for k in allowed:
+        val = str(raw.get(k, "")).strip()[:150]
+        if val:
+            clean[k] = val
+    if not clean.get("name") and clean.get("recipient"):
+        clean["name"] = clean["recipient"]
+    if not clean.get("country"):
+        clean["country"] = "SG"
+    if not clean.get("city"):
+        clean["city"] = "Singapore"
+    return clean
+
+
+def _calculate_discount(subtotal_cents, promo_code):
+    if not promo_code or not isinstance(promo_code, str):
+        return 0
+    code = promo_code.strip().upper()
+    if code == "DISTRICT10":
+        return int(round(subtotal_cents * 0.10))
+    if code == "SOLE20" and subtotal_cents >= 10000:
+        return 2000
+    return 0
+
+
+def _create_or_reuse_order(request, items, checkout_key, shipping_address=None, promo_code=None):
     if not isinstance(items, list) or not items or len(items) > MAX_CART_LINES:
         raise ValueError("Your bag must contain between 1 and 20 different items.")
     quantities = {}
@@ -372,6 +403,9 @@ def _create_or_reuse_order(request, items, checkout_key):
             raise ValueError("This checkout attempt was already used for a different bag. Start a new checkout.")
         if not _order_visible_to_request(existing, request):
             raise PermissionError("This checkout attempt belongs to another browser session.")
+        if shipping_address and not existing.shipping_address:
+            existing.shipping_address = _sanitize_shipping_address(shipping_address)
+            existing.save(update_fields=["shipping_address", "updated_at"])
         return existing, False
 
     with transaction.atomic():
@@ -401,7 +435,13 @@ def _create_or_reuse_order(request, items, checkout_key):
                     count = sum(lot.quantity_remaining for lot in lots)
                     cost = int(weighted / count) if count else None
             order_lines.append((variant, quantity, unit_price, cost))
+
+        norm_promo = promo_code.strip().upper() if isinstance(promo_code, str) else ""
+        discount = _calculate_discount(subtotal, norm_promo)
         delivery = 0 if subtotal >= 15000 else 800
+        clean_addr = _sanitize_shipping_address(shipping_address) if shipping_address else {}
+        customer_email = clean_addr.get("email") or (request.user.email if request.user.is_authenticated else "")
+
         order = Order.objects.create(
             user=request.user if request.user.is_authenticated else None,
             session_key=session_key,
@@ -409,13 +449,15 @@ def _create_or_reuse_order(request, items, checkout_key):
             cart_fingerprint=fingerprint,
             subtotal_cents=subtotal,
             delivery_cents=delivery,
-            total_cents=subtotal + delivery,
+            total_cents=max(0, subtotal - discount) + delivery,
             payment_mode="live" if settings.STRIPE_SECRET_KEY.startswith("sk_live_") else "test",
-            customer_email=request.user.email if request.user.is_authenticated else "",
+            customer_email=customer_email,
+            customer_phone=clean_addr.get("phone", ""),
+            shipping_address=clean_addr,
             analytics_consent=bool(request.session.get("analytics_consent", False)) and not (request.user.is_authenticated and request.user.is_staff),
             campaign_source=(request.session.get("campaign_attribution") or {}).get("source", ""),
             campaign_medium=(request.session.get("campaign_attribution") or {}).get("medium", ""),
-            campaign_name=(request.session.get("campaign_attribution") or {}).get("name", ""),
+            campaign_name=norm_promo if norm_promo in {"DISTRICT10", "SOLE20"} else (request.session.get("campaign_attribution") or {}).get("name", ""),
         )
         for variant, quantity, unit_price, cost in order_lines:
             variant.reserved_stock += quantity
@@ -440,15 +482,34 @@ def _create_or_reuse_order(request, items, checkout_key):
 
 def _stripe_checkout(order):
     stripe.api_key = settings.STRIPE_SECRET_KEY
+    discount = _calculate_discount(order.subtotal_cents, order.campaign_name)
     lines = []
-    for item in order.items.select_related("product").all():
+    items_list = list(order.items.select_related("product").all())
+    remaining_discount = discount
+    for i, item in enumerate(items_list):
+        total_item_price = item.unit_price_cents * item.quantity
+        if discount > 0 and order.subtotal_cents > 0:
+            if i == len(items_list) - 1:
+                item_discount = remaining_discount
+            else:
+                item_discount = int(round(discount * (total_item_price / order.subtotal_cents)))
+                item_discount = min(item_discount, remaining_discount)
+            remaining_discount -= item_discount
+            adjusted_unit = max(0, (total_item_price - item_discount) // item.quantity)
+        else:
+            adjusted_unit = item.unit_price_cents
+
+        display_name = item.brand_name + " " + item.product_name + " · " + item.size
+        if discount > 0:
+            display_name += f" ({order.campaign_name} applied)"
+
         lines.append({
             "quantity": item.quantity,
             "price_data": {
                 "currency": "sgd",
-                "unit_amount": item.unit_price_cents,
+                "unit_amount": adjusted_unit,
                 "product_data": {
-                    "name": item.brand_name + " " + item.product_name + " · " + item.size,
+                    "name": display_name,
                     "metadata": {"sku": item.sku},
                 },
             },
@@ -477,6 +538,9 @@ def _stripe_checkout(order):
             "order_id": str(order.public_id),
             "order_reference": order.reference,
             "commerce_mode": "live" if settings.STRIPE_SECRET_KEY.startswith("sk_live_") else "test",
+            "postal_code": (order.shipping_address or {}).get("postal_code", ""),
+            "building": (order.shipping_address or {}).get("building", ""),
+            "promo_code": order.campaign_name or "",
         },
         "success_url": settings.FRONTEND_ORIGIN + "/checkout/complete?session_id={CHECKOUT_SESSION_ID}",
         "cancel_url": settings.FRONTEND_ORIGIN + "/checkout?cancelled=" + str(order.public_id),
@@ -499,7 +563,13 @@ def checkout(request):
         return _error("A valid checkout attempt key is required.")
     try:
         body = _json_body(request)
-        order, _ = _create_or_reuse_order(request, body.get("items"), checkout_key)
+        order, _ = _create_or_reuse_order(
+            request,
+            body.get("items"),
+            checkout_key,
+            shipping_address=body.get("shipping_address"),
+            promo_code=body.get("promo_code"),
+        )
     except PermissionError as exc:
         return _error(str(exc), 403)
     except ValueError as exc:
@@ -602,10 +672,14 @@ def _mark_order_paid(order, checkout_session):
     shipping = (checkout_session.get("collected_information") or {}).get("shipping_details") or checkout_session.get("shipping_details") or {}
     if shipping.get("address"):
         address = shipping["address"]
+        prev_addr = order.shipping_address if isinstance(order.shipping_address, dict) else {}
         order.shipping_address = {
-            "name": shipping.get("name", ""),
+            "name": shipping.get("name") or prev_addr.get("name", ""),
             **{key: address.get(key, "") for key in ["line1", "line2", "city", "postal_code", "country"]},
         }
+        for extra in ["unit", "building", "block_no", "road_name", "phone"]:
+            if prev_addr.get(extra) and not order.shipping_address.get(extra):
+                order.shipping_address[extra] = prev_addr[extra]
     order.stripe_payment_intent_id = str(checkout_session.get("payment_intent") or "")
     order.save(update_fields=[
         "payment_status", "status", "paid_at", "stock_finalized_at",
