@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import {
-  ArrowLeft, ArrowRight, ArrowUpRight, CaretDown, Check, Heart, LockSimple, Package,
-  Plus, SlidersHorizontal, Truck, X,
+  ArrowLeft, ArrowRight, ArrowUpRight, CaretDown, Check, CheckCircle, Heart, LockSimple,
+  MapPin, Package, Plus, ShieldCheck, SlidersHorizontal, Sparkle, Tag, Truck, X,
 } from '@phosphor-icons/react';
 import { Button, Dialog, LineItem, ProductGrid, useShop } from './App';
 import { GuestAccess } from './Account';
 import { PublishedPolicy } from './StoreInformation';
+import { AddressAutocomplete } from './components/AddressAutocomplete';
 import { api, money, shipping, trackEvent } from './shop';
 
 export function Home() {
@@ -200,7 +201,56 @@ export function Checkout() {
   const [cancelled, setCancelled] = useState(false);
   const [params] = useSearchParams();
   const cancellationSent = useRef(false);
+
+  // Address state
+  const [savedAddresses, setSavedAddresses] = useState([]);
+  const [selectedAddressIndex, setSelectedAddressIndex] = useState(0);
+  const [useNewAddress, setUseNewAddress] = useState(false);
+  const [deliveryAddress, setDeliveryAddress] = useState({
+    recipient: '',
+    phone: '',
+    line1: '',
+    line2: '',
+    postal_code: '',
+  });
+
+  // Promo code state
+  const [promoInput, setPromoInput] = useState('');
+  const [appliedPromo, setAppliedPromo] = useState('');
+  const [promoError, setPromoError] = useState('');
+
+  // Free delivery calculation (S$150 = 15,000 cents)
+  const freeThreshold = 15000;
   const delivery = shipping(subtotal);
+  const freeDeliveryPercent = Math.min(100, Math.round((subtotal / freeThreshold) * 100));
+  const amountToFree = Math.max(0, freeThreshold - subtotal);
+
+  // Promo discount calculation
+  const promoDiscount = useMemo(() => {
+    if (!appliedPromo) return 0;
+    if (appliedPromo === 'DISTRICT10') return Math.round(subtotal * 0.10);
+    if (appliedPromo === 'SOLE20') return subtotal >= 10000 ? 2000 : 0;
+    return 0;
+  }, [appliedPromo, subtotal]);
+
+  const finalTotal = Math.max(0, subtotal - promoDiscount) + delivery;
+
+  // Load saved addresses if authenticated
+  useEffect(() => {
+    let alive = true;
+    api('auth/me/')
+      .then((me) => {
+        if (!alive || !me.authenticated) return;
+        return api('auth/addresses/').then((data) => {
+          if (!alive || !data.addresses?.length) return;
+          setSavedAddresses(data.addresses);
+          const defaultIdx = data.addresses.findIndex((a) => a.is_default);
+          setSelectedAddressIndex(defaultIdx >= 0 ? defaultIdx : 0);
+        });
+      })
+      .catch(() => {});
+    return () => { alive = false; };
+  }, []);
 
   useEffect(() => {
     const orderId = params.get('cancelled');
@@ -211,16 +261,59 @@ export function Checkout() {
       .catch((reason) => setError(reason.message));
   }, [params]);
 
+  const handleApplyPromo = (e) => {
+    e.preventDefault();
+    setPromoError('');
+    const code = promoInput.trim().toUpperCase();
+    if (!code) return;
+    if (code === 'DISTRICT10') {
+      setAppliedPromo('DISTRICT10');
+      setPromoInput('');
+    } else if (code === 'SOLE20') {
+      if (subtotal < 10000) {
+        setPromoError('SOLE20 requires a bag minimum of S$100.');
+        return;
+      }
+      setAppliedPromo('SOLE20');
+      setPromoInput('');
+    } else {
+      setPromoError('Promo code not recognized. Try DISTRICT10 or SOLE20.');
+    }
+  };
+
+  const handleRemovePromo = () => {
+    setAppliedPromo('');
+    setPromoError('');
+  };
+
   const pay = async () => {
     if (busy || !lines.length) return;
-    setBusy(true);
     setError('');
+
+    const activeAddress = savedAddresses.length > 0 && !useNewAddress
+      ? savedAddresses[selectedAddressIndex]
+      : deliveryAddress;
+
+    if (!activeAddress.recipient?.trim()) {
+      setError('Please provide a recipient name for delivery.');
+      return;
+    }
+    if (!activeAddress.line1?.trim() || !activeAddress.postal_code?.trim()) {
+      setError('Please provide a valid Singapore delivery address and 6-digit postal code.');
+      return;
+    }
+
+    setBusy(true);
     try {
       const attemptKey = getCheckoutKey(lines);
       const data = await api('checkout/', {
         method: 'POST',
         headers: { 'Idempotency-Key': attemptKey },
-        body: JSON.stringify({ items: lines.map((line) => ({ variant_id: line.variantId, quantity: line.quantity })) }),
+        body: JSON.stringify({
+          items: lines.map((line) => ({ variant_id: line.variantId, quantity: line.quantity })),
+          shipping_address: activeAddress,
+          promo_code: appliedPromo || undefined,
+        }),
       });
       const target = new URL(data.url);
       if (target.protocol !== 'https:' || target.hostname !== 'checkout.stripe.com') throw new Error('The payment link could not be verified.');
@@ -236,29 +329,168 @@ export function Checkout() {
   return (
     <main className="section checkout-page">
       <Link className="back-link" to="/shop"><ArrowLeft size={18} />Continue shopping</Link>
-      <div className="page-heading"><div><span className="eyebrow">YOUR NEXT ROTATION</span><h1>Checkout</h1></div><span className="secure-label"><LockSimple size={18} />Secure payment</span></div>
+      <div className="page-heading">
+        <div><span className="eyebrow">YOUR NEXT ROTATION</span><h1>Checkout</h1></div>
+        <span className="secure-label"><LockSimple size={18} />Secure payment</span>
+      </div>
       {cancelled && <div className="notice notice-soft"><Check size={18} />Checkout was cancelled. Your bag is still here.</div>}
+      
       <div className="checkout-layout">
         <section className="checkout-items">
-          <h2>Review your bag</h2>
-          {lines.map((line) => <LineItem key={line.variantId} line={line} />)}
+          {/* STEP 1: Singapore Delivery Address Auto-Recommendation */}
+          <div className="checkout-step-card">
+            <div className="step-card-header">
+              <div className="step-badge"><MapPin size={20} weight="bold" /></div>
+              <div>
+                <span className="eyebrow">DESTINATION</span>
+                <h2>Singapore Delivery Address</h2>
+              </div>
+            </div>
+
+            {savedAddresses.length > 0 && !useNewAddress ? (
+              <div className="saved-addresses-selector">
+                <p className="step-subhead">Choose a saved delivery address for Singapore courier dispatch:</p>
+                <div className="address-chip-grid">
+                  {savedAddresses.map((addr, idx) => (
+                    <button
+                      type="button"
+                      key={addr.id || idx}
+                      className={`address-chip ${selectedAddressIndex === idx ? 'selected' : ''}`}
+                      onClick={() => setSelectedAddressIndex(idx)}
+                    >
+                      <div className="chip-top">
+                        <strong>{addr.label || 'Home'}</strong>
+                        {selectedAddressIndex === idx && <CheckCircle size={16} weight="fill" />}
+                      </div>
+                      <span className="chip-name">{addr.recipient}</span>
+                      <span className="chip-line">{addr.line1}{addr.line2 ? `, ${addr.line2}` : ''}</span>
+                      <span className="chip-postal">Singapore {addr.postal_code}</span>
+                    </button>
+                  ))}
+                </div>
+                <button type="button" className="text-button new-address-toggle" onClick={() => setUseNewAddress(true)}>
+                  + Deliver to a different address
+                </button>
+              </div>
+            ) : (
+              <div className="new-address-form">
+                {savedAddresses.length > 0 && (
+                  <button type="button" className="text-button back-to-saved" onClick={() => setUseNewAddress(false)}>
+                    ← Use saved address
+                  </button>
+                )}
+                <p className="step-subhead">Enter your 6-digit postal code or building name for instant auto-recommendation:</p>
+                <AddressAutocomplete
+                  value={deliveryAddress}
+                  onChange={setDeliveryAddress}
+                  disabled={busy}
+                  showContact={true}
+                />
+              </div>
+            )}
+
+            <div className="courier-badge">
+              <Truck size={22} weight="duotone" />
+              <div>
+                <strong>Tracked Singapore Courier (2–4 Business Days)</strong>
+                <p>Dispatched with district verification tag. Doorstep delivery with SMS tracking notifications.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* STEP 2: Review Bag */}
+          <div className="checkout-step-card">
+            <div className="step-card-header">
+              <div className="step-badge"><Package size={20} weight="bold" /></div>
+              <div>
+                <span className="eyebrow">YOUR PIECES</span>
+                <h2>Review your bag ({lines.length})</h2>
+              </div>
+            </div>
+            {lines.map((line) => <LineItem key={line.variantId} line={line} />)}
+          </div>
+
+          {/* Payment info */}
           <div className="payment-options">
             <span className="eyebrow">PAY SECURELY WITH STRIPE</span>
             <h2>Choose at checkout</h2>
-            <p>Stripe shows the methods available to your account and device. This store is planned to accept cards, PayNow, and Apple Pay or Google Pay when eligible.</p>
+            <p>Stripe presents the payment methods available to your account and device, including cards, PayNow QR, and Apple Pay or Google Pay when eligible.</p>
             <div className="payment-method-chips"><span>Cards</span><span>PayNow QR</span><span>Apple Pay*</span><span>Google Pay*</span></div>
             <small>*Wallet buttons depend on device, browser, wallet setup, and Stripe account settings.</small>
           </div>
         </section>
+
         <aside className="order-summary">
           <h2>Order summary</h2>
+
+          {/* Dynamic Free Shipping Meter */}
+          <div className="shipping-meter">
+            <div className="shipping-meter-header">
+              {subtotal >= freeThreshold ? (
+                <span className="shipping-meter-unlocked">
+                  <CheckCircle size={16} weight="fill" /> Complimentary Singapore Delivery unlocked!
+                </span>
+              ) : (
+                <span>Add <strong>{money(amountToFree)}</strong> more for <strong>Complimentary Delivery</strong></span>
+              )}
+              <span className="shipping-meter-pct">{freeDeliveryPercent}%</span>
+            </div>
+            <div className="shipping-meter-track">
+              <div className="shipping-meter-fill" style={{ width: `${freeDeliveryPercent}%` }} />
+            </div>
+          </div>
+
           <div><span>Subtotal</span><span>{money(subtotal)}</span></div>
+
+          {/* Promo code line if applied */}
+          {appliedPromo && promoDiscount > 0 && (
+            <div className="discount-line">
+              <span>Promo ({appliedPromo}) <button type="button" className="remove-promo-btn" onClick={handleRemovePromo} title="Remove promo"><X size={12} /></button></span>
+              <span className="discount-amount">−{money(promoDiscount)}</span>
+            </div>
+          )}
+
           <div><span>Singapore delivery</span><span>{delivery ? money(delivery) : 'Complimentary'}</span></div>
-          <div className="total"><strong>Total</strong><strong>{money(subtotal + delivery)}</strong></div>
-          <p>Amounts shown in SGD. Shipping is calculated using the current store rule. Tax settings are not configured.</p>
+          <div className="total"><strong>Total</strong><strong>{money(finalTotal)}</strong></div>
+
+          {/* Promo Code Box */}
+          <div className="promo-box">
+            {!appliedPromo ? (
+              <form onSubmit={handleApplyPromo} className="promo-form">
+                <div className="promo-input-group">
+                  <Tag size={16} className="promo-icon" />
+                  <input
+                    type="text"
+                    placeholder="Promo code (e.g. DISTRICT10)"
+                    value={promoInput}
+                    onChange={(e) => setPromoInput(e.target.value)}
+                    autoCapitalize="characters"
+                  />
+                  <button type="submit" className="button button-dark promo-apply-btn" disabled={!promoInput.trim()}>
+                    Apply
+                  </button>
+                </div>
+                {promoError && <p className="promo-error" role="alert">{promoError}</p>}
+                <div className="promo-suggestions">
+                  <button type="button" onClick={() => setPromoInput('DISTRICT10')}>Try <strong>DISTRICT10</strong> (10% off)</button>
+                  <button type="button" onClick={() => setPromoInput('SOLE20')}>Try <strong>SOLE20</strong> (S$20 off S$100+)</button>
+                </div>
+              </form>
+            ) : (
+              <div className="promo-active-badge">
+                <Tag size={16} weight="fill" />
+                <span>Promo code <strong>{appliedPromo}</strong> applied</span>
+                <button type="button" onClick={handleRemovePromo} className="text-button remove-btn">Remove</button>
+              </div>
+            )}
+          </div>
+
+          <p className="summary-footnote">Amounts shown in SGD. Shipping is calculated using the current store rule. Tax settings are not configured.</p>
           {!store.checkout_ready && <div className="checkout-notice">Preview only. Payments are disabled until Stripe is configured and the catalogue is verified.</div>}
           {error && <p className="form-error" role="alert">{error}</p>}
-          <Button disabled={busy || !store.checkout_ready || lines.some((line) => line.product.sellable === false)} onClick={pay}>{busy ? 'Opening secure checkout…' : 'Continue to secure payment'} <ArrowRight size={20} /></Button>
+          <Button disabled={busy || !store.checkout_ready || lines.some((line) => line.product.sellable === false)} onClick={pay}>
+            {busy ? 'Opening secure checkout…' : 'Continue to secure payment'} <ArrowRight size={20} />
+          </Button>
           <span className="payment-note"><LockSimple size={15} />Payment details stay on Stripe.</span>
           <Link className="underlined" to="/help/returns">Delivery & returns</Link>
         </aside>
@@ -301,15 +533,98 @@ export function Complete() {
 
   const paid = order?.payment_status === 'paid';
   const pending = order && ['pending', 'payment_pending'].includes(order.status);
+  const shippingAddr = order?.shipping_address || {};
+
   return (
     <main className="section complete-page">
       <span className="eyebrow">SOLE DISTRICT</span>
       <h1>{paid ? 'Your order is confirmed.' : order?.status === 'expired' || order?.status === 'payment_failed' ? 'Payment was not completed.' : error ? 'Order unavailable.' : 'Checking your payment.'}</h1>
-      <p>{paid ? 'Thank you. Your order is being prepared.' : pending ? 'Stripe is confirming your payment. This page will update when the verified payment event arrives.' : 'The store checks payment status with its server. A redirect by itself does not confirm a purchase.'}</p>
+      <p>{paid ? 'Thank you. Your order has been placed and is being prepared for Singapore courier dispatch.' : pending ? 'Stripe is confirming your payment. This page will update when the verified payment event arrives.' : 'The store checks payment status with its server. A redirect by itself does not confirm a purchase.'}</p>
       {error && <p role="alert" className="form-error">{error}</p>}
-      {order && <div className="receipt"><div><strong>Order {order.reference}</strong><span className="status-pill">{order.status.replace('_', ' ')}</span></div><strong>{money(order.total)}</strong>{order.items.map((item) => <div key={item.line_id}><span>{item.name} · {item.size} × {item.quantity}</span><span>{money(item.unit_price * item.quantity)}</span></div>)}</div>}
-      <Button to="/orders">View your orders <ArrowRight size={19} /></Button>
-      <Link className="underlined" to="/shop">Continue shopping</Link>
+      
+      {/* 4-Stage Post-Purchase Order Timeline */}
+      {paid && (
+        <div className="order-stepper-container">
+          <h2>Order fulfillment status</h2>
+          <div className="order-stepper">
+            <div className="step-node completed">
+              <div className="node-icon"><CheckCircle size={22} weight="fill" /></div>
+              <div className="node-info">
+                <strong>Order Confirmed</strong>
+                <span>Payment verified via Stripe</span>
+              </div>
+            </div>
+            <div className="step-node active">
+              <div className="node-icon"><ShieldCheck size={22} weight="duotone" /></div>
+              <div className="node-info">
+                <strong>Authentication Check</strong>
+                <span>District tag & condition inspection</span>
+              </div>
+            </div>
+            <div className="step-node">
+              <div className="node-icon"><Package size={22} /></div>
+              <div className="node-info">
+                <strong>Custom Packaging</strong>
+                <span>Double-boxed & sealed</span>
+              </div>
+            </div>
+            <div className="step-node">
+              <div className="node-icon"><Truck size={22} /></div>
+              <div className="node-info">
+                <strong>Courier Dispatch</strong>
+                <span>Estimated 2–4 business days</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Confirmed Delivery Destination Card */}
+      {order && (shippingAddr.line1 || shippingAddr.postal_code) && (
+        <div className="confirmed-destination-card">
+          <div className="destination-header">
+            <MapPin size={20} weight="fill" />
+            <strong>Delivery Destination</strong>
+          </div>
+          <div className="destination-body">
+            <p className="destination-name">{shippingAddr.name || shippingAddr.recipient || 'Customer'}</p>
+            <p className="destination-line">{shippingAddr.line1}{shippingAddr.line2 ? `, ${shippingAddr.line2}` : ''}</p>
+            <p className="destination-postal">Singapore {shippingAddr.postal_code}</p>
+            {shippingAddr.phone && <p className="destination-contact">Phone: {shippingAddr.phone}</p>}
+          </div>
+          <div className="destination-footer">
+            <Truck size={18} />
+            <span>Express Courier Tracked Delivery · Estimated 2–4 Business Days</span>
+          </div>
+        </div>
+      )}
+
+      {order && (
+        <div className="receipt">
+          <div>
+            <strong>Order {order.reference}</strong>
+            <span className="status-pill">{order.status.replace('_', ' ')}</span>
+          </div>
+          <strong>{money(order.total)}</strong>
+          {order.promo_code && (
+            <div className="receipt-promo">
+              <span>Promo code applied</span>
+              <span>{order.promo_code}</span>
+            </div>
+          )}
+          {order.items.map((item) => (
+            <div key={item.line_id}>
+              <span>{item.name} · {item.size} × {item.quantity}</span>
+              <span>{money(item.unit_price * item.quantity)}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="complete-actions">
+        <Button to="/orders">View your orders <ArrowRight size={19} /></Button>
+        <Link className="underlined" to="/shop">Continue shopping</Link>
+      </div>
     </main>
   );
 }

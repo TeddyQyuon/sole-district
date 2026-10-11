@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from './shop';
+import { AddressAutocomplete } from './components/AddressAutocomplete';
 
 function useEmailLink() {
   const [link] = useState(() => ({
@@ -90,7 +91,17 @@ export function Account() {
       {!user.email_verified && <button className="underlined" disabled={busy} onClick={() => run(async () => { const data = await api('auth/email/', { method: 'POST', body: JSON.stringify({ purpose: 'verify', email: user.email }) }); setMessage(data.message); })}>Resend verification email</button>}
       <p><Link className="underlined" to="/orders">View your orders</Link></p><button className="text-button" disabled={busy} onClick={() => run(async () => { await api('auth/logout/', { method: 'POST', body: '{}' }); setUser(null); setAddresses([]); })}>Sign out</button></section>
       <section className="account-card"><h2>Saved delivery addresses</h2>{addresses.map((row) => <div className="address-row" key={row.id}><strong>{row.label}{row.is_default ? ' · Default' : ''}</strong><span>{row.recipient}, {row.line1} {row.line2}, Singapore {row.postal_code}</span><div><button className="underlined" disabled={busy} onClick={() => setAddress(row)}>Edit</button>{' · '}<button className="underlined" disabled={busy} onClick={() => run(async () => { await api('auth/addresses/', { method: 'DELETE', body: JSON.stringify({ id: row.id }) }); await load(); })}>Delete</button></div></div>)}
-        <form className="form-grid" onSubmit={saveAddress}>{[['label', 'Label'], ['recipient', 'Recipient'], ['phone', 'Phone'], ['line1', 'Street address'], ['line2', 'Unit / address line 2'], ['postal_code', 'Singapore postal code']].map(([key, label]) => <label key={key}>{label}<input value={address[key]} required={['recipient', 'line1', 'postal_code'].includes(key)} maxLength={key === 'postal_code' ? 6 : 180} pattern={key === 'postal_code' ? '[0-9]{6}' : undefined} onChange={(event) => setAddress({ ...address, [key]: event.target.value })} /></label>)}<label className="check-field"><input type="checkbox" checked={address.is_default} onChange={(event) => setAddress({ ...address, is_default: event.target.checked })} />Default delivery address</label><button className="button button-dark" disabled={busy}>{address.id ? 'Save changes' : 'Save address'}</button>{address.id && <button type="button" className="text-button" onClick={() => setAddress(emptyAddress)}>Cancel editing</button>}</form>
+        <form className="account-address-form" onSubmit={saveAddress}>
+          <div className="label-field-wrapper">
+            <label><span>Address label</span><input value={address.label || ''} placeholder="e.g. Home, Office, Studio" onChange={(e) => setAddress({ ...address, label: e.target.value })} /></label>
+          </div>
+          <AddressAutocomplete value={address} onChange={setAddress} showContact={true} />
+          <label className="check-field"><input type="checkbox" checked={address.is_default} onChange={(event) => setAddress({ ...address, is_default: event.target.checked })} />Set as default delivery address</label>
+          <div className="address-form-actions">
+            <button className="button button-dark" disabled={busy}>{address.id ? 'Save changes' : 'Save address'}</button>
+            {address.id && <button type="button" className="text-button" onClick={() => setAddress(emptyAddress)}>Cancel editing</button>}
+          </div>
+        </form>
       </section></div> : <form className="auth-form" onSubmit={submit}>
       {mode === 'register' && <label>Name<input name="name" autoComplete="name" maxLength={120} /></label>}
       {!emailAction && <label>Email<input name="email" type="email" required autoComplete="email" /></label>}
