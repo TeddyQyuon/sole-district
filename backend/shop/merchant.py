@@ -193,11 +193,17 @@ def order_detail(request, public_id):
     return JsonResponse(data)
 
 
+def _obj_val(obj, key, default=None):
+    if isinstance(obj, dict):
+        return obj.get(key, default)
+    return getattr(obj, key, default)
+
+
 def reconcile_refund(data):
-    candidate = RefundRecord.objects.filter(stripe_id=data.get("id")).first()
+    candidate = RefundRecord.objects.filter(stripe_id=_obj_val(data, "id")).first()
     if not candidate:
         # An out-of-band dashboard refund requires merchant reconciliation.
-        if Order.objects.filter(stripe_payment_intent_id=data.get("payment_intent")).exists():
+        if Order.objects.filter(stripe_payment_intent_id=_obj_val(data, "payment_intent")).exists():
             raise ValueError("Unrecorded refund requires merchant reconciliation")
         return
     order = Order.objects.select_for_update().get(pk=candidate.request.order_id)
@@ -205,10 +211,10 @@ def reconcile_refund(data):
     record = RefundRecord.objects.select_for_update().get(pk=candidate.pk)
     if record.status == "succeeded":
         return
-    if data.get("amount") != record.amount_cents or data.get("payment_intent") != order.stripe_payment_intent_id:
+    if _obj_val(data, "amount") != record.amount_cents or _obj_val(data, "payment_intent") != order.stripe_payment_intent_id:
         raise ValueError("Refund does not match saved request")
-    if data.get("status") != "succeeded":
-        record.status = data.get("status", "pending")
+    if _obj_val(data, "status") != "succeeded":
+        record.status = _obj_val(data, "status", "pending")
         record.save(update_fields=["status"])
         return
     item = OrderItem.objects.select_for_update().get(pk=row.order_item_id)

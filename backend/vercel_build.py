@@ -20,6 +20,7 @@ def main():
         execute_from_command_line(["manage.py", "check", "--deploy", "--fail-level", "WARNING"])
         execute_from_command_line(["manage.py", "migrate", "--noinput"])
         execute_from_command_line(["manage.py", "seed_catalog"])
+        execute_from_command_line(["manage.py", "activate_catalog"])
         execute_from_command_line(["manage.py", "bootstrap_roles"])
         execute_from_command_line(["manage.py", "bootstrap_owner"])
         execute_from_command_line(["manage.py", "seed_policies"])

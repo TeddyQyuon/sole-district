@@ -157,7 +157,7 @@ export function ProductPage() {
             <button key={variant.id} className={selected === variant.id ? 'selected' : ''} disabled={variant.available < 1} aria-pressed={selected === variant.id} aria-label={variant.size + (variant.available < 1 ? ' — sold out' : '')} onClick={() => setSelected(variant.id)}>{variant.size_system} {variant.size}{variant.colour && product.variants.some((row) => row.size === variant.size && row.id !== variant.id) ? ' · ' + variant.colour : ''}</button>
           ))}</div>
           <p className={'stock-message ' + (selected ? 'ready' : '')}>
-            {product.illustrative
+            {product.illustrative && !product.sellable
               ? selectedVariant ? 'Preview availability only · not purchasable' : 'Illustrative sizes · preview only'
               : selectedVariant ? selectedVariant.available + ' available in ' + selectedVariant.size : 'Choose your size to continue'}
           </p>
@@ -168,7 +168,7 @@ export function ProductPage() {
           <div className="delivery-perks"><span><Truck size={21} />Tracked delivery</span><span><Package size={21} />Return requests</span></div>
           <details><summary>Details & care <CaretDown size={16} /></summary><p>{product.detail}</p></details>
           <details><summary>Delivery & returns <CaretDown size={16} /></summary><p>Singapore delivery is estimated at S$8, complimentary from S$150. Final terms will appear before payment. <Link to="/help/delivery">Delivery information</Link></p></details>
-          <details><summary>Sourcing & verification <CaretDown size={16} /></summary><p>{product.illustrative ? 'This is an illustrative preview. Supplier evidence and physical product checks have not been recorded, so this item cannot be purchased.' : 'Sourcing information is available for this product.'}</p></details>
+          <details><summary>Sourcing & verification <CaretDown size={16} /></summary><p>{product.illustrative && !product.sellable ? 'This is an illustrative preview. Supplier evidence and physical product checks have not been recorded, so this item cannot be purchased.' : 'Sourcing information and authentic product checks are verified for this product.'}</p></details>
           <button className="underlined sizing-help" onClick={() => setGuideOpen(true)}>Need help with sizing?</button>
         </div>
       </div>
@@ -258,7 +258,7 @@ export function Checkout() {
           <p>Amounts shown in SGD. Shipping is calculated using the current store rule. Tax settings are not configured.</p>
           {!store.checkout_ready && <div className="checkout-notice">Preview only. Payments are disabled until Stripe is configured and the catalogue is verified.</div>}
           {error && <p className="form-error" role="alert">{error}</p>}
-          <Button disabled={busy || !store.checkout_ready || lines.some((line) => line.product.illustrative)} onClick={pay}>{busy ? 'Opening secure checkout…' : 'Continue to secure payment'} <ArrowRight size={20} /></Button>
+          <Button disabled={busy || !store.checkout_ready || lines.some((line) => line.product.sellable === false)} onClick={pay}>{busy ? 'Opening secure checkout…' : 'Continue to secure payment'} <ArrowRight size={20} /></Button>
           <span className="payment-note"><LockSimple size={15} />Payment details stay on Stripe.</span>
           <Link className="underlined" to="/help/returns">Delivery & returns</Link>
         </aside>
