@@ -22,6 +22,8 @@ def main():
         execute_from_command_line(["manage.py", "seed_catalog"])
         execute_from_command_line(["manage.py", "bootstrap_roles"])
         execute_from_command_line(["manage.py", "bootstrap_owner"])
+        execute_from_command_line(["manage.py", "seed_policies"])
+
 
 
 if __name__ == "__main__":
