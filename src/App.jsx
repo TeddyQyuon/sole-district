@@ -175,7 +175,7 @@ export function ProductCard({ product }) {
         <button className="wish icon" aria-label={(wishlist.includes(product.id) ? 'Remove ' : 'Save ') + product.name + ' ' + (wishlist.includes(product.id) ? 'from' : 'to') + ' wishlist'} aria-pressed={wishlist.includes(product.id)} onClick={() => toggleWish(product.id)}>
           <Heart size={22} weight={wishlist.includes(product.id) ? 'fill' : 'regular'} />
         </button>
-        {product.illustrative && <span className="product-badge">Preview</span>}
+        {product.illustrative && !product.sellable && <span className="product-badge">Preview</span>}
       </div>
       <Link className="product-copy" to={'/product/' + product.id}>
         <strong>{product.brand}</strong>

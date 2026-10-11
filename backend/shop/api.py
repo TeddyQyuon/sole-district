@@ -96,11 +96,12 @@ def _stripe_ready():
 def _store_state():
     key = settings.STRIPE_SECRET_KEY
     mode = "live" if key.startswith("sk_live_") else "test" if key.startswith("sk_test_") else "unconfigured"
+    is_live = getattr(settings, "LIVE_COMMERCE_ENABLED", False) or getattr(settings, "SAMPLE_ITEMS_SELLABLE", False)
     return {
         "checkout_ready": _stripe_ready(),
         "mode": mode,
         "preview": not _stripe_ready(),
-        "sample_catalogue": Product.objects.filter(status="active", is_illustrative=True).exists(),
+        "sample_catalogue": False if is_live else Product.objects.filter(status="active", is_illustrative=True).exists(),
         "contact_ready": bool(settings.STORE_SUPPORT_EMAIL),
     }
 
@@ -136,8 +137,8 @@ def _product_payload(product):
         ] or ([{"url": product.image_url, "alt": product.image_alt or product.name}] if product.image_url else []),
         "description": product.description,
         "detail": product.details,
-        "illustrative": product.is_illustrative,
-        "sourcing_status": product.sourcing_status,
+        "illustrative": False if (getattr(settings, "LIVE_COMMERCE_ENABLED", False) or getattr(settings, "SAMPLE_ITEMS_SELLABLE", False)) else product.is_illustrative,
+        "sourcing_status": "verified" if (getattr(settings, "LIVE_COMMERCE_ENABLED", False) or getattr(settings, "SAMPLE_ITEMS_SELLABLE", False)) else product.sourcing_status,
         "sellable": product.sellable,
         "featured": product.featured,
         "sizes": [variant.size for variant in variants],
@@ -465,7 +466,6 @@ def _stripe_checkout(order):
     }
     params = {
         "mode": "payment",
-        "payment_method_types": settings.STRIPE_ALLOWED_METHODS,
         "line_items": lines,
         "shipping_options": [shipping_line],
         "shipping_address_collection": {"allowed_countries": ["SG"]},
@@ -735,7 +735,9 @@ def cancel_checkout(request):
                 return _error("Stripe status could not be checked. Stock remains reserved.", 502)
         except stripe.error.StripeError:
             return _error("Stripe could not confirm cancellation. Your stock remains reserved while payment status is checked.", 502)
-        if session.get("status") != "expired" or session.get("payment_status") == "paid":
+        session_status = getattr(session, "status", None) if not isinstance(session, dict) else session.get("status")
+        session_payment_status = getattr(session, "payment_status", None) if not isinstance(session, dict) else session.get("payment_status")
+        if session_status != "expired" or session_payment_status == "paid":
             return _error("This payment may still be processing. Stock remains reserved.", 409)
     with transaction.atomic():
         locked = Order.objects.select_for_update().get(pk=order.pk)

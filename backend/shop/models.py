@@ -64,6 +64,8 @@ class Product(models.Model):
 
     @property
     def sellable(self):
+        if getattr(settings, "SAMPLE_ITEMS_SELLABLE", False):
+            return self.status == "active"
         return (self.status == "active" and not self.is_illustrative
                 and self.sourcing_status == "verified"
                 and self.sourcing_reviews.order_by("-reviewed_at", "-pk").values_list("status", flat=True).first() == "verified")
