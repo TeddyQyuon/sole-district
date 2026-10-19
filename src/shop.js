@@ -1,16 +1,37 @@
 import seed from '../data/catalog.json';
 
+export function sortVariantsBySize(variants) {
+  if (!Array.isArray(variants)) return [];
+  const clothingOrder = {
+    'XXS': 1, 'XS': 2, 'S': 3, 'M': 4, 'L': 5, 'XL': 6, 'XXL': 7, '3XL': 8, 'One size': 99,
+  };
+  return [...variants].sort((a, b) => {
+    const numA = parseFloat(a.size);
+    const numB = parseFloat(b.size);
+    const isNumA = !isNaN(numA) && !isNaN(Number(a.size));
+    const isNumB = !isNaN(numB) && !isNaN(Number(b.size));
+    if (isNumA && isNumB) return numA - numB;
+    if (isNumA) return -1;
+    if (isNumB) return 1;
+    const cA = clothingOrder[a.size] ?? 50;
+    const cB = clothingOrder[b.size] ?? 50;
+    if (cA !== cB) return cA - cB;
+    return String(a.size).localeCompare(String(b.size), undefined, { numeric: true });
+  });
+}
+
 export const initialProducts = seed.map((product) => ({
   ...product,
   illustrative: true,
   sellable: false,
   images: [{ url: product.image, alt: product.brand + ' ' + product.name }],
-  variants: product.sizes.map((size) => ({
+  variants: sortVariantsBySize(product.sizes.map((size) => ({
     id: product.id + ':' + size,
+    legacy_id: product.id + ':' + size,
     size,
     size_system: product.category === 'Sneakers' ? 'UK' : 'INT',
     available: product.unavailable.includes(size) ? 0 : 8,
-  })),
+  }))),
 }));
 
 export const money = (cents) =>
@@ -55,9 +76,17 @@ export const validCart = (raw) =>
 export function cartLines(cart, products) {
   return cart.flatMap((item) => {
     const product = products.find((candidate) =>
-      candidate.variants.some((variant) => variant.id === item.variantId),
+      candidate.variants.some((variant) =>
+        variant.id === item.variantId ||
+        variant.legacy_id === item.variantId ||
+        (variant.sku && item.variantId === 'sku:' + variant.sku)
+      ),
     );
-    const variant = product?.variants.find((candidate) => candidate.id === item.variantId);
+    const variant = product?.variants.find((candidate) =>
+      candidate.id === item.variantId ||
+      candidate.legacy_id === item.variantId ||
+      (candidate.sku && item.variantId === 'sku:' + candidate.sku)
+    );
     return product && variant ? [{ ...item, product, variant }] : [];
   });
 }

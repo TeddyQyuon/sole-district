@@ -52,7 +52,7 @@ function Provider({ children }) {
       setCart((items) => {
         const merged = new Map();
         for (const item of items) {
-          const matches = variants.filter((variant) => variant.id === item.variantId || variant.legacy_id === item.variantId);
+          const matches = variants.filter((variant) => variant.id === item.variantId || variant.legacy_id === item.variantId || (variant.sku && item.variantId === 'sku:' + variant.sku));
           const id = matches.length === 1 ? matches[0].id : item.variantId;
           const quantity = (merged.get(id)?.quantity || 0) + item.quantity;
           merged.set(id, { variantId: id, quantity: Math.min(10, quantity) });
@@ -319,7 +319,7 @@ function ConsentBanner() {
   return (
     <aside className="consent-banner" aria-label="Analytics consent">
       <div><strong>Your privacy, your call.</strong><p>Optional shopping analytics help us understand what works. They stay off unless you choose to allow them.</p></div>
-      <div className="consent-actions"><button className="text-button" onClick={() => decide('rejected')}>Decline</button><button className="button button-dark" onClick={() => decide('accepted')}>Allow analytics</button></div>
+      <div className="consent-actions"><button className="button button-light consent-decline" onClick={() => decide('rejected')}>Decline</button><button className="button button-dark consent-accept" onClick={() => decide('accepted')}>Allow analytics</button></div>
     </aside>
   );
 }

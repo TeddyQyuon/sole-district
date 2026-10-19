@@ -119,8 +119,16 @@ def health(request):
     return JsonResponse({"status": "ok", "database": connection.vendor, "checkout_ready": ready})
 
 
+def _size_sort_key(size_str):
+    try:
+        return (0, float(size_str), "")
+    except (ValueError, TypeError):
+        order = {"XXS": 1, "XS": 2, "S": 3, "M": 4, "L": 5, "XL": 6, "XXL": 7, "3XL": 8, "One size": 99}
+        return (1, order.get(str(size_str), 50), str(size_str))
+
+
 def _product_payload(product):
-    variants = list(product.variants.filter(active=True))
+    variants = sorted(list(product.variants.filter(active=True)), key=lambda v: _size_sort_key(v.size))
     images = list(product.images.all())
     product_image = images[0].image_url if images else product.image_url
     return {
