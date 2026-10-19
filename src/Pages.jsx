@@ -8,7 +8,7 @@ import { Button, Dialog, LineItem, ProductGrid, useShop } from './App';
 import { GuestAccess } from './Account';
 import { PublishedPolicy } from './StoreInformation';
 import { AddressAutocomplete } from './components/AddressAutocomplete';
-import { api, money, shipping, trackEvent } from './shop';
+import { api, money, shipping, sortVariantsBySize, trackEvent } from './shop';
 
 export function Home() {
   const { products } = useShop();
@@ -65,7 +65,8 @@ export function ShopPage() {
     else next.delete(key);
     setParams(next);
   };
-  const sizes = [...new Set(products.filter((product) => !category || product.category === category).flatMap((product) => product.sizes))];
+  const rawSizes = [...new Set(products.filter((product) => !category || product.category === category).flatMap((product) => product.sizes || []))];
+  const sortedFilterSizes = sortVariantsBySize(rawSizes.map((s) => ({ size: s }))).map((v) => v.size);
   let found = products.filter((product) => (
     (!category || product.category === category) &&
     (!brand || product.brand === brand) &&
@@ -81,7 +82,7 @@ export function ShopPage() {
   const visibleProducts = found.slice((page - 1) * 12, page * 12);
 
   return (
-    <main className="section shop-page">
+    <div className="section shop-page">
       <div className="breadcrumb"><Link to="/">Home</Link><span>/</span><span>{category || brand || 'New arrivals'}</span></div>
       <div className="page-heading">
         <div><span className="eyebrow">THE DISTRICT COLLECTION</span><h1>{query ? 'Results for “' + query + '”' : brand || category || 'New arrivals'}</h1><p>Find your next everyday favourite.</p></div>
@@ -96,7 +97,7 @@ export function ShopPage() {
         {filtersOpen && (
           <aside className="filters">
             <label>Brand<select value={brand} onChange={(event) => change('brand', event.target.value)}><option value="">All brands</option>{[...new Set(products.map((product) => product.brand))].map((item) => <option key={item}>{item}</option>)}</select></label>
-            <label>Size<select value={size} onChange={(event) => change('size', event.target.value)}><option value="">All sizes</option>{sizes.map((item) => <option key={item}>{item}</option>)}</select></label>
+            <label>Size<select value={size} onChange={(event) => change('size', event.target.value)}><option value="">All sizes</option>{sortedFilterSizes.map((item) => <option key={item}>{item}</option>)}</select></label>
             <label>Colour<select value={colour} onChange={(event) => change('colour', event.target.value)}><option value="">All colours</option>{[...new Set(products.map((product) => product.color))].map((value) => <option key={value}>{value}</option>)}</select></label><label>Maximum price (SGD)<input type="number" min="0" step="1" value={maxPrice || ''} onChange={(event) => change('maxPrice', event.target.value)} /></label><label className="checkbox"><input type="checkbox" checked={stockOnly} onChange={(event) => change('stock', event.target.checked ? 'true' : '')} />Available sizes only</label>
             <button className="text-button" onClick={() => setParams(category ? { category } : {})}>Clear filters</button>
           </aside>
@@ -106,7 +107,7 @@ export function ShopPage() {
         </div>
       </div>
       {pages > 1 && <nav className="catalogue-pagination" aria-label="Catalogue pages"><button className="text-button" disabled={page === 1} onClick={() => change('page', String(page - 1))}>Previous</button><span>Page {page} of {pages}</span><button className="text-button" disabled={page === pages} onClick={() => change('page', String(page + 1))}>Next</button></nav>}
-    </main>
+    </div>
   );
 }
 
@@ -118,25 +119,38 @@ export function ProductPage() {
   const [zoom, setZoom] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
   const [activeImage, setActiveImage] = useState(0);
+  const [sizeError, setSizeError] = useState(false);
+  const sizeGridRef = useRef(null);
+
   useEffect(() => {
     setSelected('');
     setActiveImage(0);
+    setSizeError(false);
   }, [pathname]);
   useEffect(() => {
     if (product) trackEvent('product_viewed', { product_id: product.id });
   }, [product?.id]);
   if (!product) return <NotFound />;
-  const selectedVariant = product.variants.find((variant) => variant.id === selected);
+  const sortedVariants = sortVariantsBySize(product.variants || []);
+  const selectedVariant = sortedVariants.find((variant) => variant.id === selected);
   const images = product.images?.length ? product.images : [{ url: product.image, alt: product.brand + ' ' + product.name }];
   const currentImage = images[activeImage] || images[0];
   const sneaker = product.category === 'Sneakers';
   const addToBag = () => {
-    if (!selectedVariant || selectedVariant.available < 1) return;
+    if (!selectedVariant) {
+      setSizeError(true);
+      if (sizeGridRef.current) {
+        sizeGridRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+      setTimeout(() => setSizeError(false), 2400);
+      return;
+    }
+    if (selectedVariant.available < 1) return;
     add(product, selected);
   };
 
   return (
-    <main className="section product-page">
+    <div className="section product-page">
       <div className="breadcrumb"><Link to="/">Home</Link><span>/</span><Link to={'/shop?category=' + encodeURIComponent(product.category)}>{product.category}</Link><span>/</span><Link to={'/shop?brand=' + encodeURIComponent(product.brand)}>{product.brand}</Link><span>/</span><span>{product.name}</span></div>
       <div className="product-layout">
         <div className="gallery">
@@ -152,18 +166,45 @@ export function ProductPage() {
           <p className="price">{money(product.price)}</p>
           <p className="description">{product.description}</p>
           <div className="colour-row"><span>Colour</span><span>{product.color.split(' / ')[0]}</span></div>
-          <div className="size-heading"><strong>Select size</strong><button className="underlined" onClick={() => setGuideOpen(true)}>Size guide</button></div>
+          <div className="size-heading">
+            <strong>Select size</strong>
+            {sizeError && <span className="size-prompt-pill" role="alert">Please select a size</span>}
+            <button className="underlined" onClick={() => setGuideOpen(true)}>Size guide</button>
+          </div>
           <p className="size-system">Sizes shown with each variant’s recorded size system.</p>
-          <div className="sizes">{product.variants.map((variant) => (
-            <button key={variant.id} className={selected === variant.id ? 'selected' : ''} disabled={variant.available < 1} aria-pressed={selected === variant.id} aria-label={variant.size + (variant.available < 1 ? ' — sold out' : '')} onClick={() => setSelected(variant.id)}>{variant.size_system} {variant.size}{variant.colour && product.variants.some((row) => row.size === variant.size && row.id !== variant.id) ? ' · ' + variant.colour : ''}</button>
-          ))}</div>
-          <p className={'stock-message ' + (selected ? 'ready' : '')}>
-            {product.illustrative && !product.sellable
-              ? selectedVariant ? 'Preview availability only · not purchasable' : 'Illustrative sizes · preview only'
-              : selectedVariant ? selectedVariant.available + ' available in ' + selectedVariant.size : 'Choose your size to continue'}
+          <div ref={sizeGridRef} className={'sizes' + (sizeError ? ' shake-sizes' : '')}>
+            {sortedVariants.map((variant) => (
+              <button
+                key={variant.id}
+                className={selected === variant.id ? 'selected' : ''}
+                disabled={variant.available < 1}
+                aria-pressed={selected === variant.id}
+                aria-label={`${variant.size_system} ${variant.size}${variant.available < 1 ? ' — sold out' : ''}`}
+                onClick={() => {
+                  setSelected(variant.id);
+                  setSizeError(false);
+                }}
+              >
+                {variant.size_system} {variant.size}
+                {variant.colour && sortedVariants.some((row) => row.size === variant.size && row.id !== variant.id) ? ' · ' + variant.colour : ''}
+              </button>
+            ))}
+          </div>
+          <p className={'stock-message ' + (selected ? 'ready' : '') + (sizeError ? ' text-error' : '')}>
+            {sizeError
+              ? 'Please choose your size above before adding to bag.'
+              : product.illustrative && !product.sellable
+                ? selectedVariant ? `Preview availability only · ${selectedVariant.size_system} ${selectedVariant.size} selected` : 'Illustrative sizes · preview only'
+                : selectedVariant ? `✓ ${selectedVariant.size_system} ${selectedVariant.size} selected · ${selectedVariant.available} available` : 'Choose your size to continue'}
           </p>
           <div className="purchase-actions">
-            <Button disabled={!selectedVariant || selectedVariant.available < 1} onClick={addToBag}>Add to bag <ArrowRight size={20} /></Button>
+            <Button
+              disabled={selectedVariant && selectedVariant.available < 1}
+              onClick={addToBag}
+              className={!selectedVariant ? 'button-prompt-size' : ''}
+            >
+              {!selectedVariant ? 'Select size to add' : 'Add to bag'} <ArrowRight size={20} />
+            </Button>
             <button className="outline-icon" aria-label="Save to wishlist" aria-pressed={wishlist.includes(product.id)} onClick={() => toggleWish(product.id)}><Heart size={22} weight={wishlist.includes(product.id) ? 'fill' : 'regular'} /></button>
           </div>
           <div className="delivery-perks"><span><Truck size={21} />Tracked delivery</span><span><Package size={21} />Return requests</span></div>
@@ -176,7 +217,42 @@ export function ProductPage() {
       <section className="related"><div className="section-heading"><div><span className="eyebrow">MORE FROM THE DISTRICT</span><h2>Keep your rotation fresh</h2></div><Link to="/shop">Explore all <ArrowRight size={19} /></Link></div><ProductGrid products={products.filter((item) => item.id !== product.id).slice(0, 4)} /></section>
       {guideOpen && <Dialog title="Find your fit" onClose={() => setGuideOpen(false)}><p>Size labels vary by brand. Check the brand’s own fit guidance and product measurements before purchase. Exact product sizing will be verified before launch.</p></Dialog>}
       {zoom && <Dialog title={product.brand + ' ' + product.name} onClose={() => setZoom(false)}><img className="zoom-image" src={currentImage.url} alt={currentImage.alt} /></Dialog>}
-    </main>
+
+      {/* Mobile Sticky Quick Add Bar */}
+      <div className="mobile-sticky-action-bar" aria-label="Quick buy bar">
+        <div className="sticky-info">
+          <span className="sticky-brand">{product.brand}</span>
+          <span className="sticky-name">{product.name}</span>
+          <span className="sticky-price">{money(product.price)}</span>
+        </div>
+        <div className="sticky-controls">
+          <select
+            className="sticky-size-select"
+            value={selected}
+            onChange={(e) => {
+              setSelected(e.target.value);
+              setSizeError(false);
+            }}
+            aria-label="Select size"
+          >
+            <option value="">{selectedVariant ? `${selectedVariant.size_system} ${selectedVariant.size}` : 'Size'}</option>
+            {sortedVariants.map((v) => (
+              <option key={v.id} value={v.id} disabled={v.available < 1}>
+                {v.size_system} {v.size} {v.available < 1 ? '(Sold out)' : ''}
+              </option>
+            ))}
+          </select>
+          <button
+            type="button"
+            className="button sticky-add-btn"
+            disabled={selectedVariant && selectedVariant.available < 1}
+            onClick={addToBag}
+          >
+            {!selectedVariant ? 'Select size' : 'Add to bag'}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -325,9 +401,9 @@ export function Checkout() {
     }
   };
 
-  if (!lines.length) return <main className="section empty"><h1>Your bag is empty.</h1><p>Choose a piece before reviewing checkout.</p><Button to="/shop">Explore the collection</Button></main>;
+  if (!lines.length) return <div className="section empty checkout-empty"><h1>Your bag is empty.</h1><p>Choose a piece before reviewing checkout.</p><Button to="/shop">Explore the collection</Button></div>;
   return (
-    <main className="section checkout-page">
+    <div className="section checkout-page">
       <Link className="back-link" to="/shop"><ArrowLeft size={18} />Continue shopping</Link>
       <div className="page-heading">
         <div><span className="eyebrow">YOUR NEXT ROTATION</span><h1>Checkout</h1></div>
@@ -440,18 +516,18 @@ export function Checkout() {
             </div>
           </div>
 
-          <div><span>Subtotal</span><span>{money(subtotal)}</span></div>
+          <div className="summary-line"><span>Subtotal</span><span>{money(subtotal)}</span></div>
 
           {/* Promo code line if applied */}
           {appliedPromo && promoDiscount > 0 && (
-            <div className="discount-line">
+            <div className="discount-line summary-line">
               <span>Promo ({appliedPromo}) <button type="button" className="remove-promo-btn" onClick={handleRemovePromo} title="Remove promo"><X size={12} /></button></span>
               <span className="discount-amount">−{money(promoDiscount)}</span>
             </div>
           )}
 
-          <div><span>Singapore delivery</span><span>{delivery ? money(delivery) : 'Complimentary'}</span></div>
-          <div className="total"><strong>Total</strong><strong>{money(finalTotal)}</strong></div>
+          <div className="summary-line"><span>Singapore delivery</span><span>{delivery ? money(delivery) : 'Complimentary'}</span></div>
+          <div className="total summary-line"><strong>Total</strong><strong>{money(finalTotal)}</strong></div>
 
           {/* Promo Code Box */}
           <div className="promo-box">
@@ -495,7 +571,7 @@ export function Checkout() {
           <Link className="underlined" to="/help/returns">Delivery & returns</Link>
         </aside>
       </div>
-    </main>
+    </div>
   );
 }
 
@@ -536,7 +612,7 @@ export function Complete() {
   const shippingAddr = order?.shipping_address || {};
 
   return (
-    <main className="section complete-page">
+    <div className="section complete-page">
       <span className="eyebrow">SOLE DISTRICT</span>
       <h1>{paid ? 'Your order is confirmed.' : order?.status === 'expired' || order?.status === 'payment_failed' ? 'Payment was not completed.' : error ? 'Order unavailable.' : 'Checking your payment.'}</h1>
       <p>{paid ? 'Thank you. Your order has been placed and is being prepared for Singapore courier dispatch.' : pending ? 'Stripe is confirming your payment. This page will update when the verified payment event arrives.' : 'The store checks payment status with its server. A redirect by itself does not confirm a purchase.'}</p>
@@ -625,7 +701,7 @@ export function Complete() {
         <Button to="/orders">View your orders <ArrowRight size={19} /></Button>
         <Link className="underlined" to="/shop">Continue shopping</Link>
       </div>
-    </main>
+    </div>
   );
 }
 
@@ -670,7 +746,7 @@ export function Orders() {
   const load = () => api('orders/').then((data) => setOrders(data.orders)).catch((reason) => setError(reason.message)).finally(() => setLoading(false));
   useEffect(() => { load(); }, []);
   return (
-    <main className="section orders-page">
+    <div className="section orders-page">
       <span className="eyebrow">YOUR DISTRICT</span><h1>Your orders</h1>
       <p>Signed-in orders stay with your account. Use an email link to access a guest order on another device.</p><GuestAccess onAccess={load} />
       {loading ? <p role="status">Loading your orders…</p> : error ? <p className="form-error" role="alert">{error}</p> : orders.length ? (
@@ -684,7 +760,7 @@ export function Orders() {
       ) : (
         <div className="empty"><Package size={34} /><h2>A fresh start.</h2><p>Your orders appear here after a confirmed payment.</p><Button to="/shop">Find your next favourite</Button></div>
       )}
-    </main>
+    </div>
   );
 }
 
@@ -693,18 +769,18 @@ export { Account } from './Account';
 export function Wishlist() {
   const { products, wishlist } = useShop();
   const saved = products.filter((product) => wishlist.includes(product.id));
-  return <main className="section"><div className="page-heading"><div><span className="eyebrow">ON YOUR RADAR</span><h1>Your wishlist</h1></div><span>{saved.length} saved</span></div>{saved.length ? <ProductGrid products={saved} /> : <div className="empty"><Heart size={34} /><h2>Keep your favourites close.</h2><p>Tap the heart on any piece to save it here.</p><Button to="/shop">Explore the collection</Button></div>}</main>;
+  return <div className="section"><div className="page-heading"><div><span className="eyebrow">ON YOUR RADAR</span><h1>Your wishlist</h1></div><span>{saved.length} saved</span></div>{saved.length ? <ProductGrid products={saved} /> : <div className="empty"><Heart size={34} /><h2>Keep your favourites close.</h2><p>Tap the heart on any piece to save it here.</p><Button to="/shop">Explore the collection</Button></div>}</div>;
 }
 
 export function Brands() {
   const { products } = useShop();
   const brands = [...new Set(products.map((product) => product.brand))];
-  return <main className="section brands-page"><span className="eyebrow">LABELS IN THE DISTRICT</span><h1>The brands</h1><p>Familiar classics. Fresh perspectives.</p><div>{brands.map((brand, index) => <Link key={brand} to={'/shop?brand=' + encodeURIComponent(brand)}><span className="muted">{String(index + 1).padStart(2, '0')}</span><h2>{brand}</h2><ArrowUpRight size={28} /></Link>)}</div></main>;
+  return <div className="section brands-page"><span className="eyebrow">LABELS IN THE DISTRICT</span><h1>The brands</h1><p>Familiar classics. Fresh perspectives.</p><div>{brands.map((brand, index) => <Link key={brand} to={'/shop?brand=' + encodeURIComponent(brand)}><span className="muted">{String(index + 1).padStart(2, '0')}</span><h2>{brand}</h2><ArrowUpRight size={28} /></Link>)}</div></div>;
 }
 
 export function Journal() {
   const { products } = useShop();
-  return <main className="section journal-page"><span className="eyebrow">THE DISTRICT JOURNAL</span><h1>Wear it your way.</h1><img src="/assets/hero.webp" alt="Neutral streetwear editorial" /><div className="journal-copy"><h2>Build a rotation, not a collection.</h2><p>Start with pieces you reach for every day: a familiar pair of sneakers, an easy layer and a fit that feels like you. A thoughtful wardrobe is built around what you actually wear.</p><p>Neutral colours make mixing easier. Let texture do the work: soft fleece, worn-in suede and structured cotton. Choose fewer pieces, then find more ways to wear them.</p><Button to="/shop">Find your everyday pieces <ArrowRight size={19} /></Button><span className="muted">{products.length} preview pieces in the collection</span></div></main>;
+  return <div className="section journal-page"><span className="eyebrow">THE DISTRICT JOURNAL</span><h1>Wear it your way.</h1><img src="/assets/hero.webp" alt="Neutral streetwear editorial" /><div className="journal-copy"><h2>Build a rotation, not a collection.</h2><p>Start with pieces you reach for every day: a familiar pair of sneakers, an easy layer and a fit that feels like you. A thoughtful wardrobe is built around what you actually wear.</p><p>Neutral colours make mixing easier. Let texture do the work: soft fleece, worn-in suede and structured cotton. Choose fewer pieces, then find more ways to wear them.</p><Button to="/shop">Find your everyday pieces <ArrowRight size={19} /></Button><span className="muted">{products.length} preview pieces in the collection</span></div></div>;
 }
 
 export function Help() {
@@ -718,9 +794,9 @@ export function Help() {
     terms: ['Store information', 'SOLE DISTRICT is a prototype retailer project. Catalogue prices, images and stock are illustrative. Products cannot be purchased until sourcing, authentic product records, stock, policies and Stripe settings are verified.'],
   };
   const [title, copy] = content[kind] || content.store;
-  return <main className="section policy-page"><span className="eyebrow">GOOD TO KNOW</span><PublishedPolicy kind={kind} fallbackTitle={title} fallbackCopy={copy} /><Button to="/shop">Back to the collection <ArrowRight size={19} /></Button></main>;
+  return <div className="section policy-page"><span className="eyebrow">GOOD TO KNOW</span><PublishedPolicy kind={kind} fallbackTitle={title} fallbackCopy={copy} /><Button to="/shop">Back to the collection <ArrowRight size={19} /></Button></div>;
 }
 
 export function NotFound() {
-  return <main className="section empty"><h1>This piece is out of sight.</h1><p>Let’s get you back to the collection.</p><Button to="/shop">Explore the collection</Button></main>;
+  return <div className="section empty"><h1>This piece is out of sight.</h1><p>Let’s get you back to the collection.</p><Button to="/shop">Explore the collection</Button></div>;
 }

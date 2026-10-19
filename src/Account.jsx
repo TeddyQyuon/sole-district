@@ -83,9 +83,9 @@ export function Account() {
       setAddress(emptyAddress); await load(); setMessage('Address saved.');
     });
   };
-  if (loading) return <main className="section"><p role="status">Loading your account…</p></main>;
+  if (loading) return <div className="section"><p role="status">Loading your account…</p></div>;
   const emailAction = ['reset', 'verify'].includes(mode) && link.token;
-  return <main className="section account-page"><span className="eyebrow">YOUR DISTRICT</span><h1>{emailAction ? mode === 'reset' ? 'Choose a new password' : 'Verify your email' : user ? 'Your account' : mode === 'forgot' ? 'Reset your password' : mode === 'register' ? 'Create an account' : 'Sign in'}</h1>
+  return <div className="section account-page"><span className="eyebrow">YOUR DISTRICT</span><h1>{emailAction ? mode === 'reset' ? 'Choose a new password' : 'Verify your email' : user ? 'Your account' : mode === 'forgot' ? 'Reset your password' : mode === 'register' ? 'Create an account' : 'Sign in'}</h1>
     {message && <p className="notice notice-soft" role="status">{message}</p>}{error && <p className="form-error" role="alert">{error}</p>}
     {user && !emailAction ? <div className="account-grid"><section className="account-card"><h2>Welcome back</h2><p>{user.name || user.email}</p><p>{user.email_verified ? 'Email verified' : 'Your email needs verification.'}</p>
       {!user.email_verified && <button className="underlined" disabled={busy} onClick={() => run(async () => { const data = await api('auth/email/', { method: 'POST', body: JSON.stringify({ purpose: 'verify', email: user.email }) }); setMessage(data.message); })}>Resend verification email</button>}
@@ -109,5 +109,5 @@ export function Account() {
       <button className="button button-dark" disabled={busy}>{busy ? 'Please wait…' : mode === 'forgot' ? 'Email a reset link' : mode === 'reset' ? 'Reset password' : mode === 'verify' ? 'Verify email' : mode === 'register' ? 'Create account' : 'Sign in'}</button>
       <p><button type="button" className="underlined" onClick={() => { setMode(mode === 'register' ? 'login' : 'register'); setError(''); }}>{mode === 'register' ? 'Sign in' : 'Create an account'}</button>{' · '}<button type="button" className="underlined" onClick={() => { setMode(mode === 'forgot' ? 'login' : 'forgot'); setError(''); }}>{mode === 'forgot' ? 'Back to sign in' : 'Forgot password?'}</button></p>
     </form>}
-  </main>;
+  </div>;
 }
