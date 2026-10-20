@@ -1,746 +1,5 @@
 [
   {
-    "id": "jordan-1-chicago-reimagined",
-    "brand": "Jordan",
-    "name": "Air Jordan 1 Retro High OG 'Chicago Lost & Found'",
-    "category": "Sneakers",
-    "silhouette": "Air Jordan 1",
-    "badge": "Grail",
-    "price": 27900,
-    "color": "Varsity Red / Black / Sail",
-    "image": "/assets/sneakers/jordan-1-chicago-reimagined-1.jpg",
-    "images": [
-      {
-        "url": "/assets/sneakers/jordan-1-chicago-reimagined-1.jpg",
-        "alt": "Air Jordan 1 High OG Chicago Lost and Found lateral profile"
-      },
-      {
-        "url": "/assets/sneakers/jordan-1-chicago-reimagined-2.jpg",
-        "alt": "Air Jordan 1 High OG Chicago Lost and Found 3/4 angle"
-      }
-    ],
-    "description": "An iconic reimagining of the 1985 classic. Vintage accents, aged leather details and cracked black collars celebrate the spirit of deadstock discoveries.",
-    "detail": "Premium aged leather upper with cracked collar aesthetic. Air-Sole cushioning encapsulated in polyurethane midsole. Classic pivot-circle rubber traction. Includes retro packaging and spare laces.",
-    "sizes": [
-      "7",
-      "7.5",
-      "8",
-      "8.5",
-      "9",
-      "9.5",
-      "10",
-      "10.5",
-      "11"
-    ],
-    "unavailable": [
-      "7",
-      "11"
-    ],
-    "featured": true
-  },
-  {
-    "id": "jordan-4-military-black",
-    "brand": "Jordan",
-    "name": "Air Jordan 4 Retro 'Military Black'",
-    "category": "Sneakers",
-    "silhouette": "Air Jordan 4",
-    "badge": "Trending",
-    "price": 29900,
-    "color": "White / Black / Neutral Grey",
-    "image": "/assets/sneakers/jordan-4-military-black-1.jpg",
-    "images": [
-      {
-        "url": "/assets/sneakers/jordan-4-military-black-1.jpg",
-        "alt": "Air Jordan 4 Military Black lateral profile"
-      },
-      {
-        "url": "/assets/sneakers/jordan-4-military-black-2.jpg",
-        "alt": "Air Jordan 4 Military Black 3/4 angle"
-      }
-    ],
-    "description": "A clean monochromatic translation of the original 1989 silhouette. Smooth white leather paired with light grey suede mudguards and deep black accents.",
-    "detail": "Genuine leather upper with soft suede overlay at the toe. Molded eyelets, quarter panel mesh netting, and visible Air-Sole unit in the heel. Sculpted polyurethane midsole and herringbone rubber outsole.",
-    "sizes": [
-      "7",
-      "7.5",
-      "8",
-      "8.5",
-      "9",
-      "9.5",
-      "10",
-      "10.5",
-      "11"
-    ],
-    "unavailable": [
-      "10.5"
-    ],
-    "featured": true
-  },
-  {
-    "id": "jordan-4-bred-reimagined",
-    "brand": "Jordan",
-    "name": "Air Jordan 4 Retro 'Bred Reimagined'",
-    "category": "Sneakers",
-    "silhouette": "Air Jordan 4",
-    "badge": "Iconic",
-    "price": 31900,
-    "color": "Black / Fire Red / Cement Grey",
-    "image": "/assets/sneakers/jordan-4-bred-reimagined-1.jpg",
-    "images": [
-      {
-        "url": "/assets/sneakers/jordan-4-bred-reimagined-1.jpg",
-        "alt": "Air Jordan 4 Bred Reimagined lateral profile"
-      },
-      {
-        "url": "/assets/sneakers/jordan-4-bred-reimagined-2.jpg",
-        "alt": "Air Jordan 4 Bred Reimagined 3/4 angle"
-      }
-    ],
-    "description": "The legendary 1989 Bred colorway reimagined with a luxurious, supple tumbled leather upper in place of traditional nubuck. Completed with Nike Air heel branding.",
-    "detail": "Premium black tumbled leather upper. Visible Air cushioning in the heel with encapsulated forefoot unit. TPU support wings, heritage netting, and OG Nike Air embossed heel tab.",
-    "sizes": [
-      "7",
-      "7.5",
-      "8",
-      "8.5",
-      "9",
-      "9.5",
-      "10",
-      "10.5",
-      "11"
-    ],
-    "unavailable": [
-      "7.5"
-    ],
-    "featured": true
-  },
-  {
-    "id": "jordan-1-dark-mocha",
-    "brand": "Jordan",
-    "name": "Air Jordan 1 Retro High OG 'Dark Mocha'",
-    "category": "Sneakers",
-    "silhouette": "Air Jordan 1",
-    "badge": "Popular",
-    "price": 28900,
-    "color": "Sail / Dark Mocha / Black",
-    "image": "/assets/sneakers/jordan-1-dark-mocha-1.jpg",
-    "images": [
-      {
-        "url": "/assets/sneakers/jordan-1-dark-mocha-1.jpg",
-        "alt": "Air Jordan 1 Dark Mocha lateral profile"
-      },
-      {
-        "url": "/assets/sneakers/jordan-1-dark-mocha-2.jpg",
-        "alt": "Air Jordan 1 Dark Mocha 3/4 angle"
-      }
-    ],
-    "description": "One of the most sought-after modern Jordan 1 releases. Rich Dark Mocha nubuck wrapping the heel and collar, complemented by clean sail leather and black overlays.",
-    "detail": "Rich nubuck heel counters and collar panels combined with full-grain leather overlays. Air-Sole cushioning in the heel. Perforated toe box for ventilation.",
-    "sizes": [
-      "7",
-      "7.5",
-      "8",
-      "8.5",
-      "9",
-      "9.5",
-      "10",
-      "10.5"
-    ],
-    "unavailable": [
-      "8"
-    ],
-    "featured": false
-  },
-  {
-    "id": "jordan-1-low-travis-scott-reverse-mocha",
-    "brand": "Jordan",
-    "name": "Air Jordan 1 Retro Low OG 'Travis Scott Reverse Mocha'",
-    "category": "Sneakers",
-    "silhouette": "Air Jordan 1",
-    "badge": "Hype",
-    "price": 39900,
-    "color": "Sail / University Red / Ridgerock",
-    "image": "/assets/sneakers/jordan-1-low-travis-scott-reverse-mocha-1.jpg",
-    "images": [
-      {
-        "url": "/assets/sneakers/jordan-1-low-travis-scott-reverse-mocha-1.jpg",
-        "alt": "Travis Scott Jordan 1 Low Reverse Mocha lateral profile"
-      },
-      {
-        "url": "/assets/sneakers/jordan-1-low-travis-scott-reverse-mocha-2.jpg",
-        "alt": "Travis Scott Jordan 1 Low Reverse Mocha 3/4 angle"
-      }
-    ],
-    "description": "A legendary low-top collaboration featuring Houston rapper Travis Scott's signature oversized reversed Swoosh, earthy neutral tones, and Cactus Jack embroidery.",
-    "detail": "Brown nubuck base with off-white sail leather overlays. Inverted oversized leather Swoosh on the lateral side. Mismatched Cactus Jack face and Jordan Wings embroidery at heels.",
-    "sizes": [
-      "7",
-      "7.5",
-      "8",
-      "8.5",
-      "9",
-      "9.5",
-      "10",
-      "10.5"
-    ],
-    "unavailable": [
-      "7",
-      "9.5"
-    ],
-    "featured": true
-  },
-  {
-    "id": "jordan-3-white-cement-reimagined",
-    "brand": "Jordan",
-    "name": "Air Jordan 3 Retro 'White Cement Reimagined'",
-    "category": "Sneakers",
-    "silhouette": "Air Jordan 3",
-    "badge": "Classic",
-    "price": 28900,
-    "color": "Summit White / Fire Red / Cement Grey",
-    "image": "/assets/sneakers/jordan-3-white-cement-reimagined-1.jpg",
-    "images": [
-      {
-        "url": "/assets/sneakers/jordan-3-white-cement-reimagined-1.jpg",
-        "alt": "Air Jordan 3 White Cement Reimagined lateral profile"
-      },
-      {
-        "url": "/assets/sneakers/jordan-3-white-cement-reimagined-2.jpg",
-        "alt": "Air Jordan 3 White Cement Reimagined 3/4 angle"
-      }
-    ],
-    "description": "Crafted to the exact 1988 specifications. Featuring vintage elephant print overlays, pre-yellowed sail midsole accents, and original Nike Air heel branding.",
-    "detail": "Supple white leather upper with classic elephant print mudguards. Visible heel Air unit with pre-aged sail detailing. Polyurethane midsole and rubber outsole with vintage branding.",
-    "sizes": [
-      "7",
-      "7.5",
-      "8",
-      "8.5",
-      "9",
-      "9.5",
-      "10",
-      "10.5"
-    ],
-    "unavailable": [],
-    "featured": false
-  },
-  {
-    "id": "jordan-11-concord",
-    "brand": "Jordan",
-    "name": "Air Jordan 11 Retro 'Concord'",
-    "category": "Sneakers",
-    "silhouette": "Air Jordan 11",
-    "badge": "Heritage",
-    "price": 32900,
-    "color": "White / Black / Dark Concord",
-    "image": "/assets/sneakers/jordan-11-concord-1.jpg",
-    "images": [
-      {
-        "url": "/assets/sneakers/jordan-11-concord-1.jpg",
-        "alt": "Air Jordan 11 Concord lateral profile"
-      },
-      {
-        "url": "/assets/sneakers/jordan-11-concord-2.jpg",
-        "alt": "Air Jordan 11 Concord 3/4 angle"
-      }
-    ],
-    "description": "Tinker Hatfield's crowning achievement and a historic basketball grail. Deep black patent leather cut high to original specs, white ballistic mesh, and ice-blue translucent soles.",
-    "detail": "High-cut patent leather with breathable ballistic mesh upper. Full-length Air-Sole unit, carbon fiber shank plate, and icy translucent rubber outsole with Concord traction pods.",
-    "sizes": [
-      "7.5",
-      "8",
-      "8.5",
-      "9",
-      "9.5",
-      "10",
-      "10.5",
-      "11"
-    ],
-    "unavailable": [
-      "8.5"
-    ],
-    "featured": false
-  },
-  {
-    "id": "jordan-1-low-wolf-grey",
-    "brand": "Jordan",
-    "name": "Air Jordan 1 Low 'Wolf Grey'",
-    "category": "Sneakers",
-    "silhouette": "Air Jordan 1",
-    "badge": "Essential",
-    "price": 18900,
-    "color": "Wolf Grey / White / Photon Dust",
-    "image": "/assets/sneakers/jordan-1-low-wolf-grey-1.jpg",
-    "images": [
-      {
-        "url": "/assets/sneakers/jordan-1-low-wolf-grey-1.jpg",
-        "alt": "Air Jordan 1 Low Wolf Grey lateral profile"
-      },
-      {
-        "url": "/assets/sneakers/jordan-1-low-wolf-grey-2.jpg",
-        "alt": "Air Jordan 1 Low Wolf Grey 3/4 angle"
-      }
-    ],
-    "description": "Celebrated for its resemblance to ultra-luxury collaborations. Clean white leather base, soft grey leather overlays, and an icy semi-translucent outsole.",
-    "detail": "Smooth leather upper with stitched overlays. Encapsulated Air-Sole cushioning in heel. Semi-translucent icy rubber outsole.",
-    "sizes": [
-      "6",
-      "6.5",
-      "7",
-      "7.5",
-      "8",
-      "8.5",
-      "9",
-      "9.5",
-      "10"
-    ],
-    "unavailable": [
-      "6"
-    ],
-    "featured": false
-  },
-  {
-    "id": "yeezy-boost-350-v2-zebra",
-    "brand": "adidas Yeezy",
-    "name": "Yeezy Boost 350 V2 'Zebra'",
-    "category": "Sneakers",
-    "silhouette": "Yeezy 350",
-    "badge": "Iconic",
-    "price": 34900,
-    "color": "White / Core Black / Red",
-    "image": "/assets/sneakers/yeezy-boost-350-v2-zebra-1.jpg",
-    "images": [
-      {
-        "url": "/assets/sneakers/yeezy-boost-350-v2-zebra-1.jpg",
-        "alt": "adidas Yeezy Boost 350 V2 Zebra lateral profile"
-      },
-      {
-        "url": "/assets/sneakers/yeezy-boost-350-v2-zebra-2.jpg",
-        "alt": "adidas Yeezy Boost 350 V2 Zebra 3/4 angle"
-      }
-    ],
-    "description": "An enduring icon of modern sneaker history. Re-engineered Primeknit upper featuring black and white zebra marbling and reversed red 'SPLY-350' script.",
-    "detail": "Breathable Primeknit upper in contrasting stripe pattern. Full-length Boost midsole encapsulated in translucent ribbed TPU sidewalls. Matching heel pull tab.",
-    "sizes": [
-      "6.5",
-      "7",
-      "7.5",
-      "8",
-      "8.5",
-      "9",
-      "9.5",
-      "10",
-      "10.5",
-      "11"
-    ],
-    "unavailable": [
-      "7",
-      "10.5"
-    ],
-    "featured": true
-  },
-  {
-    "id": "yeezy-boost-350-v2-onyx",
-    "brand": "adidas Yeezy",
-    "name": "Yeezy Boost 350 V2 'Onyx'",
-    "category": "Sneakers",
-    "silhouette": "Yeezy 350",
-    "badge": "Popular",
-    "price": 33900,
-    "color": "Onyx / Core Black / Charcoal",
-    "image": "/assets/sneakers/yeezy-boost-350-v2-onyx-1.jpg",
-    "images": [
-      {
-        "url": "/assets/sneakers/yeezy-boost-350-v2-onyx-1.jpg",
-        "alt": "adidas Yeezy Boost 350 V2 Onyx lateral profile"
-      },
-      {
-        "url": "/assets/sneakers/yeezy-boost-350-v2-onyx-2.jpg",
-        "alt": "adidas Yeezy Boost 350 V2 Onyx 3/4 angle"
-      }
-    ],
-    "description": "A versatile blackout edition of the 350 V2 silhouette. Monochromatic charcoal Primeknit with a sheer monofilament side stripe and pillowy Boost cushioning.",
-    "detail": "Engineered Primeknit upper in muted charcoal tones. Post-dyed monofilament side stripe. Responsive full-length Boost cushioning in semi-translucent rubber cage.",
-    "sizes": [
-      "6.5",
-      "7",
-      "7.5",
-      "8",
-      "8.5",
-      "9",
-      "9.5",
-      "10",
-      "10.5"
-    ],
-    "unavailable": [
-      "8.5"
-    ],
-    "featured": true
-  },
-  {
-    "id": "yeezy-boost-700-wave-runner",
-    "brand": "adidas Yeezy",
-    "name": "Yeezy Boost 700 'Wave Runner'",
-    "category": "Sneakers",
-    "silhouette": "Yeezy 700",
-    "badge": "Grail",
-    "price": 38900,
-    "color": "Solid Grey / Chalk White / Core Black",
-    "image": "/assets/sneakers/yeezy-boost-700-wave-runner-1.jpg",
-    "images": [
-      {
-        "url": "/assets/sneakers/yeezy-boost-700-wave-runner-1.jpg",
-        "alt": "adidas Yeezy Boost 700 Wave Runner lateral profile"
-      },
-      {
-        "url": "/assets/sneakers/yeezy-boost-700-wave-runner-2.jpg",
-        "alt": "adidas Yeezy Boost 700 Wave Runner 3/4 angle"
-      }
-    ],
-    "description": "The shoe that defined the dad-shoe era. Multi-layered panels of suede, premium leather, and mesh with vibrant teal, neon laces, and sculpted orange midsole accents.",
-    "detail": "Layered upper combining grey suede, blue mesh, and leather overlays. Sculpted full-length Boost midsole with vibrant orange accents. Reflective three-stripe elements beneath side mesh.",
-    "sizes": [
-      "7",
-      "7.5",
-      "8",
-      "8.5",
-      "9",
-      "9.5",
-      "10",
-      "10.5"
-    ],
-    "unavailable": [
-      "9"
-    ],
-    "featured": true
-  },
-  {
-    "id": "yeezy-slide-bone",
-    "brand": "adidas Yeezy",
-    "name": "Yeezy Slide 'Bone'",
-    "category": "Sneakers",
-    "silhouette": "Yeezy Slide",
-    "badge": "Trending",
-    "price": 14900,
-    "color": "Bone / Bone",
-    "image": "/assets/sneakers/yeezy-slide-bone-1.jpg",
-    "images": [
-      {
-        "url": "/assets/sneakers/yeezy-slide-bone-1.jpg",
-        "alt": "adidas Yeezy Slide Bone lateral profile"
-      },
-      {
-        "url": "/assets/sneakers/yeezy-slide-bone-2.jpg",
-        "alt": "adidas Yeezy Slide Bone 3/4 angle"
-      }
-    ],
-    "description": "Minimalist slip-on luxury with seamless one-piece injection-molded EVA foam construction for lightweight, resilient comfort.",
-    "detail": "Injected EVA foam compound for lightweight comfort. Soft top layer in the footbed offers immediate step-in cushioning. Strategic groove outsole delivers optimal flexibility and traction.",
-    "sizes": [
-      "6",
-      "7",
-      "8",
-      "9",
-      "10",
-      "11"
-    ],
-    "unavailable": [
-      "7"
-    ],
-    "featured": false
-  },
-  {
-    "id": "yeezy-foam-runner-onyx",
-    "brand": "adidas Yeezy",
-    "name": "Yeezy Foam Runner 'Onyx'",
-    "category": "Sneakers",
-    "silhouette": "Yeezy Foam Runner",
-    "badge": "Future",
-    "price": 17900,
-    "color": "Onyx / Carbon",
-    "image": "/assets/sneakers/yeezy-foam-runner-onyx-1.jpg",
-    "images": [
-      {
-        "url": "/assets/sneakers/yeezy-foam-runner-onyx-1.jpg",
-        "alt": "adidas Yeezy Foam Runner Onyx lateral profile"
-      },
-      {
-        "url": "/assets/sneakers/yeezy-foam-runner-onyx-2.jpg",
-        "alt": "adidas Yeezy Foam Runner Onyx 3/4 angle"
-      }
-    ],
-    "description": "Futuristic sculpted slip-on footwear engineered from an innovative blend of lightweight EVA foam and harvested algae.",
-    "detail": "One-piece molded EVA and algae foam construction. Strategically mapped ventilation ports for breathability and airflow. Textured footbed prevents foot slippage.",
-    "sizes": [
-      "7",
-      "8",
-      "9",
-      "10",
-      "11"
-    ],
-    "unavailable": [
-      "8"
-    ],
-    "featured": false
-  },
-  {
-    "id": "yeezy-foam-runner-sand",
-    "brand": "adidas Yeezy",
-    "name": "Yeezy Foam Runner 'Sand'",
-    "category": "Sneakers",
-    "silhouette": "Yeezy Foam Runner",
-    "badge": "Popular",
-    "price": 17900,
-    "color": "Sand / Cream",
-    "image": "/assets/sneakers/yeezy-foam-runner-sand-1.jpg",
-    "images": [
-      {
-        "url": "/assets/sneakers/yeezy-foam-runner-sand-1.jpg",
-        "alt": "adidas Yeezy Foam Runner Sand lateral profile"
-      },
-      {
-        "url": "/assets/sneakers/yeezy-foam-runner-sand-2.jpg",
-        "alt": "adidas Yeezy Foam Runner Sand 3/4 angle"
-      }
-    ],
-    "description": "Lightweight sculptural footwear rendered in warm desert sand tones, blending bio-based materials and aerated organic ergonomics.",
-    "detail": "One-piece molded EVA and algae foam construction. Flowing lines with strategically mapped ventilation ports. Seamless slip-on comfort.",
-    "sizes": [
-      "7",
-      "8",
-      "9",
-      "10",
-      "11"
-    ],
-    "unavailable": [],
-    "featured": false
-  },
-  {
-    "id": "nike-dunk-low-panda",
-    "brand": "Nike",
-    "name": "Dunk Low 'Panda'",
-    "category": "Sneakers",
-    "silhouette": "Dunk Low",
-    "badge": "Top Seller",
-    "price": 17900,
-    "color": "White / Black",
-    "image": "/assets/sneakers/nike-dunk-low-panda-1.jpg",
-    "images": [
-      {
-        "url": "/assets/sneakers/nike-dunk-low-panda-1.jpg",
-        "alt": "Nike Dunk Low Panda lateral profile"
-      },
-      {
-        "url": "/assets/sneakers/nike-dunk-low-panda-2.jpg",
-        "alt": "Nike Dunk Low Panda 3/4 angle"
-      }
-    ],
-    "description": "The undisputed streetwear rotation essential. Crisp two-tone white and black leather color blocking that effortlessly pairs with any wardrobe.",
-    "detail": "Smooth leather upper with contrasting black overlays. Low-cut padded collar and perforated toe box. Lightweight foam midsole with durable pivot-circle rubber outsole.",
-    "sizes": [
-      "6",
-      "6.5",
-      "7",
-      "7.5",
-      "8",
-      "8.5",
-      "9",
-      "9.5",
-      "10",
-      "10.5"
-    ],
-    "unavailable": [
-      "6.5"
-    ],
-    "featured": true
-  },
-  {
-    "id": "nike-dunk-low-grey-fog",
-    "brand": "Nike",
-    "name": "Dunk Low 'Grey Fog'",
-    "category": "Sneakers",
-    "silhouette": "Dunk Low",
-    "badge": "Essential",
-    "price": 18900,
-    "color": "White / Grey Fog",
-    "image": "/assets/sneakers/nike-dunk-low-grey-fog-1.jpg",
-    "images": [
-      {
-        "url": "/assets/sneakers/nike-dunk-low-grey-fog-1.jpg",
-        "alt": "Nike Dunk Low Grey Fog lateral profile"
-      },
-      {
-        "url": "/assets/sneakers/nike-dunk-low-grey-fog-2.jpg",
-        "alt": "Nike Dunk Low Grey Fog 3/4 angle"
-      }
-    ],
-    "description": "An understated, elevated neutral take on the basketball-turned-skate icon. Clean white leather base with soft grey fog leather overlays.",
-    "detail": "Full-grain leather upper with tonal grey swoosh and heel tab. Breathable nylon tongue and cushioned collar. Two-tone rubber cupsole with foam wedge.",
-    "sizes": [
-      "6.5",
-      "7",
-      "7.5",
-      "8",
-      "8.5",
-      "9",
-      "9.5",
-      "10"
-    ],
-    "unavailable": [
-      "8"
-    ],
-    "featured": false
-  },
-  {
-    "id": "nike-air-force-1-triple-white",
-    "brand": "Nike",
-    "name": "Air Force 1 '07 'Triple White'",
-    "category": "Sneakers",
-    "silhouette": "Air Force 1",
-    "badge": "Classic",
-    "price": 15900,
-    "color": "White / White / White",
-    "image": "/assets/sneakers/nike-air-force-1-triple-white-1.jpg",
-    "images": [
-      {
-        "url": "/assets/sneakers/nike-air-force-1-triple-white-1.jpg",
-        "alt": "Nike Air Force 1 07 Triple White lateral profile"
-      },
-      {
-        "url": "/assets/sneakers/nike-air-force-1-triple-white-2.jpg",
-        "alt": "Nike Air Force 1 07 Triple White 3/4 angle"
-      }
-    ],
-    "description": "The all-time classic. Crisp leather edges, clean lines, and timeless comfort that set the standard for street style across generations.",
-    "detail": "Real leather upper with stitched overlays. Encapsulated Nike Air unit for lightweight all-day cushioning. Perforated toe box and metal 'AF-1' lace deubre.",
-    "sizes": [
-      "6",
-      "6.5",
-      "7",
-      "7.5",
-      "8",
-      "8.5",
-      "9",
-      "9.5",
-      "10",
-      "10.5",
-      "11"
-    ],
-    "unavailable": [
-      "6"
-    ],
-    "featured": false
-  },
-  {
-    "id": "nike-sb-dunk-low-dodgers",
-    "brand": "Nike",
-    "name": "Nike SB Dunk Low Pro 'Los Angeles Dodgers'",
-    "category": "Sneakers",
-    "silhouette": "Dunk Low",
-    "badge": "Collab",
-    "price": 25900,
-    "color": "Deep Royal Blue / White / Sport Red",
-    "image": "/assets/sneakers/nike-sb-dunk-low-dodgers-1.jpg",
-    "images": [
-      {
-        "url": "/assets/sneakers/nike-sb-dunk-low-dodgers-1.jpg",
-        "alt": "Nike SB Dunk Low Dodgers lateral profile"
-      },
-      {
-        "url": "/assets/sneakers/nike-sb-dunk-low-dodgers-2.jpg",
-        "alt": "Nike SB Dunk Low Dodgers 3/4 angle"
-      }
-    ],
-    "description": "MLB-inspired skateboarding grail featuring rich royal blue suede over crisp white leather, finished with a gum sole displaying a pink bubblegum hit on the heel.",
-    "detail": "Plush suede and leather upper. Padded fat tongue with hidden inner tongue graphics (palm tree and welcome sign). Zoom Air heel unit in the insole.",
-    "sizes": [
-      "7",
-      "7.5",
-      "8",
-      "8.5",
-      "9",
-      "9.5",
-      "10"
-    ],
-    "unavailable": [
-      "7"
-    ],
-    "featured": true
-  },
-  {
-    "id": "nike-air-max-1-travis-scott-wheat",
-    "brand": "Nike",
-    "name": "Air Max 1 'Travis Scott Cactus Jack Wheat'",
-    "category": "Sneakers",
-    "silhouette": "Air Max 1",
-    "badge": "Hype",
-    "price": 34900,
-    "color": "Wheat / Lemon Drop / Baroque Brown",
-    "image": "/assets/sneakers/nike-air-max-1-travis-scott-wheat-1.jpg",
-    "images": [
-      {
-        "url": "/assets/sneakers/nike-air-max-1-travis-scott-wheat-1.jpg",
-        "alt": "Nike Air Max 1 Travis Scott Wheat lateral profile"
-      },
-      {
-        "url": "/assets/sneakers/nike-air-max-1-travis-scott-wheat-2.jpg",
-        "alt": "Nike Air Max 1 Travis Scott Wheat 3/4 angle"
-      }
-    ],
-    "description": "Outdoor-inspired rework of the visible Air pioneer with custom webbing, reverse lateral Swoosh, CACT.US CORP heel crest, and trail lacing.",
-    "detail": "Mixed material upper with mesh underlays and rich wheat nubuck. Reverse Swoosh insignia. Patterned nylon webbing straps and bungee-style toggle lacing.",
-    "sizes": [
-      "7",
-      "7.5",
-      "8",
-      "8.5",
-      "9",
-      "9.5",
-      "10",
-      "10.5"
-    ],
-    "unavailable": [
-      "10.5"
-    ],
-    "featured": true
-  },
-  {
-    "id": "new-balance-2002r",
-    "brand": "New Balance",
-    "name": "2002R",
-    "category": "Sneakers",
-    "silhouette": "2002R",
-    "badge": "Popular",
-    "price": 22900,
-    "color": "Rain Cloud / Marblehead",
-    "image": "/assets/new-balance.webp",
-    "images": [
-      {
-        "url": "/assets/new-balance.webp",
-        "alt": "New Balance 2002R Rain Cloud Marblehead"
-      }
-    ],
-    "description": "A considered everyday classic. Suede overlays, breathable mesh and cushioned support.",
-    "detail": "Suede and mesh upper. Cushioned midsole and durable rubber outsole. Standard fit; consult the size guide before choosing your size.",
-    "sizes": [
-      "6",
-      "6.5",
-      "7",
-      "7.5",
-      "8",
-      "8.5",
-      "9",
-      "9.5",
-      "10",
-      "10.5"
-    ],
-    "unavailable": [
-      "6",
-      "10.5"
-    ],
-    "featured": true
-  },
-  {
     "id": "adidas-samba-og",
     "brand": "adidas Originals",
     "name": "Samba OG",
@@ -757,7 +16,7 @@
       }
     ],
     "description": "From the terrace to the everyday. A low-profile icon with leather texture and a classic gum sole.",
-    "detail": "Leather upper, textile lining and gum rubber outsole. Wipe clean with a soft cloth. Refer to the size guide for fit.",
+    "detail": "Leather upper, textile lining and gum rubber outsole. Wipe clean with a soft cloth.",
     "sizes": [
       "6",
       "6.5",
@@ -792,7 +51,7 @@
       }
     ],
     "description": "A street staple in an understated palette. Layered textures and visible cushioning, made for your daily rotation.",
-    "detail": "Mixed-material upper and rubber outsole. Visible heel cushioning. Clean with a soft brush; avoid machine washing.",
+    "detail": "Mixed-material upper and rubber outsole. Visible heel cushioning. Clean with a soft brush.",
     "sizes": [
       "6",
       "6.5",
@@ -892,5 +151,4248 @@
     ],
     "unavailable": [],
     "featured": false
+  },
+  {
+    "id": "air-jordan-1-retro-high-og-chicago-reimagined",
+    "brand": "Jordan",
+    "name": "Air Jordan 1 Retro High OG 'Chicago Lost & Found'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 1",
+    "badge": "Grail",
+    "price": 27900,
+    "color": "Varsity Red / Black / Sail / Muslin",
+    "image": "/assets/sneakers/air-jordan-1-retro-high-og-chicago-reimagined-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-high-og-chicago-reimagined-1.jpg",
+        "alt": "Jordan Air Jordan 1 Retro High OG 'Chicago Lost & Found' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-high-og-chicago-reimagined-2.jpg",
+        "alt": "Jordan Air Jordan 1 Retro High OG 'Chicago Lost & Found' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 1 Retro High OG 'Chicago Lost & Found' featuring verified deadstock construction, premium materials, and iconic Air Jordan 1 heritage.",
+    "detail": "Style Code: DZ5485-612. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": true
+  },
+  {
+    "id": "air-jordan-1-retro-low-og-sp-travis-scott-reverse-mocha",
+    "brand": "Jordan",
+    "name": "Air Jordan 1 Retro Low OG 'Travis Scott Reverse Mocha'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 1",
+    "badge": "Hype",
+    "price": 39900,
+    "color": "Sail / University Red / Ridgerock",
+    "image": "/assets/sneakers/air-jordan-1-retro-low-og-sp-travis-scott-reverse-mocha-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-low-og-sp-travis-scott-reverse-mocha-1.jpg",
+        "alt": "Jordan Air Jordan 1 Retro Low OG 'Travis Scott Reverse Mocha' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-low-og-sp-travis-scott-reverse-mocha-2.jpg",
+        "alt": "Jordan Air Jordan 1 Retro Low OG 'Travis Scott Reverse Mocha' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 1 Retro Low OG 'Travis Scott Reverse Mocha' featuring verified deadstock construction, premium materials, and iconic Air Jordan 1 heritage.",
+    "detail": "Style Code: DM7866-162. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": true
+  },
+  {
+    "id": "air-jordan-1-retro-high-travis-scott",
+    "brand": "Jordan",
+    "name": "Air Jordan 1 Retro High OG 'Travis Scott'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 1",
+    "badge": "Grail",
+    "price": 45900,
+    "color": "Sail / Dark Mocha / University Red / Black",
+    "image": "/assets/sneakers/air-jordan-1-retro-high-travis-scott-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-high-travis-scott-1.jpg",
+        "alt": "Jordan Air Jordan 1 Retro High OG 'Travis Scott' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-high-travis-scott-2.jpg",
+        "alt": "Jordan Air Jordan 1 Retro High OG 'Travis Scott' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 1 Retro High OG 'Travis Scott' featuring verified deadstock construction, premium materials, and iconic Air Jordan 1 heritage.",
+    "detail": "Style Code: CD4487-100. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": true
+  },
+  {
+    "id": "air-jordan-1-retro-high-dark-mocha",
+    "brand": "Jordan",
+    "name": "Air Jordan 1 Retro High OG 'Dark Mocha'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 1",
+    "badge": "Popular",
+    "price": 28900,
+    "color": "Sail / Dark Mocha / Black",
+    "image": "/assets/sneakers/air-jordan-1-retro-high-dark-mocha-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-high-dark-mocha-1.jpg",
+        "alt": "Jordan Air Jordan 1 Retro High OG 'Dark Mocha' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-high-dark-mocha-2.jpg",
+        "alt": "Jordan Air Jordan 1 Retro High OG 'Dark Mocha' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 1 Retro High OG 'Dark Mocha' featuring verified deadstock construction, premium materials, and iconic Air Jordan 1 heritage.",
+    "detail": "Style Code: 555088-105. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-1-low-wolf-grey-w",
+    "brand": "Jordan",
+    "name": "Air Jordan 1 Low 'Wolf Grey'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 1",
+    "badge": "Essential",
+    "price": 18900,
+    "color": "Wolf Grey / White / Photon Dust",
+    "image": "/assets/sneakers/air-jordan-1-low-wolf-grey-w-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-1-low-wolf-grey-w-1.jpg",
+        "alt": "Jordan Air Jordan 1 Low 'Wolf Grey' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-1-low-wolf-grey-w-2.jpg",
+        "alt": "Jordan Air Jordan 1 Low 'Wolf Grey' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 1 Low 'Wolf Grey' featuring verified deadstock construction, premium materials, and iconic Air Jordan 1 heritage.",
+    "detail": "Style Code: DC0774-105. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-1-retro-high-court-purple-white",
+    "brand": "Jordan",
+    "name": "Air Jordan 1 Retro High OG 'Court Purple 2.0'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 1",
+    "badge": "Popular",
+    "price": 26900,
+    "color": "Court Purple / White / Black",
+    "image": "/assets/sneakers/air-jordan-1-retro-high-court-purple-white-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-high-court-purple-white-1.jpg",
+        "alt": "Jordan Air Jordan 1 Retro High OG 'Court Purple 2.0' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-high-court-purple-white-2.jpg",
+        "alt": "Jordan Air Jordan 1 Retro High OG 'Court Purple 2.0' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 1 Retro High OG 'Court Purple 2.0' featuring verified deadstock construction, premium materials, and iconic Air Jordan 1 heritage.",
+    "detail": "Style Code: 555088-500. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-1-retro-high-pine-green-black",
+    "brand": "Jordan",
+    "name": "Air Jordan 1 Retro High OG 'Pine Green 2.0'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 1",
+    "badge": "Trending",
+    "price": 25900,
+    "color": "Pine Green / Black / Sail / Gym Red",
+    "image": "/assets/sneakers/air-jordan-1-retro-high-pine-green-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-high-pine-green-black-1.jpg",
+        "alt": "Jordan Air Jordan 1 Retro High OG 'Pine Green 2.0' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-high-pine-green-black-2.jpg",
+        "alt": "Jordan Air Jordan 1 Retro High OG 'Pine Green 2.0' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 1 Retro High OG 'Pine Green 2.0' featuring verified deadstock construction, premium materials, and iconic Air Jordan 1 heritage.",
+    "detail": "Style Code: 555088-030. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-1-retro-high-bio-hack",
+    "brand": "Jordan",
+    "name": "Air Jordan 1 Retro High OG 'Bio Hack'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 1",
+    "badge": "Collab",
+    "price": 27900,
+    "color": "Baroque Brown / Black / Laser Orange / Racer Pink",
+    "image": "/assets/sneakers/air-jordan-1-retro-high-bio-hack-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-high-bio-hack-1.jpg",
+        "alt": "Jordan Air Jordan 1 Retro High OG 'Bio Hack' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-high-bio-hack-2.jpg",
+        "alt": "Jordan Air Jordan 1 Retro High OG 'Bio Hack' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 1 Retro High OG 'Bio Hack' featuring verified deadstock construction, premium materials, and iconic Air Jordan 1 heritage.",
+    "detail": "Style Code: 555088-201. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-1-retro-high-pollen",
+    "brand": "Jordan",
+    "name": "Air Jordan 1 Retro High OG 'Pollen'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 1",
+    "badge": "Classic",
+    "price": 23900,
+    "color": "Pollen / Black / White",
+    "image": "/assets/sneakers/air-jordan-1-retro-high-pollen-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-high-pollen-1.jpg",
+        "alt": "Jordan Air Jordan 1 Retro High OG 'Pollen' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-high-pollen-2.jpg",
+        "alt": "Jordan Air Jordan 1 Retro High OG 'Pollen' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 1 Retro High OG 'Pollen' featuring verified deadstock construction, premium materials, and iconic Air Jordan 1 heritage.",
+    "detail": "Style Code: 555088-701. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-1-retro-high-bordeaux",
+    "brand": "Jordan",
+    "name": "Air Jordan 1 Retro High OG 'Bordeaux'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 1",
+    "badge": "Heritage",
+    "price": 24900,
+    "color": "Bordeaux / White / Metallic Silver",
+    "image": "/assets/sneakers/air-jordan-1-retro-high-bordeaux-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-high-bordeaux-1.jpg",
+        "alt": "Jordan Air Jordan 1 Retro High OG 'Bordeaux' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-high-bordeaux-2.jpg",
+        "alt": "Jordan Air Jordan 1 Retro High OG 'Bordeaux' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 1 Retro High OG 'Bordeaux' featuring verified deadstock construction, premium materials, and iconic Air Jordan 1 heritage.",
+    "detail": "Style Code: 555088-611. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-1-retro-high-electro-orange",
+    "brand": "Jordan",
+    "name": "Air Jordan 1 Retro High OG 'Electro Orange'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 1",
+    "badge": "Popular",
+    "price": 24900,
+    "color": "White / Electro Orange / Black",
+    "image": "/assets/sneakers/air-jordan-1-retro-high-electro-orange-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-high-electro-orange-1.jpg",
+        "alt": "Jordan Air Jordan 1 Retro High OG 'Electro Orange' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-high-electro-orange-2.jpg",
+        "alt": "Jordan Air Jordan 1 Retro High OG 'Electro Orange' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 1 Retro High OG 'Electro Orange' featuring verified deadstock construction, premium materials, and iconic Air Jordan 1 heritage.",
+    "detail": "Style Code: 555088-180. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-1-retro-high-silver-toe-w",
+    "brand": "Jordan",
+    "name": "Air Jordan 1 Retro High OG 'Silver Toe'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 1",
+    "badge": "Popular",
+    "price": 25900,
+    "color": "Black / Metallic Silver / White",
+    "image": "/assets/sneakers/air-jordan-1-retro-high-silver-toe-w-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-high-silver-toe-w-1.jpg",
+        "alt": "Jordan Air Jordan 1 Retro High OG 'Silver Toe' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-high-silver-toe-w-2.jpg",
+        "alt": "Jordan Air Jordan 1 Retro High OG 'Silver Toe' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 1 Retro High OG 'Silver Toe' featuring verified deadstock construction, premium materials, and iconic Air Jordan 1 heritage.",
+    "detail": "Style Code: CD0461-001. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-1-mid-light-smoke-grey",
+    "brand": "Jordan",
+    "name": "Air Jordan 1 Mid 'Light Smoke Grey'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 1",
+    "badge": "Top Seller",
+    "price": 19900,
+    "color": "Light Smoke Grey / Black / White",
+    "image": "/assets/sneakers/air-jordan-1-mid-light-smoke-grey-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-1-mid-light-smoke-grey-1.jpg",
+        "alt": "Jordan Air Jordan 1 Mid 'Light Smoke Grey' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-1-mid-light-smoke-grey-2.jpg",
+        "alt": "Jordan Air Jordan 1 Mid 'Light Smoke Grey' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 1 Mid 'Light Smoke Grey' featuring verified deadstock construction, premium materials, and iconic Air Jordan 1 heritage.",
+    "detail": "Style Code: 554724-092. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-3-retro-white-cement-reimagined",
+    "brand": "Jordan",
+    "name": "Air Jordan 3 Retro 'White Cement Reimagined'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 3",
+    "badge": "Grail",
+    "price": 28900,
+    "color": "Summit White / Fire Red / Black / Cement Grey",
+    "image": "/assets/sneakers/air-jordan-3-retro-white-cement-reimagined-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-3-retro-white-cement-reimagined-1.jpg",
+        "alt": "Jordan Air Jordan 3 Retro 'White Cement Reimagined' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-3-retro-white-cement-reimagined-2.jpg",
+        "alt": "Jordan Air Jordan 3 Retro 'White Cement Reimagined' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 3 Retro 'White Cement Reimagined' featuring verified deadstock construction, premium materials, and iconic Air Jordan 3 heritage.",
+    "detail": "Style Code: DN3707-100. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-3-retro-fire-red-2022",
+    "brand": "Jordan",
+    "name": "Air Jordan 3 Retro OG 'Fire Red' (2022)",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 3",
+    "badge": "Heritage",
+    "price": 27900,
+    "color": "White / Fire Red / Cement Grey / Black",
+    "image": "/assets/sneakers/air-jordan-3-retro-fire-red-2022-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-3-retro-fire-red-2022-1.jpg",
+        "alt": "Jordan Air Jordan 3 Retro OG 'Fire Red' (2022) lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-3-retro-fire-red-2022-2.jpg",
+        "alt": "Jordan Air Jordan 3 Retro OG 'Fire Red' (2022) 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 3 Retro OG 'Fire Red' (2022) featuring verified deadstock construction, premium materials, and iconic Air Jordan 3 heritage.",
+    "detail": "Style Code: DN3707-160. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-3-retro-black-cement-2018",
+    "brand": "Jordan",
+    "name": "Air Jordan 3 Retro OG 'Black Cement'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 3",
+    "badge": "Grail",
+    "price": 32900,
+    "color": "Black / Fire Red / Cement Grey / White",
+    "image": "/assets/sneakers/air-jordan-3-retro-black-cement-2018-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-3-retro-black-cement-2018-1.jpg",
+        "alt": "Jordan Air Jordan 3 Retro OG 'Black Cement' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-3-retro-black-cement-2018-2.jpg",
+        "alt": "Jordan Air Jordan 3 Retro OG 'Black Cement' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 3 Retro OG 'Black Cement' featuring verified deadstock construction, premium materials, and iconic Air Jordan 3 heritage.",
+    "detail": "Style Code: 854262-001. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": true
+  },
+  {
+    "id": "air-jordan-3-retro-midnight-navy",
+    "brand": "Jordan",
+    "name": "Air Jordan 3 Retro 'Midnight Navy'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 3",
+    "badge": "Popular",
+    "price": 26900,
+    "color": "White / Midnight Navy / Cement Grey",
+    "image": "/assets/sneakers/air-jordan-3-retro-midnight-navy-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-3-retro-midnight-navy-1.jpg",
+        "alt": "Jordan Air Jordan 3 Retro 'Midnight Navy' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-3-retro-midnight-navy-2.jpg",
+        "alt": "Jordan Air Jordan 3 Retro 'Midnight Navy' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 3 Retro 'Midnight Navy' featuring verified deadstock construction, premium materials, and iconic Air Jordan 3 heritage.",
+    "detail": "Style Code: CT8532-140. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-3-retro-palomino",
+    "brand": "Jordan",
+    "name": "Air Jordan 3 Retro 'Palomino'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 3",
+    "badge": "Trending",
+    "price": 26900,
+    "color": "Light Orewood Brown / Metallic Gold / Light British Tan",
+    "image": "/assets/sneakers/air-jordan-3-retro-palomino-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-3-retro-palomino-1.jpg",
+        "alt": "Jordan Air Jordan 3 Retro 'Palomino' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-3-retro-palomino-2.jpg",
+        "alt": "Jordan Air Jordan 3 Retro 'Palomino' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 3 Retro 'Palomino' featuring verified deadstock construction, premium materials, and iconic Air Jordan 3 heritage.",
+    "detail": "Style Code: CT8532-102. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-3-retro-desert-elephant",
+    "brand": "Jordan",
+    "name": "Air Jordan 3 Retro 'Desert Elephant'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 3",
+    "badge": "Classic",
+    "price": 25900,
+    "color": "Black / Rush Orange / Fossil Stone / Sail",
+    "image": "/assets/sneakers/air-jordan-3-retro-desert-elephant-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-3-retro-desert-elephant-1.jpg",
+        "alt": "Jordan Air Jordan 3 Retro 'Desert Elephant' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-3-retro-desert-elephant-2.jpg",
+        "alt": "Jordan Air Jordan 3 Retro 'Desert Elephant' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 3 Retro 'Desert Elephant' featuring verified deadstock construction, premium materials, and iconic Air Jordan 3 heritage.",
+    "detail": "Style Code: CT8532-008. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-3-retro-unc-2020",
+    "brand": "Jordan",
+    "name": "Air Jordan 3 Retro 'UNC'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 3",
+    "badge": "Grail",
+    "price": 38900,
+    "color": "White / Valor Blue / Tech Grey",
+    "image": "/assets/sneakers/air-jordan-3-retro-unc-2020-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-3-retro-unc-2020-1.jpg",
+        "alt": "Jordan Air Jordan 3 Retro 'UNC' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-3-retro-unc-2020-2.jpg",
+        "alt": "Jordan Air Jordan 3 Retro 'UNC' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 3 Retro 'UNC' featuring verified deadstock construction, premium materials, and iconic Air Jordan 3 heritage.",
+    "detail": "Style Code: CT8532-104. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": true
+  },
+  {
+    "id": "air-jordan-3-retro-cool-grey-2021",
+    "brand": "Jordan",
+    "name": "Air Jordan 3 Retro 'Cool Grey'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 3",
+    "badge": "Classic",
+    "price": 26900,
+    "color": "Silver / Light Graphite / Orange Peel / Sport Red",
+    "image": "/assets/sneakers/air-jordan-3-retro-cool-grey-2021-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-3-retro-cool-grey-2021-1.jpg",
+        "alt": "Jordan Air Jordan 3 Retro 'Cool Grey' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-3-retro-cool-grey-2021-2.jpg",
+        "alt": "Jordan Air Jordan 3 Retro 'Cool Grey' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 3 Retro 'Cool Grey' featuring verified deadstock construction, premium materials, and iconic Air Jordan 3 heritage.",
+    "detail": "Style Code: CT8532-012. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-3-retro-cardinal-red",
+    "brand": "Jordan",
+    "name": "Air Jordan 3 Retro 'Cardinal Red'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 3",
+    "badge": "Popular",
+    "price": 25900,
+    "color": "White / Cardinal Red / Cement Grey / Light Curry",
+    "image": "/assets/sneakers/air-jordan-3-retro-cardinal-red-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-3-retro-cardinal-red-1.jpg",
+        "alt": "Jordan Air Jordan 3 Retro 'Cardinal Red' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-3-retro-cardinal-red-2.jpg",
+        "alt": "Jordan Air Jordan 3 Retro 'Cardinal Red' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 3 Retro 'Cardinal Red' featuring verified deadstock construction, premium materials, and iconic Air Jordan 3 heritage.",
+    "detail": "Style Code: CT8532-126. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-3-retro-georgetown-2021",
+    "brand": "Jordan",
+    "name": "Air Jordan 3 Retro 'Midnight Navy Georgetown'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 3",
+    "badge": "Popular",
+    "price": 27900,
+    "color": "Midnight Navy / Cement Grey / White",
+    "image": "/assets/sneakers/air-jordan-3-retro-georgetown-2021-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-3-retro-georgetown-2021-1.jpg",
+        "alt": "Jordan Air Jordan 3 Retro 'Midnight Navy Georgetown' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-3-retro-georgetown-2021-2.jpg",
+        "alt": "Jordan Air Jordan 3 Retro 'Midnight Navy Georgetown' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 3 Retro 'Midnight Navy Georgetown' featuring verified deadstock construction, premium materials, and iconic Air Jordan 3 heritage.",
+    "detail": "Style Code: CT8532-401. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-4-retro-military-black",
+    "brand": "Jordan",
+    "name": "Air Jordan 4 Retro 'Military Black'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 4",
+    "badge": "Trending",
+    "price": 29900,
+    "color": "White / Black / Neutral Grey",
+    "image": "/assets/sneakers/air-jordan-4-retro-military-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-4-retro-military-black-1.jpg",
+        "alt": "Jordan Air Jordan 4 Retro 'Military Black' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-4-retro-military-black-2.jpg",
+        "alt": "Jordan Air Jordan 4 Retro 'Military Black' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 4 Retro 'Military Black' featuring verified deadstock construction, premium materials, and iconic Air Jordan 4 heritage.",
+    "detail": "Style Code: DH6927-111. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": true
+  },
+  {
+    "id": "air-jordan-4-retro-bred-reimagined",
+    "brand": "Jordan",
+    "name": "Air Jordan 4 Retro 'Bred Reimagined'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 4",
+    "badge": "Iconic",
+    "price": 31900,
+    "color": "Black / Fire Red / Cement Grey / Summit White",
+    "image": "/assets/sneakers/air-jordan-4-retro-bred-reimagined-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-4-retro-bred-reimagined-1.jpg",
+        "alt": "Jordan Air Jordan 4 Retro 'Bred Reimagined' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-4-retro-bred-reimagined-2.jpg",
+        "alt": "Jordan Air Jordan 4 Retro 'Bred Reimagined' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 4 Retro 'Bred Reimagined' featuring verified deadstock construction, premium materials, and iconic Air Jordan 4 heritage.",
+    "detail": "Style Code: FV5029-006. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": true
+  },
+  {
+    "id": "air-jordan-4-retro-black-cat-2020",
+    "brand": "Jordan",
+    "name": "Air Jordan 4 Retro 'Black Cat'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 4",
+    "badge": "Grail",
+    "price": 49900,
+    "color": "Black / Black / Light Graphite",
+    "image": "/assets/sneakers/air-jordan-4-retro-black-cat-2020-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-4-retro-black-cat-2020-1.jpg",
+        "alt": "Jordan Air Jordan 4 Retro 'Black Cat' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-4-retro-black-cat-2020-2.jpg",
+        "alt": "Jordan Air Jordan 4 Retro 'Black Cat' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 4 Retro 'Black Cat' featuring verified deadstock construction, premium materials, and iconic Air Jordan 4 heritage.",
+    "detail": "Style Code: CU1110-010. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": true
+  },
+  {
+    "id": "air-jordan-4-retro-red-cement",
+    "brand": "Jordan",
+    "name": "Air Jordan 4 Retro 'Red Cement'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 4",
+    "badge": "Popular",
+    "price": 28900,
+    "color": "White / Fire Red / Black / Neutral Grey",
+    "image": "/assets/sneakers/air-jordan-4-retro-red-cement-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-4-retro-red-cement-1.jpg",
+        "alt": "Jordan Air Jordan 4 Retro 'Red Cement' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-4-retro-red-cement-2.jpg",
+        "alt": "Jordan Air Jordan 4 Retro 'Red Cement' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 4 Retro 'Red Cement' featuring verified deadstock construction, premium materials, and iconic Air Jordan 4 heritage.",
+    "detail": "Style Code: DH6927-161. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-4-retro-thunder-2023",
+    "brand": "Jordan",
+    "name": "Air Jordan 4 Retro 'Thunder' (2023)",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 4",
+    "badge": "Top Seller",
+    "price": 29900,
+    "color": "Black / Tour Yellow",
+    "image": "/assets/sneakers/air-jordan-4-retro-thunder-2023-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-4-retro-thunder-2023-1.jpg",
+        "alt": "Jordan Air Jordan 4 Retro 'Thunder' (2023) lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-4-retro-thunder-2023-2.jpg",
+        "alt": "Jordan Air Jordan 4 Retro 'Thunder' (2023) 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 4 Retro 'Thunder' (2023) featuring verified deadstock construction, premium materials, and iconic Air Jordan 4 heritage.",
+    "detail": "Style Code: DH6927-017. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": true
+  },
+  {
+    "id": "air-jordan-4-retro-university-blue",
+    "brand": "Jordan",
+    "name": "Air Jordan 4 Retro 'University Blue'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 4",
+    "badge": "Grail",
+    "price": 38900,
+    "color": "University Blue / Tech Grey / White / Black",
+    "image": "/assets/sneakers/air-jordan-4-retro-university-blue-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-4-retro-university-blue-1.jpg",
+        "alt": "Jordan Air Jordan 4 Retro 'University Blue' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-4-retro-university-blue-2.jpg",
+        "alt": "Jordan Air Jordan 4 Retro 'University Blue' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 4 Retro 'University Blue' featuring verified deadstock construction, premium materials, and iconic Air Jordan 4 heritage.",
+    "detail": "Style Code: CT8527-400. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": true
+  },
+  {
+    "id": "air-jordan-4-retro-white-oreo-2021",
+    "brand": "Jordan",
+    "name": "Air Jordan 4 Retro 'White Oreo'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 4",
+    "badge": "Popular",
+    "price": 36900,
+    "color": "White / Tech Grey / Black / Fire Red",
+    "image": "/assets/sneakers/air-jordan-4-retro-white-oreo-2021-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-4-retro-white-oreo-2021-1.jpg",
+        "alt": "Jordan Air Jordan 4 Retro 'White Oreo' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-4-retro-white-oreo-2021-2.jpg",
+        "alt": "Jordan Air Jordan 4 Retro 'White Oreo' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 4 Retro 'White Oreo' featuring verified deadstock construction, premium materials, and iconic Air Jordan 4 heritage.",
+    "detail": "Style Code: CT8527-100. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-4-retro-infrared",
+    "brand": "Jordan",
+    "name": "Air Jordan 4 Retro 'Infrared'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 4",
+    "badge": "Classic",
+    "price": 28900,
+    "color": "Dark Grey / Infrared 23 / Black / Cement Grey",
+    "image": "/assets/sneakers/air-jordan-4-retro-infrared-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-4-retro-infrared-1.jpg",
+        "alt": "Jordan Air Jordan 4 Retro 'Infrared' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-4-retro-infrared-2.jpg",
+        "alt": "Jordan Air Jordan 4 Retro 'Infrared' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 4 Retro 'Infrared' featuring verified deadstock construction, premium materials, and iconic Air Jordan 4 heritage.",
+    "detail": "Style Code: DH6927-061. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-4-retro-taupe-haze",
+    "brand": "Jordan",
+    "name": "Air Jordan 4 Retro 'Taupe Haze'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 4",
+    "badge": "Trending",
+    "price": 34900,
+    "color": "Taupe Haze / Oil Grey / Off White / Infrared 23",
+    "image": "/assets/sneakers/air-jordan-4-retro-taupe-haze-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-4-retro-taupe-haze-1.jpg",
+        "alt": "Jordan Air Jordan 4 Retro 'Taupe Haze' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-4-retro-taupe-haze-2.jpg",
+        "alt": "Jordan Air Jordan 4 Retro 'Taupe Haze' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 4 Retro 'Taupe Haze' featuring verified deadstock construction, premium materials, and iconic Air Jordan 4 heritage.",
+    "detail": "Style Code: DB0732-200. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-4-retro-lightning-2021",
+    "brand": "Jordan",
+    "name": "Air Jordan 4 Retro 'Lightning' (2021)",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 4",
+    "badge": "Iconic",
+    "price": 29900,
+    "color": "Tour Yellow / White / Dark Blue Grey",
+    "image": "/assets/sneakers/air-jordan-4-retro-lightning-2021-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-4-retro-lightning-2021-1.jpg",
+        "alt": "Jordan Air Jordan 4 Retro 'Lightning' (2021) lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-4-retro-lightning-2021-2.jpg",
+        "alt": "Jordan Air Jordan 4 Retro 'Lightning' (2021) 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 4 Retro 'Lightning' (2021) featuring verified deadstock construction, premium materials, and iconic Air Jordan 4 heritage.",
+    "detail": "Style Code: CT8527-700. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-4-retro-fire-red-2020",
+    "brand": "Jordan",
+    "name": "Air Jordan 4 Retro OG 'Fire Red'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 4",
+    "badge": "Heritage",
+    "price": 34900,
+    "color": "White / Fire Red / Black / Tech Grey",
+    "image": "/assets/sneakers/air-jordan-4-retro-fire-red-2020-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-4-retro-fire-red-2020-1.jpg",
+        "alt": "Jordan Air Jordan 4 Retro OG 'Fire Red' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-4-retro-fire-red-2020-2.jpg",
+        "alt": "Jordan Air Jordan 4 Retro OG 'Fire Red' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 4 Retro OG 'Fire Red' featuring verified deadstock construction, premium materials, and iconic Air Jordan 4 heritage.",
+    "detail": "Style Code: DC7770-160. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-11-retro-concord-2018",
+    "brand": "Jordan",
+    "name": "Air Jordan 11 Retro 'Concord'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 11",
+    "badge": "Heritage",
+    "price": 32900,
+    "color": "White / Black / Dark Concord",
+    "image": "/assets/sneakers/air-jordan-11-retro-concord-2018-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-11-retro-concord-2018-1.jpg",
+        "alt": "Jordan Air Jordan 11 Retro 'Concord' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-11-retro-concord-2018-2.jpg",
+        "alt": "Jordan Air Jordan 11 Retro 'Concord' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 11 Retro 'Concord' featuring verified deadstock construction, premium materials, and iconic Air Jordan 11 heritage.",
+    "detail": "Style Code: 378037-100. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-11-retro-cool-grey-2021",
+    "brand": "Jordan",
+    "name": "Air Jordan 11 Retro 'Cool Grey'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 11",
+    "badge": "Iconic",
+    "price": 33900,
+    "color": "Medium Grey / White / Cool Grey",
+    "image": "/assets/sneakers/air-jordan-11-retro-cool-grey-2021-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-11-retro-cool-grey-2021-1.jpg",
+        "alt": "Jordan Air Jordan 11 Retro 'Cool Grey' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-11-retro-cool-grey-2021-2.jpg",
+        "alt": "Jordan Air Jordan 11 Retro 'Cool Grey' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 11 Retro 'Cool Grey' featuring verified deadstock construction, premium materials, and iconic Air Jordan 11 heritage.",
+    "detail": "Style Code: CT8012-005. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-11-retro-cherry-2022",
+    "brand": "Jordan",
+    "name": "Air Jordan 11 Retro 'Cherry'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 11",
+    "badge": "Popular",
+    "price": 31900,
+    "color": "White / Varsity Red / Black",
+    "image": "/assets/sneakers/air-jordan-11-retro-cherry-2022-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-11-retro-cherry-2022-1.jpg",
+        "alt": "Jordan Air Jordan 11 Retro 'Cherry' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-11-retro-cherry-2022-2.jpg",
+        "alt": "Jordan Air Jordan 11 Retro 'Cherry' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 11 Retro 'Cherry' featuring verified deadstock construction, premium materials, and iconic Air Jordan 11 heritage.",
+    "detail": "Style Code: CT8012-116. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "nike-dunk-low-retro-white-black-2021",
+    "brand": "Nike",
+    "name": "Dunk Low 'Panda'",
+    "category": "Sneakers",
+    "silhouette": "Dunk Low",
+    "badge": "Top Seller",
+    "price": 17900,
+    "color": "White / Black",
+    "image": "/assets/sneakers/nike-dunk-low-retro-white-black-2021-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/nike-dunk-low-retro-white-black-2021-1.jpg",
+        "alt": "Nike Dunk Low 'Panda' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/nike-dunk-low-retro-white-black-2021-2.jpg",
+        "alt": "Nike Dunk Low 'Panda' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Dunk Low 'Panda' featuring verified deadstock construction, premium materials, and iconic Dunk Low heritage.",
+    "detail": "Style Code: DD1391-100. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": true
+  },
+  {
+    "id": "nike-dunk-low-grey-fog",
+    "brand": "Nike",
+    "name": "Dunk Low 'Grey Fog'",
+    "category": "Sneakers",
+    "silhouette": "Dunk Low",
+    "badge": "Essential",
+    "price": 18900,
+    "color": "White / Grey Fog",
+    "image": "/assets/sneakers/nike-dunk-low-grey-fog-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/nike-dunk-low-grey-fog-1.jpg",
+        "alt": "Nike Dunk Low 'Grey Fog' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/nike-dunk-low-grey-fog-2.jpg",
+        "alt": "Nike Dunk Low 'Grey Fog' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Dunk Low 'Grey Fog' featuring verified deadstock construction, premium materials, and iconic Dunk Low heritage.",
+    "detail": "Style Code: DD1391-103. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "nike-dunk-low-valerian-blue",
+    "brand": "Nike",
+    "name": "Dunk Low 'Valerian Blue'",
+    "category": "Sneakers",
+    "silhouette": "Dunk Low",
+    "badge": "Trending",
+    "price": 18900,
+    "color": "Valerian Blue / White",
+    "image": "/assets/sneakers/nike-dunk-low-valerian-blue-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/nike-dunk-low-valerian-blue-1.jpg",
+        "alt": "Nike Dunk Low 'Valerian Blue' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/nike-dunk-low-valerian-blue-2.jpg",
+        "alt": "Nike Dunk Low 'Valerian Blue' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Dunk Low 'Valerian Blue' featuring verified deadstock construction, premium materials, and iconic Dunk Low heritage.",
+    "detail": "Style Code: DD1391-400. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "nike-dunk-low-polar-blue",
+    "brand": "Nike",
+    "name": "Dunk Low 'Polar Blue'",
+    "category": "Sneakers",
+    "silhouette": "Dunk Low",
+    "badge": "Trending",
+    "price": 18900,
+    "color": "Polar Blue / White",
+    "image": "/assets/sneakers/nike-dunk-low-polar-blue-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/nike-dunk-low-polar-blue-1.jpg",
+        "alt": "Nike Dunk Low 'Polar Blue' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/nike-dunk-low-polar-blue-2.jpg",
+        "alt": "Nike Dunk Low 'Polar Blue' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Dunk Low 'Polar Blue' featuring verified deadstock construction, premium materials, and iconic Dunk Low heritage.",
+    "detail": "Style Code: DV0831-401. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "nike-dunk-low-court-purple",
+    "brand": "Nike",
+    "name": "Dunk Low 'Court Purple'",
+    "category": "Sneakers",
+    "silhouette": "Dunk Low",
+    "badge": "Popular",
+    "price": 19900,
+    "color": "White / Court Purple",
+    "image": "/assets/sneakers/nike-dunk-low-court-purple-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/nike-dunk-low-court-purple-1.jpg",
+        "alt": "Nike Dunk Low 'Court Purple' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/nike-dunk-low-court-purple-2.jpg",
+        "alt": "Nike Dunk Low 'Court Purple' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Dunk Low 'Court Purple' featuring verified deadstock construction, premium materials, and iconic Dunk Low heritage.",
+    "detail": "Style Code: DD1391-104. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "nike-dunk-low-goldenrod",
+    "brand": "Nike",
+    "name": "Dunk Low 'Goldenrod' (Iowa)",
+    "category": "Sneakers",
+    "silhouette": "Dunk Low",
+    "badge": "Heritage",
+    "price": 17900,
+    "color": "Black / Goldenrod / White",
+    "image": "/assets/sneakers/nike-dunk-low-goldenrod-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/nike-dunk-low-goldenrod-1.jpg",
+        "alt": "Nike Dunk Low 'Goldenrod' (Iowa) lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/nike-dunk-low-goldenrod-2.jpg",
+        "alt": "Nike Dunk Low 'Goldenrod' (Iowa) 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Dunk Low 'Goldenrod' (Iowa) featuring verified deadstock construction, premium materials, and iconic Dunk Low heritage.",
+    "detail": "Style Code: DD1391-004. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "nike-dunk-low-georgetown",
+    "brand": "Nike",
+    "name": "Dunk Low 'Georgetown' (Championship Grey)",
+    "category": "Sneakers",
+    "silhouette": "Dunk Low",
+    "badge": "Popular",
+    "price": 18900,
+    "color": "Wolf Grey / Dark Obsidian / Total Orange",
+    "image": "/assets/sneakers/nike-dunk-low-georgetown-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/nike-dunk-low-georgetown-1.jpg",
+        "alt": "Nike Dunk Low 'Georgetown' (Championship Grey) lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/nike-dunk-low-georgetown-2.jpg",
+        "alt": "Nike Dunk Low 'Georgetown' (Championship Grey) 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Dunk Low 'Georgetown' (Championship Grey) featuring verified deadstock construction, premium materials, and iconic Dunk Low heritage.",
+    "detail": "Style Code: DD1391-003. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "nike-dunk-low-team-red",
+    "brand": "Nike",
+    "name": "Dunk Low 'Team Red'",
+    "category": "Sneakers",
+    "silhouette": "Dunk Low",
+    "badge": "Classic",
+    "price": 18900,
+    "color": "White / Team Red",
+    "image": "/assets/sneakers/nike-dunk-low-team-red-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/nike-dunk-low-team-red-1.jpg",
+        "alt": "Nike Dunk Low 'Team Red' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/nike-dunk-low-team-red-2.jpg",
+        "alt": "Nike Dunk Low 'Team Red' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Dunk Low 'Team Red' featuring verified deadstock construction, premium materials, and iconic Dunk Low heritage.",
+    "detail": "Style Code: DD1391-601. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "nike-sb-dunk-low-los-angeles-dodgers",
+    "brand": "Nike",
+    "name": "Nike SB Dunk Low Pro 'Los Angeles Dodgers'",
+    "category": "Sneakers",
+    "silhouette": "Dunk Low",
+    "badge": "Collab",
+    "price": 25900,
+    "color": "Deep Royal Blue / White / Sport Red",
+    "image": "/assets/sneakers/nike-sb-dunk-low-los-angeles-dodgers-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/nike-sb-dunk-low-los-angeles-dodgers-1.jpg",
+        "alt": "Nike Nike SB Dunk Low Pro 'Los Angeles Dodgers' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/nike-sb-dunk-low-los-angeles-dodgers-2.jpg",
+        "alt": "Nike Nike SB Dunk Low Pro 'Los Angeles Dodgers' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Nike SB Dunk Low Pro 'Los Angeles Dodgers' featuring verified deadstock construction, premium materials, and iconic Dunk Low heritage.",
+    "detail": "Style Code: DO9395-400. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": true
+  },
+  {
+    "id": "nike-sb-dunk-low-court-purple",
+    "brand": "Nike",
+    "name": "Nike SB Dunk Low Pro 'Court Purple'",
+    "category": "Sneakers",
+    "silhouette": "Dunk Low",
+    "badge": "Popular",
+    "price": 23900,
+    "color": "Court Purple / White / Black",
+    "image": "/assets/sneakers/nike-sb-dunk-low-court-purple-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/nike-sb-dunk-low-court-purple-1.jpg",
+        "alt": "Nike Nike SB Dunk Low Pro 'Court Purple' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/nike-sb-dunk-low-court-purple-2.jpg",
+        "alt": "Nike Nike SB Dunk Low Pro 'Court Purple' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Nike SB Dunk Low Pro 'Court Purple' featuring verified deadstock construction, premium materials, and iconic Dunk Low heritage.",
+    "detail": "Style Code: BQ6817-500. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "nike-sb-dunk-low-black-gum",
+    "brand": "Nike",
+    "name": "Nike SB Dunk Low Pro 'Black Gum'",
+    "category": "Sneakers",
+    "silhouette": "Dunk Low",
+    "badge": "Essential",
+    "price": 19900,
+    "color": "Black / White / Gum Light Brown",
+    "image": "/assets/sneakers/nike-sb-dunk-low-black-gum-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/nike-sb-dunk-low-black-gum-1.jpg",
+        "alt": "Nike Nike SB Dunk Low Pro 'Black Gum' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/nike-sb-dunk-low-black-gum-2.jpg",
+        "alt": "Nike Nike SB Dunk Low Pro 'Black Gum' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Nike SB Dunk Low Pro 'Black Gum' featuring verified deadstock construction, premium materials, and iconic Dunk Low heritage.",
+    "detail": "Style Code: CD2563-006. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "nike-sb-dunk-low-white-gum",
+    "brand": "Nike",
+    "name": "Nike SB Dunk Low Pro 'White Gum'",
+    "category": "Sneakers",
+    "silhouette": "Dunk Low",
+    "badge": "Essential",
+    "price": 19900,
+    "color": "White / Black / Gum Light Brown",
+    "image": "/assets/sneakers/nike-sb-dunk-low-white-gum-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/nike-sb-dunk-low-white-gum-1.jpg",
+        "alt": "Nike Nike SB Dunk Low Pro 'White Gum' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/nike-sb-dunk-low-white-gum-2.jpg",
+        "alt": "Nike Nike SB Dunk Low Pro 'White Gum' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Nike SB Dunk Low Pro 'White Gum' featuring verified deadstock construction, premium materials, and iconic Dunk Low heritage.",
+    "detail": "Style Code: CD2563-101. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "nike-air-force-1-low-white-07",
+    "brand": "Nike",
+    "name": "Air Force 1 '07 'Triple White'",
+    "category": "Sneakers",
+    "silhouette": "Air Force 1",
+    "badge": "Classic",
+    "price": 15900,
+    "color": "White / White / White",
+    "image": "/assets/sneakers/nike-air-force-1-low-white-07-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/nike-air-force-1-low-white-07-1.jpg",
+        "alt": "Nike Air Force 1 '07 'Triple White' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/nike-air-force-1-low-white-07-2.jpg",
+        "alt": "Nike Air Force 1 '07 'Triple White' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Force 1 '07 'Triple White' featuring verified deadstock construction, premium materials, and iconic Air Force 1 heritage.",
+    "detail": "Style Code: CW2288-111. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "nike-air-max-1-travis-scott-wheat",
+    "brand": "Nike",
+    "name": "Air Max 1 'Travis Scott Cactus Jack Wheat'",
+    "category": "Sneakers",
+    "silhouette": "Air Max 1",
+    "badge": "Hype",
+    "price": 34900,
+    "color": "Wheat / Lemon Drop / Baroque Brown",
+    "image": "/assets/sneakers/nike-air-max-1-travis-scott-wheat-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/nike-air-max-1-travis-scott-wheat-1.jpg",
+        "alt": "Nike Air Max 1 'Travis Scott Cactus Jack Wheat' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/nike-air-max-1-travis-scott-wheat-2.jpg",
+        "alt": "Nike Air Max 1 'Travis Scott Cactus Jack Wheat' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Max 1 'Travis Scott Cactus Jack Wheat' featuring verified deadstock construction, premium materials, and iconic Air Max 1 heritage.",
+    "detail": "Style Code: DO9392-700. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": true
+  },
+  {
+    "id": "adidas-yeezy-boost-350-v2-zebra",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Boost 350 V2 'Zebra'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 350",
+    "badge": "Iconic",
+    "price": 34900,
+    "color": "White / Core Black / Red",
+    "image": "/assets/sneakers/adidas-yeezy-boost-350-v2-zebra-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-zebra-1.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Zebra' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-zebra-2.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Zebra' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Boost 350 V2 'Zebra' featuring verified deadstock construction, premium materials, and iconic Yeezy 350 heritage.",
+    "detail": "Style Code: CP9654. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": true
+  },
+  {
+    "id": "adidas-yeezy-boost-350-v2-onyx",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Boost 350 V2 'Onyx'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 350",
+    "badge": "Popular",
+    "price": 33900,
+    "color": "Onyx / Core Black / Charcoal",
+    "image": "/assets/sneakers/adidas-yeezy-boost-350-v2-onyx-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-onyx-1.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Onyx' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-onyx-2.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Onyx' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Boost 350 V2 'Onyx' featuring verified deadstock construction, premium materials, and iconic Yeezy 350 heritage.",
+    "detail": "Style Code: HQ4540. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": true
+  },
+  {
+    "id": "adidas-yeezy-boost-350-v2-dazzling-blue",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Boost 350 V2 'Dazzling Blue'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 350",
+    "badge": "Trending",
+    "price": 32900,
+    "color": "Core Black / Dazzling Blue / Core Black",
+    "image": "/assets/sneakers/adidas-yeezy-boost-350-v2-dazzling-blue-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-dazzling-blue-1.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Dazzling Blue' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-dazzling-blue-2.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Dazzling Blue' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Boost 350 V2 'Dazzling Blue' featuring verified deadstock construction, premium materials, and iconic Yeezy 350 heritage.",
+    "detail": "Style Code: GY7164. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-boost-350-v2-light",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Boost 350 V2 'Light'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 350",
+    "badge": "Popular",
+    "price": 32900,
+    "color": "Light / Light / Light",
+    "image": "/assets/sneakers/adidas-yeezy-boost-350-v2-light-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-light-1.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Light' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-light-2.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Light' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Boost 350 V2 'Light' featuring verified deadstock construction, premium materials, and iconic Yeezy 350 heritage.",
+    "detail": "Style Code: GY3438. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-boost-350-v2-israfil",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Boost 350 V2 'Israfil'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 350",
+    "badge": "Classic",
+    "price": 31900,
+    "color": "Israfil / Israfil / Israfil",
+    "image": "/assets/sneakers/adidas-yeezy-boost-350-v2-israfil-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-israfil-1.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Israfil' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-israfil-2.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Israfil' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Boost 350 V2 'Israfil' featuring verified deadstock construction, premium materials, and iconic Yeezy 350 heritage.",
+    "detail": "Style Code: FZ5421. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-boost-350-v2-zyon",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Boost 350 V2 'Zyon'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 350",
+    "badge": "Popular",
+    "price": 32900,
+    "color": "Zyon / Zyon / Zyon",
+    "image": "/assets/sneakers/adidas-yeezy-boost-350-v2-zyon-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-zyon-1.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Zyon' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-zyon-2.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Zyon' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Boost 350 V2 'Zyon' featuring verified deadstock construction, premium materials, and iconic Yeezy 350 heritage.",
+    "detail": "Style Code: FZ1267. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-boost-350-v2-cinder",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Boost 350 V2 'Cinder'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 350",
+    "badge": "Top Seller",
+    "price": 34900,
+    "color": "Cinder / Cinder / Cinder",
+    "image": "/assets/sneakers/adidas-yeezy-boost-350-v2-cinder-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-cinder-1.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Cinder' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-cinder-2.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Cinder' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Boost 350 V2 'Cinder' featuring verified deadstock construction, premium materials, and iconic Yeezy 350 heritage.",
+    "detail": "Style Code: FY2903. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-boost-350-v2-desert-sage",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Boost 350 V2 'Desert Sage'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 350",
+    "badge": "Classic",
+    "price": 32900,
+    "color": "Desert Sage / Desert Sage / Desert Sage",
+    "image": "/assets/sneakers/adidas-yeezy-boost-350-v2-desert-sage-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-desert-sage-1.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Desert Sage' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-desert-sage-2.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Desert Sage' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Boost 350 V2 'Desert Sage' featuring verified deadstock construction, premium materials, and iconic Yeezy 350 heritage.",
+    "detail": "Style Code: FX9035. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-boost-350-v2-tail-light",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Boost 350 V2 'Tail Light'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 350",
+    "badge": "Grail",
+    "price": 36900,
+    "color": "Tail Light / Tail Light / Tail Light",
+    "image": "/assets/sneakers/adidas-yeezy-boost-350-v2-tail-light-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-tail-light-1.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Tail Light' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-tail-light-2.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Tail Light' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Boost 350 V2 'Tail Light' featuring verified deadstock construction, premium materials, and iconic Yeezy 350 heritage.",
+    "detail": "Style Code: FX9017. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-boost-350-v2-earth",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Boost 350 V2 'Earth'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 350",
+    "badge": "Classic",
+    "price": 33900,
+    "color": "Earth / Earth / Earth",
+    "image": "/assets/sneakers/adidas-yeezy-boost-350-v2-earth-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-earth-1.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Earth' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-earth-2.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Earth' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Boost 350 V2 'Earth' featuring verified deadstock construction, premium materials, and iconic Yeezy 350 heritage.",
+    "detail": "Style Code: FX9033. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-boost-350-v2-cloud-white",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Boost 350 V2 'Cloud White'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 350",
+    "badge": "Popular",
+    "price": 33900,
+    "color": "Cloud White / Cloud White / Cloud White",
+    "image": "/assets/sneakers/adidas-yeezy-boost-350-v2-cloud-white-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-cloud-white-1.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Cloud White' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-cloud-white-2.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Cloud White' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Boost 350 V2 'Cloud White' featuring verified deadstock construction, premium materials, and iconic Yeezy 350 heritage.",
+    "detail": "Style Code: FW3043. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-boost-350-v2-static",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Boost 350 V2 'Static'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 350",
+    "badge": "Iconic",
+    "price": 34900,
+    "color": "Static / Static / Static",
+    "image": "/assets/sneakers/adidas-yeezy-boost-350-v2-static-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-static-1.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Static' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-static-2.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Static' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Boost 350 V2 'Static' featuring verified deadstock construction, premium materials, and iconic Yeezy 350 heritage.",
+    "detail": "Style Code: EF2905. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-boost-350-v2-sesame",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Boost 350 V2 'Sesame'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 350",
+    "badge": "Essential",
+    "price": 32900,
+    "color": "Sesame / Sesame / Sesame",
+    "image": "/assets/sneakers/adidas-yeezy-boost-350-v2-sesame-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-sesame-1.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Sesame' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-sesame-2.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Sesame' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Boost 350 V2 'Sesame' featuring verified deadstock construction, premium materials, and iconic Yeezy 350 heritage.",
+    "detail": "Style Code: F99710. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-boost-350-v2-butter",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Boost 350 V2 'Butter'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 350",
+    "badge": "Popular",
+    "price": 31900,
+    "color": "Butter / Butter / Butter",
+    "image": "/assets/sneakers/adidas-yeezy-boost-350-v2-butter-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-butter-1.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Butter' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-butter-2.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Butter' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Boost 350 V2 'Butter' featuring verified deadstock construction, premium materials, and iconic Yeezy 350 heritage.",
+    "detail": "Style Code: F36980. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-boost-350-v2-blue-tint",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Boost 350 V2 'Blue Tint'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 350",
+    "badge": "Iconic",
+    "price": 35900,
+    "color": "Blue Tint / Grey Three / High Res Red",
+    "image": "/assets/sneakers/adidas-yeezy-boost-350-v2-blue-tint-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-blue-tint-1.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Blue Tint' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-blue-tint-2.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Blue Tint' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Boost 350 V2 'Blue Tint' featuring verified deadstock construction, premium materials, and iconic Yeezy 350 heritage.",
+    "detail": "Style Code: B37571. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-boost-350-v2-cream-white",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Boost 350 V2 'Triple White' (Cream)",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 350",
+    "badge": "Top Seller",
+    "price": 32900,
+    "color": "Cream White / Cream White",
+    "image": "/assets/sneakers/adidas-yeezy-boost-350-v2-cream-white-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-cream-white-1.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Triple White' (Cream) lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-cream-white-2.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Triple White' (Cream) 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Boost 350 V2 'Triple White' (Cream) featuring verified deadstock construction, premium materials, and iconic Yeezy 350 heritage.",
+    "detail": "Style Code: CP9366. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-wave-runner-700-solid-grey",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Boost 700 'Wave Runner'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 700",
+    "badge": "Grail",
+    "price": 38900,
+    "color": "Solid Grey / Chalk White / Core Black",
+    "image": "/assets/sneakers/adidas-yeezy-wave-runner-700-solid-grey-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-wave-runner-700-solid-grey-1.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 700 'Wave Runner' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-wave-runner-700-solid-grey-2.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 700 'Wave Runner' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Boost 700 'Wave Runner' featuring verified deadstock construction, premium materials, and iconic Yeezy 700 heritage.",
+    "detail": "Style Code: B75571. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": true
+  },
+  {
+    "id": "adidas-yeezy-boost-700-inertia",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Boost 700 'Inertia'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 700",
+    "badge": "Popular",
+    "price": 35900,
+    "color": "Inertia / Inertia / Inertia",
+    "image": "/assets/sneakers/adidas-yeezy-boost-700-inertia-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-700-inertia-1.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 700 'Inertia' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-700-inertia-2.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 700 'Inertia' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Boost 700 'Inertia' featuring verified deadstock construction, premium materials, and iconic Yeezy 700 heritage.",
+    "detail": "Style Code: EG7597. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-boost-700-utility-black",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Boost 700 'Utility Black'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 700",
+    "badge": "Essential",
+    "price": 35900,
+    "color": "Utility Black / Utility Black",
+    "image": "/assets/sneakers/adidas-yeezy-boost-700-utility-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-700-utility-black-1.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 700 'Utility Black' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-700-utility-black-2.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 700 'Utility Black' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Boost 700 'Utility Black' featuring verified deadstock construction, premium materials, and iconic Yeezy 700 heritage.",
+    "detail": "Style Code: FV5304. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-boost-700-v2-vanta",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Boost 700 V2 'Vanta'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 700",
+    "badge": "Top Seller",
+    "price": 36900,
+    "color": "Vanta / Vanta / Vanta",
+    "image": "/assets/sneakers/adidas-yeezy-boost-700-v2-vanta-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-700-v2-vanta-1.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 700 V2 'Vanta' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-700-v2-vanta-2.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 700 V2 'Vanta' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Boost 700 V2 'Vanta' featuring verified deadstock construction, premium materials, and iconic Yeezy 700 heritage.",
+    "detail": "Style Code: FU6684. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-boost-700-v2-tephra",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Boost 700 V2 'Tephra'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 700",
+    "badge": "Popular",
+    "price": 34900,
+    "color": "Tephra / Tephra / Tephra",
+    "image": "/assets/sneakers/adidas-yeezy-boost-700-v2-tephra-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-700-v2-tephra-1.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 700 V2 'Tephra' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-700-v2-tephra-2.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 700 V2 'Tephra' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Boost 700 V2 'Tephra' featuring verified deadstock construction, premium materials, and iconic Yeezy 700 heritage.",
+    "detail": "Style Code: FU7914. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-boost-700-v2-geode",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Boost 700 V2 'Geode'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 700",
+    "badge": "Classic",
+    "price": 33900,
+    "color": "Geode / Geode / Geode",
+    "image": "/assets/sneakers/adidas-yeezy-boost-700-v2-geode-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-700-v2-geode-1.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 700 V2 'Geode' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-700-v2-geode-2.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 700 V2 'Geode' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Boost 700 V2 'Geode' featuring verified deadstock construction, premium materials, and iconic Yeezy 700 heritage.",
+    "detail": "Style Code: EG6860. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-boost-700-v2-hospital-blue",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Boost 700 V2 'Hospital Blue'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 700",
+    "badge": "Trending",
+    "price": 35900,
+    "color": "Hospital Blue / Hospital Blue",
+    "image": "/assets/sneakers/adidas-yeezy-boost-700-v2-hospital-blue-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-700-v2-hospital-blue-1.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 700 V2 'Hospital Blue' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-700-v2-hospital-blue-2.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 700 V2 'Hospital Blue' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Boost 700 V2 'Hospital Blue' featuring verified deadstock construction, premium materials, and iconic Yeezy 700 heritage.",
+    "detail": "Style Code: FV8424. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-700-v3-alvah",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy 700 V3 'Alvah'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 700",
+    "badge": "Future",
+    "price": 32900,
+    "color": "Alvah / Alvah / Alvah",
+    "image": "/assets/sneakers/adidas-yeezy-700-v3-alvah-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-700-v3-alvah-1.jpg",
+        "alt": "adidas Yeezy Yeezy 700 V3 'Alvah' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-700-v3-alvah-2.jpg",
+        "alt": "adidas Yeezy Yeezy 700 V3 'Alvah' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy 700 V3 'Alvah' featuring verified deadstock construction, premium materials, and iconic Yeezy 700 heritage.",
+    "detail": "Style Code: H67799. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-700-v3-arzareth",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy 700 V3 'Arzareth'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 700",
+    "badge": "Future",
+    "price": 31900,
+    "color": "Arzareth / Arzareth / Arzareth",
+    "image": "/assets/sneakers/adidas-yeezy-700-v3-arzareth-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-700-v3-arzareth-1.jpg",
+        "alt": "adidas Yeezy Yeezy 700 V3 'Arzareth' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-700-v3-arzareth-2.jpg",
+        "alt": "adidas Yeezy Yeezy 700 V3 'Arzareth' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy 700 V3 'Arzareth' featuring verified deadstock construction, premium materials, and iconic Yeezy 700 heritage.",
+    "detail": "Style Code: G54850. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-slide-bone-2022",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Slide 'Bone'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy Slide",
+    "badge": "Top Seller",
+    "price": 14900,
+    "color": "Bone / Bone",
+    "image": "/assets/sneakers/adidas-yeezy-slide-bone-2022-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-slide-bone-2022-1.jpg",
+        "alt": "adidas Yeezy Yeezy Slide 'Bone' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-slide-bone-2022-2.jpg",
+        "alt": "adidas Yeezy Yeezy Slide 'Bone' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Slide 'Bone' featuring verified deadstock construction, premium materials, and iconic Yeezy Slide heritage.",
+    "detail": "Style Code: FZ5897. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "unavailable": [],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-slide-pure",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Slide 'Pure'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy Slide",
+    "badge": "Trending",
+    "price": 14900,
+    "color": "Pure / Pure",
+    "image": "/assets/sneakers/adidas-yeezy-slide-pure-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-slide-pure-1.jpg",
+        "alt": "adidas Yeezy Yeezy Slide 'Pure' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-slide-pure-2.jpg",
+        "alt": "adidas Yeezy Yeezy Slide 'Pure' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Slide 'Pure' featuring verified deadstock construction, premium materials, and iconic Yeezy Slide heritage.",
+    "detail": "Style Code: GW1934. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "unavailable": [
+      "7"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-slide-glow-green-2022",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Slide 'Glow Green'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy Slide",
+    "badge": "Popular",
+    "price": 15900,
+    "color": "Glow Green / Glow Green",
+    "image": "/assets/sneakers/adidas-yeezy-slide-glow-green-2022-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-slide-glow-green-2022-1.jpg",
+        "alt": "adidas Yeezy Yeezy Slide 'Glow Green' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-slide-glow-green-2022-2.jpg",
+        "alt": "adidas Yeezy Yeezy Slide 'Glow Green' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Slide 'Glow Green' featuring verified deadstock construction, premium materials, and iconic Yeezy Slide heritage.",
+    "detail": "Style Code: HQ6447. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "unavailable": [],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-foam-rnnr-onyx",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Foam Runner 'Onyx'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy Foam Runner",
+    "badge": "Future",
+    "price": 17900,
+    "color": "Onyx / Carbon",
+    "image": "/assets/sneakers/adidas-yeezy-foam-rnnr-onyx-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-foam-rnnr-onyx-1.jpg",
+        "alt": "adidas Yeezy Yeezy Foam Runner 'Onyx' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-foam-rnnr-onyx-2.jpg",
+        "alt": "adidas Yeezy Yeezy Foam Runner 'Onyx' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Foam Runner 'Onyx' featuring verified deadstock construction, premium materials, and iconic Yeezy Foam Runner heritage.",
+    "detail": "Style Code: HP8739. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "unavailable": [],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-foam-rnnr-sand",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Foam Runner 'Sand'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy Foam Runner",
+    "badge": "Popular",
+    "price": 17900,
+    "color": "Sand / Cream",
+    "image": "/assets/sneakers/adidas-yeezy-foam-rnnr-sand-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-foam-rnnr-sand-1.jpg",
+        "alt": "adidas Yeezy Yeezy Foam Runner 'Sand' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-foam-rnnr-sand-2.jpg",
+        "alt": "adidas Yeezy Yeezy Foam Runner 'Sand' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Foam Runner 'Sand' featuring verified deadstock construction, premium materials, and iconic Yeezy Foam Runner heritage.",
+    "detail": "Style Code: FY4567. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "unavailable": [],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-foam-rnnr-mineral-blue",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Foam Runner 'Mineral Blue'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy Foam Runner",
+    "badge": "Future",
+    "price": 18900,
+    "color": "Mineral Blue / Mineral Blue",
+    "image": "/assets/sneakers/adidas-yeezy-foam-rnnr-mineral-blue-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-foam-rnnr-mineral-blue-1.jpg",
+        "alt": "adidas Yeezy Yeezy Foam Runner 'Mineral Blue' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-foam-rnnr-mineral-blue-2.jpg",
+        "alt": "adidas Yeezy Yeezy Foam Runner 'Mineral Blue' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Foam Runner 'Mineral Blue' featuring verified deadstock construction, premium materials, and iconic Yeezy Foam Runner heritage.",
+    "detail": "Style Code: GV7903. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "unavailable": [
+      "7"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-foam-rnnr-ochre",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Foam Runner 'Ochre'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy Foam Runner",
+    "badge": "Trending",
+    "price": 17900,
+    "color": "Ochre / Ochre",
+    "image": "/assets/sneakers/adidas-yeezy-foam-rnnr-ochre-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-foam-rnnr-ochre-1.jpg",
+        "alt": "adidas Yeezy Yeezy Foam Runner 'Ochre' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-foam-rnnr-ochre-2.jpg",
+        "alt": "adidas Yeezy Yeezy Foam Runner 'Ochre' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Foam Runner 'Ochre' featuring verified deadstock construction, premium materials, and iconic Yeezy Foam Runner heritage.",
+    "detail": "Style Code: GW3354. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "unavailable": [],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-foam-rnnr-mist",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Foam Runner 'Mist'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy Foam Runner",
+    "badge": "Popular",
+    "price": 17900,
+    "color": "Mist / Mist",
+    "image": "/assets/sneakers/adidas-yeezy-foam-rnnr-mist-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-foam-rnnr-mist-1.jpg",
+        "alt": "adidas Yeezy Yeezy Foam Runner 'Mist' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-foam-rnnr-mist-2.jpg",
+        "alt": "adidas Yeezy Yeezy Foam Runner 'Mist' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Foam Runner 'Mist' featuring verified deadstock construction, premium materials, and iconic Yeezy Foam Runner heritage.",
+    "detail": "Style Code: GV6774. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "unavailable": [
+      "7"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-campus-00s-core-black",
+    "brand": "adidas Originals",
+    "name": "Campus 00s 'Core Black'",
+    "category": "Sneakers",
+    "silhouette": "Campus 00s",
+    "badge": "Top Seller",
+    "price": 15900,
+    "color": "Core Black / Footwear White / Off White",
+    "image": "/assets/sneakers/adidas-campus-00s-core-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-campus-00s-core-black-1.jpg",
+        "alt": "adidas Originals Campus 00s 'Core Black' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-campus-00s-core-black-2.jpg",
+        "alt": "adidas Originals Campus 00s 'Core Black' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Campus 00s 'Core Black' featuring verified deadstock construction, premium materials, and iconic Campus 00s heritage.",
+    "detail": "Style Code: HQ8708. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": true
+  },
+  {
+    "id": "new-balance-9060-sea-salt",
+    "brand": "New Balance",
+    "name": "9060 'Sea Salt'",
+    "category": "Sneakers",
+    "silhouette": "9060",
+    "badge": "Trending",
+    "price": 25900,
+    "color": "Sea Salt / Surf",
+    "image": "/assets/sneakers/new-balance-9060-sea-salt-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/new-balance-9060-sea-salt-1.jpg",
+        "alt": "New Balance 9060 'Sea Salt' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/new-balance-9060-sea-salt-2.jpg",
+        "alt": "New Balance 9060 'Sea Salt' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic 9060 'Sea Salt' featuring verified deadstock construction, premium materials, and iconic 9060 heritage.",
+    "detail": "Style Code: U9060ECA. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": true
+  },
+  {
+    "id": "new-balance-9060-rain-cloud-grey",
+    "brand": "New Balance",
+    "name": "9060 'Rain Cloud Grey'",
+    "category": "Sneakers",
+    "silhouette": "9060",
+    "badge": "Popular",
+    "price": 25900,
+    "color": "Rain Cloud / Castlerock",
+    "image": "/assets/sneakers/new-balance-9060-rain-cloud-grey-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/new-balance-9060-rain-cloud-grey-1.jpg",
+        "alt": "New Balance 9060 'Rain Cloud Grey' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/new-balance-9060-rain-cloud-grey-2.jpg",
+        "alt": "New Balance 9060 'Rain Cloud Grey' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic 9060 'Rain Cloud Grey' featuring verified deadstock construction, premium materials, and iconic 9060 heritage.",
+    "detail": "Style Code: U9060GRY. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-4-retro-sb-pine-green",
+    "brand": "Jordan",
+    "name": "Nike SB x Air Jordan 4 Retro 'Pine Green'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 4",
+    "badge": "Grail",
+    "price": 44900,
+    "color": "Sail / Pine Green / Neutral Grey / White",
+    "image": "/assets/sneakers/air-jordan-4-retro-sb-pine-green-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-4-retro-sb-pine-green-1.jpg",
+        "alt": "Jordan Nike SB x Air Jordan 4 Retro 'Pine Green' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-4-retro-sb-pine-green-2.jpg",
+        "alt": "Jordan Nike SB x Air Jordan 4 Retro 'Pine Green' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Nike SB x Air Jordan 4 Retro 'Pine Green' featuring verified deadstock construction, premium materials, and iconic Air Jordan 4 heritage.",
+    "detail": "Style Code: DR5415-103. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5",
+      "10.5"
+    ],
+    "featured": true
+  },
+  {
+    "id": "air-jordan-4-retro-military-blue-2024",
+    "brand": "Jordan",
+    "name": "Air Jordan 4 Retro OG 'Military Blue' (2024)",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 4",
+    "badge": "Iconic",
+    "price": 31900,
+    "color": "Off-White / Military Blue / Neutral Grey",
+    "image": "/assets/sneakers/air-jordan-4-retro-military-blue-2024-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-4-retro-military-blue-2024-1.jpg",
+        "alt": "Jordan Air Jordan 4 Retro OG 'Military Blue' (2024) lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-4-retro-military-blue-2024-2.jpg",
+        "alt": "Jordan Air Jordan 4 Retro OG 'Military Blue' (2024) 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 4 Retro OG 'Military Blue' (2024) featuring verified deadstock construction, premium materials, and iconic Air Jordan 4 heritage.",
+    "detail": "Style Code: FV5029-141. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5",
+      "10.5"
+    ],
+    "featured": true
+  },
+  {
+    "id": "air-jordan-1-retro-high-og-palomino",
+    "brand": "Jordan",
+    "name": "Air Jordan 1 Retro High OG 'Palomino'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 1",
+    "badge": "Trending",
+    "price": 27900,
+    "color": "Black / Palomino / Sail / Metallic Gold",
+    "image": "/assets/sneakers/air-jordan-1-retro-high-og-palomino-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-high-og-palomino-1.jpg",
+        "alt": "Jordan Air Jordan 1 Retro High OG 'Palomino' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-high-og-palomino-2.jpg",
+        "alt": "Jordan Air Jordan 1 Retro High OG 'Palomino' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 1 Retro High OG 'Palomino' featuring verified deadstock construction, premium materials, and iconic Air Jordan 1 heritage.",
+    "detail": "Style Code: DZ5485-020. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5",
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-1-retro-high-og-bred-patent",
+    "brand": "Jordan",
+    "name": "Air Jordan 1 Retro High OG 'Patent Bred'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 1",
+    "badge": "Popular",
+    "price": 28900,
+    "color": "Black / White / Varsity Red",
+    "image": "/assets/sneakers/air-jordan-1-retro-high-og-bred-patent-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-high-og-bred-patent-1.jpg",
+        "alt": "Jordan Air Jordan 1 Retro High OG 'Patent Bred' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-high-og-bred-patent-2.jpg",
+        "alt": "Jordan Air Jordan 1 Retro High OG 'Patent Bred' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 1 Retro High OG 'Patent Bred' featuring verified deadstock construction, premium materials, and iconic Air Jordan 1 heritage.",
+    "detail": "Style Code: 555088-063. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5",
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-1-retro-high-og-royal-reimagined",
+    "brand": "Jordan",
+    "name": "Air Jordan 1 Retro High OG 'Royal Reimagined'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 1",
+    "badge": "Classic",
+    "price": 26900,
+    "color": "Black / Royal Blue / White",
+    "image": "/assets/sneakers/air-jordan-1-retro-high-og-royal-reimagined-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-high-og-royal-reimagined-1.jpg",
+        "alt": "Jordan Air Jordan 1 Retro High OG 'Royal Reimagined' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-1-retro-high-og-royal-reimagined-2.jpg",
+        "alt": "Jordan Air Jordan 1 Retro High OG 'Royal Reimagined' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 1 Retro High OG 'Royal Reimagined' featuring verified deadstock construction, premium materials, and iconic Air Jordan 1 heritage.",
+    "detail": "Style Code: DZ5485-042. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5",
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "air-jordan-1-low-mocha",
+    "brand": "Jordan",
+    "name": "Air Jordan 1 Low 'Mocha'",
+    "category": "Sneakers",
+    "silhouette": "Air Jordan 1",
+    "badge": "Popular",
+    "price": 19900,
+    "color": "Light Chocolate / Crimson Bliss / White / Black",
+    "image": "/assets/sneakers/air-jordan-1-low-mocha-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/air-jordan-1-low-mocha-1.jpg",
+        "alt": "Jordan Air Jordan 1 Low 'Mocha' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/air-jordan-1-low-mocha-2.jpg",
+        "alt": "Jordan Air Jordan 1 Low 'Mocha' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Jordan 1 Low 'Mocha' featuring verified deadstock construction, premium materials, and iconic Air Jordan 1 heritage.",
+    "detail": "Style Code: DC6991-200. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5",
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "nike-sb-dunk-low-yuto-horigome",
+    "brand": "Nike",
+    "name": "Nike SB Dunk Low Pro 'Yuto Horigome'",
+    "category": "Sneakers",
+    "silhouette": "Dunk Low",
+    "badge": "Collab",
+    "price": 36900,
+    "color": "Wolf Grey / Iron Grey / Sail",
+    "image": "/assets/sneakers/nike-sb-dunk-low-yuto-horigome-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/nike-sb-dunk-low-yuto-horigome-1.jpg",
+        "alt": "Nike Nike SB Dunk Low Pro 'Yuto Horigome' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/nike-sb-dunk-low-yuto-horigome-2.jpg",
+        "alt": "Nike Nike SB Dunk Low Pro 'Yuto Horigome' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Nike SB Dunk Low Pro 'Yuto Horigome' featuring verified deadstock construction, premium materials, and iconic Dunk Low heritage.",
+    "detail": "Style Code: FQ1180-001. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5",
+      "10.5"
+    ],
+    "featured": true
+  },
+  {
+    "id": "nike-dunk-low-photon-dust-w",
+    "brand": "Nike",
+    "name": "Dunk Low 'Photon Dust'",
+    "category": "Sneakers",
+    "silhouette": "Dunk Low",
+    "badge": "Essential",
+    "price": 18900,
+    "color": "White / Photon Dust",
+    "image": "/assets/sneakers/nike-dunk-low-photon-dust-w-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/nike-dunk-low-photon-dust-w-1.jpg",
+        "alt": "Nike Dunk Low 'Photon Dust' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/nike-dunk-low-photon-dust-w-2.jpg",
+        "alt": "Nike Dunk Low 'Photon Dust' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Dunk Low 'Photon Dust' featuring verified deadstock construction, premium materials, and iconic Dunk Low heritage.",
+    "detail": "Style Code: DD1503-103. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5",
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "nike-dunk-low-rose-whisper-w",
+    "brand": "Nike",
+    "name": "Dunk Low 'Rose Whisper'",
+    "category": "Sneakers",
+    "silhouette": "Dunk Low",
+    "badge": "Popular",
+    "price": 18900,
+    "color": "White / Rose Whisper",
+    "image": "/assets/sneakers/nike-dunk-low-rose-whisper-w-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/nike-dunk-low-rose-whisper-w-1.jpg",
+        "alt": "Nike Dunk Low 'Rose Whisper' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/nike-dunk-low-rose-whisper-w-2.jpg",
+        "alt": "Nike Dunk Low 'Rose Whisper' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Dunk Low 'Rose Whisper' featuring verified deadstock construction, premium materials, and iconic Dunk Low heritage.",
+    "detail": "Style Code: DD1503-118. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5",
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "nike-air-max-1-travis-scott-baroque-brown",
+    "brand": "Nike",
+    "name": "Air Max 1 'Travis Scott Baroque Brown'",
+    "category": "Sneakers",
+    "silhouette": "Air Max 1",
+    "badge": "Hype",
+    "price": 37900,
+    "color": "Baroque Brown / Lemon Drop / Wheat / Chile Red",
+    "image": "/assets/sneakers/nike-air-max-1-travis-scott-baroque-brown-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/nike-air-max-1-travis-scott-baroque-brown-1.jpg",
+        "alt": "Nike Air Max 1 'Travis Scott Baroque Brown' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/nike-air-max-1-travis-scott-baroque-brown-2.jpg",
+        "alt": "Nike Air Max 1 'Travis Scott Baroque Brown' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Max 1 'Travis Scott Baroque Brown' featuring verified deadstock construction, premium materials, and iconic Air Max 1 heritage.",
+    "detail": "Style Code: DO9392-200. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5",
+      "10.5"
+    ],
+    "featured": true
+  },
+  {
+    "id": "nike-air-max-95-og-neon-2020",
+    "brand": "Nike",
+    "name": "Air Max 95 OG 'Neon' (2020)",
+    "category": "Sneakers",
+    "silhouette": "Air Max 95",
+    "badge": "Grail",
+    "price": 32900,
+    "color": "Black / Neon Yellow / Light Graphite",
+    "image": "/assets/sneakers/nike-air-max-95-og-neon-2020-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/nike-air-max-95-og-neon-2020-1.jpg",
+        "alt": "Nike Air Max 95 OG 'Neon' (2020) lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/nike-air-max-95-og-neon-2020-2.jpg",
+        "alt": "Nike Air Max 95 OG 'Neon' (2020) 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Air Max 95 OG 'Neon' (2020) featuring verified deadstock construction, premium materials, and iconic Air Max 95 heritage.",
+    "detail": "Style Code: CT1689-001. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5",
+      "10.5"
+    ],
+    "featured": true
+  },
+  {
+    "id": "nike-kobe-6-protro-reverse-grinch",
+    "brand": "Nike",
+    "name": "Kobe 6 Protro 'Reverse Grinch'",
+    "category": "Sneakers",
+    "silhouette": "Kobe",
+    "badge": "Grail",
+    "price": 49900,
+    "color": "Bright Crimson / Black / Electric Green",
+    "image": "/assets/sneakers/nike-kobe-6-protro-reverse-grinch-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/nike-kobe-6-protro-reverse-grinch-1.jpg",
+        "alt": "Nike Kobe 6 Protro 'Reverse Grinch' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/nike-kobe-6-protro-reverse-grinch-2.jpg",
+        "alt": "Nike Kobe 6 Protro 'Reverse Grinch' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Kobe 6 Protro 'Reverse Grinch' featuring verified deadstock construction, premium materials, and iconic Kobe heritage.",
+    "detail": "Style Code: FV9676-600. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5",
+      "10.5"
+    ],
+    "featured": true
+  },
+  {
+    "id": "adidas-yeezy-boost-350-v2-beluga-reflective",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Boost 350 V2 'Beluga Reflective'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 350",
+    "badge": "Grail",
+    "price": 36900,
+    "color": "Beluga / Reflective / Solar Red",
+    "image": "/assets/sneakers/adidas-yeezy-boost-350-v2-beluga-reflective-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-beluga-reflective-1.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Beluga Reflective' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-boost-350-v2-beluga-reflective-2.jpg",
+        "alt": "adidas Yeezy Yeezy Boost 350 V2 'Beluga Reflective' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Boost 350 V2 'Beluga Reflective' featuring verified deadstock construction, premium materials, and iconic Yeezy 350 heritage.",
+    "detail": "Style Code: GW1229. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5",
+      "10.5"
+    ],
+    "featured": true
+  },
+  {
+    "id": "adidas-yeezy-500-blush",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy 500 'Blush' (Desert Rat)",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 500",
+    "badge": "Classic",
+    "price": 32900,
+    "color": "Blush / Blush / Blush",
+    "image": "/assets/sneakers/adidas-yeezy-500-blush-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-500-blush-1.jpg",
+        "alt": "adidas Yeezy Yeezy 500 'Blush' (Desert Rat) lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-500-blush-2.jpg",
+        "alt": "adidas Yeezy Yeezy 500 'Blush' (Desert Rat) 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy 500 'Blush' (Desert Rat) featuring verified deadstock construction, premium materials, and iconic Yeezy 500 heritage.",
+    "detail": "Style Code: DB2908. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5",
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-500-utility-black",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy 500 'Utility Black'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy 500",
+    "badge": "Essential",
+    "price": 33900,
+    "color": "Utility Black / Utility Black",
+    "image": "/assets/sneakers/adidas-yeezy-500-utility-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-500-utility-black-1.jpg",
+        "alt": "adidas Yeezy Yeezy 500 'Utility Black' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-500-utility-black-2.jpg",
+        "alt": "adidas Yeezy Yeezy 500 'Utility Black' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy 500 'Utility Black' featuring verified deadstock construction, premium materials, and iconic Yeezy 500 heritage.",
+    "detail": "Style Code: F36640. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5",
+      "10.5"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-slide-slate-grey",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Slide 'Slate Grey'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy Slide",
+    "badge": "Trending",
+    "price": 14900,
+    "color": "Slate Grey / Slate Grey",
+    "image": "/assets/sneakers/adidas-yeezy-slide-slate-grey-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-slide-slate-grey-1.jpg",
+        "alt": "adidas Yeezy Yeezy Slide 'Slate Grey' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-slide-slate-grey-2.jpg",
+        "alt": "adidas Yeezy Yeezy Slide 'Slate Grey' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Slide 'Slate Grey' featuring verified deadstock construction, premium materials, and iconic Yeezy Slide heritage.",
+    "detail": "Style Code: ID2350. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "unavailable": [
+      "7"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-slide-resin-2022",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Slide 'Resin'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy Slide",
+    "badge": "Popular",
+    "price": 14900,
+    "color": "Resin / Resin",
+    "image": "/assets/sneakers/adidas-yeezy-slide-resin-2022-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-slide-resin-2022-1.jpg",
+        "alt": "adidas Yeezy Yeezy Slide 'Resin' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-slide-resin-2022-2.jpg",
+        "alt": "adidas Yeezy Yeezy Slide 'Resin' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Slide 'Resin' featuring verified deadstock construction, premium materials, and iconic Yeezy Slide heritage.",
+    "detail": "Style Code: FZ5904. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "unavailable": [
+      "7"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-yeezy-foam-rnnr-stone-sage",
+    "brand": "adidas Yeezy",
+    "name": "Yeezy Foam Runner 'Stone Sage'",
+    "category": "Sneakers",
+    "silhouette": "Yeezy Foam Runner",
+    "badge": "Popular",
+    "price": 17900,
+    "color": "Stone Sage / Stone Sage",
+    "image": "/assets/sneakers/adidas-yeezy-foam-rnnr-stone-sage-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-yeezy-foam-rnnr-stone-sage-1.jpg",
+        "alt": "adidas Yeezy Yeezy Foam Runner 'Stone Sage' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-yeezy-foam-rnnr-stone-sage-2.jpg",
+        "alt": "adidas Yeezy Yeezy Foam Runner 'Stone Sage' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Yeezy Foam Runner 'Stone Sage' featuring verified deadstock construction, premium materials, and iconic Yeezy Foam Runner heritage.",
+    "detail": "Style Code: GX4472. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "unavailable": [
+      "7"
+    ],
+    "featured": false
+  },
+  {
+    "id": "adidas-gazelle-indoor-collegiate-green",
+    "brand": "adidas Originals",
+    "name": "Gazelle Indoor 'Collegiate Green'",
+    "category": "Sneakers",
+    "silhouette": "Gazelle",
+    "badge": "Trending",
+    "price": 17900,
+    "color": "Collegiate Green / Lucid Pink / Gum",
+    "image": "/assets/sneakers/adidas-gazelle-indoor-collegiate-green-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-gazelle-indoor-collegiate-green-1.jpg",
+        "alt": "adidas Originals Gazelle Indoor 'Collegiate Green' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-gazelle-indoor-collegiate-green-2.jpg",
+        "alt": "adidas Originals Gazelle Indoor 'Collegiate Green' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Gazelle Indoor 'Collegiate Green' featuring verified deadstock construction, premium materials, and iconic Gazelle heritage.",
+    "detail": "Style Code: IG5929. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5",
+      "10.5"
+    ],
+    "featured": true
+  },
+  {
+    "id": "adidas-handball-spezial-light-blue",
+    "brand": "adidas Originals",
+    "name": "Handball Spezial 'Light Blue'",
+    "category": "Sneakers",
+    "silhouette": "Handball Spezial",
+    "badge": "Trending",
+    "price": 16900,
+    "color": "Light Blue / Footwear White / Gum",
+    "image": "/assets/sneakers/adidas-handball-spezial-light-blue-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-handball-spezial-light-blue-1.jpg",
+        "alt": "adidas Originals Handball Spezial 'Light Blue' lateral profile view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-handball-spezial-light-blue-2.jpg",
+        "alt": "adidas Originals Handball Spezial 'Light Blue' 3/4 front angle view"
+      }
+    ],
+    "description": "Authentic Handball Spezial 'Light Blue' featuring verified deadstock construction, premium materials, and iconic Handball Spezial heritage.",
+    "detail": "Style Code: BD7632. Verified physical multi-point inspection. Original manufacturer packaging and verified Sole District security tag included.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5",
+      "10.5"
+    ],
+    "featured": true
   }
 ]
