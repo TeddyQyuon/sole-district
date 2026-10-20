@@ -13,33 +13,135 @@ import { api, money, shipping, sortVariantsBySize, trackEvent } from './shop';
 export function Home() {
   const { products } = useShop();
   const clothing = products.find((product) => product.category === 'Clothing') || products[0];
+
+  const brandCounts = useMemo(() => {
+    const counts = {};
+    for (const p of products) {
+      counts[p.brand] = (counts[p.brand] || 0) + 1;
+    }
+    return counts;
+  }, [products]);
+
+  const trendingSneakers = products.filter((p) => p.featured || p.badge === 'Grail' || p.badge === 'Trending').slice(0, 8);
+  const yeezySneakers = products.filter((p) => p.brand === 'adidas Yeezy').slice(0, 4);
+  const jordanSneakers = products.filter((p) => p.brand === 'Jordan').slice(0, 4);
+
   return (
     <>
       <section className="hero">
-        <img className="hero-photo" src="/assets/hero.webp" alt="Two models wearing neutral streetwear on concrete steps" fetchPriority="high" width="1586" height="992" />
+        <img className="hero-photo" src="/assets/hero.webp" alt="Streetwear and authentic sneakers curation" fetchPriority="high" width="1586" height="992" />
         <div className="hero-copy">
-          <span className="eyebrow">THE DISTRICT COLLECTION</span>
+          <span className="eyebrow">100% AUTHENTIC SNEAKERS & STREETWEAR</span>
           <h1>THE NEXT<br />STREET STANDARD.</h1>
-          <p>Sneakers, everyday essentials and the labels shaping what comes next.</p>
-          <Button to="/shop">Shop new arrivals <ArrowRight size={21} /></Button>
+          <p>Verified authentic Jordan, Nike, and Yeezy. Hand-inspected by sneaker specialists, dispatched directly from Singapore.</p>
+          <div className="hero-cta-group">
+            <Button to="/shop">Explore collection <ArrowRight size={21} /></Button>
+            <Link to="/shop?brand=adidas+Yeezy" className="button button-outline-hero">Shop Yeezy</Link>
+          </div>
         </div>
       </section>
-      <section className="section fresh">
-        <div className="section-heading"><div><span className="eyebrow">IN THE DISTRICT</span><h2>Fresh rotation</h2></div><Link to="/shop">View all <ArrowRight size={19} /></Link></div>
-        <ProductGrid products={products.slice(0, 4)} />
+
+      {/* Brand Quick-Access Rail */}
+      <section className="brand-rail-section">
+        <div className="brand-pills-bar">
+          <Link to="/shop" className="brand-pill-btn active">
+            <span>All Pieces</span>
+            <span className="pill-count">{products.length}</span>
+          </Link>
+          {['Jordan', 'Nike', 'adidas Yeezy', 'New Balance', 'adidas Originals'].map((brandName) => (
+            <Link key={brandName} to={'/shop?brand=' + encodeURIComponent(brandName)} className="brand-pill-btn">
+              <span>{brandName}</span>
+              {brandCounts[brandName] ? <span className="pill-count">{brandCounts[brandName]}</span> : null}
+            </Link>
+          ))}
+        </div>
       </section>
+
+      {/* Trending Heat Grid */}
+      <section className="section fresh">
+        <div className="section-heading">
+          <div>
+            <span className="eyebrow">IN THE DISTRICT</span>
+            <h2>Trending Heat</h2>
+          </div>
+          <Link to="/shop">View all {products.length} pieces <ArrowRight size={19} /></Link>
+        </div>
+        <ProductGrid products={trendingSneakers.length ? trendingSneakers : products.slice(0, 8)} />
+      </section>
+
+      {/* The Yeezy Vault Feature Banner */}
+      <section className="vault-banner">
+        <div className="vault-content">
+          <span className="eyebrow vault-eyebrow">EXCLUSIVE ARCHIVE</span>
+          <h2>THE YEEZY VAULT.</h2>
+          <p>Explore the defining silhouettes that transformed footwear culture: the Boost 350 V2, the sculpted 700 Wave Runner, and ultra-comfortable Slides & Foam Runners.</p>
+          <Button to="/shop?brand=adidas+Yeezy">Shop The Vault <ArrowRight size={20} /></Button>
+        </div>
+        <div className="vault-preview-grid">
+          <ProductGrid products={yeezySneakers} />
+        </div>
+      </section>
+
+      {/* Air Jordan Retro Collection */}
+      <section className="section jordan-section">
+        <div className="section-heading">
+          <div>
+            <span className="eyebrow">HERITAGE GRAILS</span>
+            <h2>Air Jordan Collection</h2>
+          </div>
+          <Link to="/shop?brand=Jordan">Shop all Jordan <ArrowRight size={19} /></Link>
+        </div>
+        <ProductGrid products={jordanSneakers} />
+      </section>
+
+      {/* Authenticity Trust Standard */}
+      <section className="auth-trust-banner">
+        <div className="auth-trust-header">
+          <div>
+            <span className="eyebrow">VERIFICATION PROMISE</span>
+            <h2>THE 4-POINT AUTHENTICITY STANDARD.</h2>
+          </div>
+          <p>Every pair that passes through Sole District undergoes rigorous physical evaluation before reaching your doorstep.</p>
+        </div>
+        <div className="auth-trust-grid">
+          <div className="auth-trust-card">
+            <span className="card-step">01 / PHYSICAL AUDIT</span>
+            <h3>Stitching & Geometry</h3>
+            <p>Every seam, collar height, stitch spacing, and heel curve is measured against verified production baselines.</p>
+          </div>
+          <div className="auth-trust-card">
+            <span className="card-step">02 / OPTICAL & UV</span>
+            <h3>Materials & Blacklight</h3>
+            <p>Full UV blacklight examination to verify fabric glow, invisible production stamps, and dye consistency.</p>
+          </div>
+          <div className="auth-trust-card">
+            <span className="card-step">03 / DEADSTOCK AUDIT</span>
+            <h3>Box, Laces & Tags</h3>
+            <p>Original retail box labels, typography, barcode checks, tissue paper graphics, and factory spare laces.</p>
+          </div>
+          <div className="auth-trust-card">
+            <span className="card-step">04 / DISPATCH SEAL</span>
+            <h3>Tamper-Evident Seal</h3>
+            <p>Dispatched with an individually numbered Sole District security tag and backed by our 100% guarantee.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* The Everyday Edit */}
       <section className="edit">
-        <div><span className="eyebrow">THE EVERYDAY EDIT</span><h2>Good pieces.<br />Great rotation.</h2><p>Considered layers and familiar classics. Discover the pieces that work harder in your wardrobe.</p><Button to="/shop?category=Clothing">Explore clothing <ArrowRight size={20} /></Button></div>
+        <div>
+          <span className="eyebrow">THE EVERYDAY EDIT</span>
+          <h2>Good pieces.<br />Great rotation.</h2>
+          <p>Considered layers and familiar classics. Discover the pieces that work harder in your wardrobe.</p>
+          <Button to="/shop?category=Clothing">Explore clothing <ArrowRight size={20} /></Button>
+        </div>
         {clothing && <Link to={'/product/' + clothing.id}><img src={clothing.image} alt={clothing.brand + ' ' + clothing.name} loading="lazy" /></Link>}
       </section>
-      <section className="section labels">
-        <span className="eyebrow">LABELS IN THE DISTRICT</span>
-        <div>{[...new Set(products.map((product) => product.brand))].slice(0, 4).map((brand) => <Link key={brand} to={'/shop?brand=' + encodeURIComponent(brand)}>{brand}<ArrowRight size={19} /></Link>)}</div>
-      </section>
+
       <section className="trust-strip">
-        <div><span>01</span><strong>Considered rotation</strong><p>Everyday sneakers, layers and accessories.</p></div>
-        <div><span>02</span><strong>Checked before launch</strong><p>Supplier and stock records are reviewed before sale.</p></div>
-        <div><span>03</span><strong>Clear at every step</strong><p>Delivery and return terms are shown before checkout.</p></div>
+        <div><span>01</span><strong>Guaranteed Authentic</strong><p>Multi-point physical verification on every single sneaker.</p></div>
+        <div><span>02</span><strong>Singapore Dispatch</strong><p>Local stock with same-day dispatch and tracking.</p></div>
+        <div><span>03</span><strong>Complimentary Delivery</strong><p>Complimentary tracked delivery on all orders over S$150.</p></div>
       </section>
     </>
   );
@@ -52,12 +154,14 @@ export function ShopPage() {
   const query = params.get('q') || '';
   const category = params.get('category') || '';
   const brand = params.get('brand') || '';
+  const silhouette = params.get('silhouette') || '';
   const size = params.get('size') || '';
   const sort = params.get('sort') || 'new';
   const stockOnly = params.get('stock') === 'true';
   const colour = params.get('colour') || '';
   const maxPrice = Number(params.get('maxPrice')) || 0;
   const requestedPage = Math.max(1, Number(params.get('page')) || 1);
+
   const change = (key, value) => {
     const next = new URLSearchParams(params);
     if (key !== 'page') next.delete('page');
@@ -65,48 +169,224 @@ export function ShopPage() {
     else next.delete(key);
     setParams(next);
   };
+
+  const clearFilter = (key) => {
+    const next = new URLSearchParams(params);
+    next.delete(key);
+    next.delete('page');
+    setParams(next);
+  };
+
   const rawSizes = [...new Set(products.filter((product) => !category || product.category === category).flatMap((product) => product.sizes || []))];
   const sortedFilterSizes = sortVariantsBySize(rawSizes.map((s) => ({ size: s }))).map((v) => v.size);
+
+  const allSilhouettes = useMemo(() => {
+    return [...new Set(products.filter((p) => p.silhouette).map((p) => p.silhouette))];
+  }, [products]);
+
+  const activeBrands = useMemo(() => {
+    return ['Jordan', 'Nike', 'adidas Yeezy', 'New Balance', 'adidas Originals', 'Carhartt WIP'];
+  }, []);
+
   let found = products.filter((product) => (
     (!category || product.category === category) &&
     (!brand || product.brand === brand) &&
-    (!query || (product.brand + ' ' + product.name + ' ' + product.color).toLowerCase().includes(query.toLowerCase())) &&
+    (!silhouette || product.silhouette === silhouette) &&
+    (!query || (product.brand + ' ' + product.name + ' ' + product.color + ' ' + (product.silhouette || '')).toLowerCase().includes(query.toLowerCase())) &&
     (!size || product.variants.some((variant) => variant.size === size && variant.available > 0)) &&
     (!stockOnly || product.variants.some((variant) => variant.available > 0)) &&
     (!colour || product.color === colour) && (!maxPrice || product.price <= maxPrice * 100)
   ));
+
   if (sort === 'low') found = [...found].sort((a, b) => a.price - b.price);
   if (sort === 'high') found = [...found].sort((a, b) => b.price - a.price);
+
   const pages = Math.max(1, Math.ceil(found.length / 12));
   const page = Math.min(requestedPage, pages);
   const visibleProducts = found.slice((page - 1) * 12, page * 12);
+  const hasActiveFilters = Boolean(brand || silhouette || size || colour || maxPrice || stockOnly || query);
 
   return (
     <div className="section shop-page">
-      <div className="breadcrumb"><Link to="/">Home</Link><span>/</span><span>{category || brand || 'New arrivals'}</span></div>
+      <div className="breadcrumb">
+        <Link to="/">Home</Link>
+        <span>/</span>
+        <span>{silhouette || brand || category || 'Sneakers'}</span>
+      </div>
+
       <div className="page-heading">
-        <div><span className="eyebrow">THE DISTRICT COLLECTION</span><h1>{query ? 'Results for “' + query + '”' : brand || category || 'New arrivals'}</h1><p>Find your next everyday favourite.</p></div>
+        <div>
+          <span className="eyebrow">AUTHENTIC ROTATION</span>
+          <h1>{query ? `Results for “${query}”` : silhouette ? `${silhouette}` : brand || category || 'All Sneakers & Apparel'}</h1>
+          <p>Hand-verified authentic grails, modern classics, and daily essentials.</p>
+        </div>
         <span>{found.length} {found.length === 1 ? 'piece' : 'pieces'}</span>
       </div>
-      <div className="shop-toolbar">
-        <button className="text-button filter-button" onClick={() => setFiltersOpen(!filtersOpen)}><SlidersHorizontal size={19} />Filters {(brand || size || stockOnly) && <span className="filter-dot" />}</button>
-        <div className="category-tabs">{['', 'Sneakers', 'Clothing', 'Accessories'].map((item) => <button key={item || 'all'} className={category === item ? 'active' : ''} onClick={() => change('category', item)}>{item || 'All'}</button>)}</div>
-        <label className="sort-label">Sort by<select value={sort} onChange={(event) => change('sort', event.target.value)}><option value="new">Featured</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option></select></label>
+
+      {/* Brand Quick Switcher */}
+      <div className="brand-pills-bar shop-brand-bar">
+        <button
+          className={'brand-pill-btn ' + (!brand ? 'active' : '')}
+          onClick={() => change('brand', '')}
+        >
+          All Brands ({products.length})
+        </button>
+        {activeBrands.map((bName) => {
+          const count = products.filter((p) => p.brand === bName).length;
+          return (
+            <button
+              key={bName}
+              className={'brand-pill-btn ' + (brand === bName ? 'active' : '')}
+              onClick={() => change('brand', brand === bName ? '' : bName)}
+            >
+              <span>{bName}</span>
+              <span className="pill-count">{count}</span>
+            </button>
+          );
+        })}
       </div>
+
+      {/* Silhouette Filter Chips */}
+      {(!category || category === 'Sneakers') && (
+        <div className="silhouette-filter-bar" aria-label="Filter by silhouette">
+          <button
+            className={'silhouette-chip ' + (!silhouette ? 'active' : '')}
+            onClick={() => change('silhouette', '')}
+          >
+            All Silhouettes
+          </button>
+          {allSilhouettes.map((sil) => (
+            <button
+              key={sil}
+              className={'silhouette-chip ' + (silhouette === sil ? 'active' : '')}
+              onClick={() => change('silhouette', silhouette === sil ? '' : sil)}
+            >
+              {sil}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Active Filter Chips */}
+      {hasActiveFilters && (
+        <div className="active-filter-chips">
+          <span className="active-filter-label">Active:</span>
+          {brand && (
+            <button className="filter-chip-remove" onClick={() => clearFilter('brand')}>
+              Brand: {brand} <X size={14} />
+            </button>
+          )}
+          {silhouette && (
+            <button className="filter-chip-remove" onClick={() => clearFilter('silhouette')}>
+              Model: {silhouette} <X size={14} />
+            </button>
+          )}
+          {size && (
+            <button className="filter-chip-remove" onClick={() => clearFilter('size')}>
+              Size: UK {size} <X size={14} />
+            </button>
+          )}
+          {colour && (
+            <button className="filter-chip-remove" onClick={() => clearFilter('colour')}>
+              {colour} <X size={14} />
+            </button>
+          )}
+          {query && (
+            <button className="filter-chip-remove" onClick={() => clearFilter('q')}>
+              “{query}” <X size={14} />
+            </button>
+          )}
+          {stockOnly && (
+            <button className="filter-chip-remove" onClick={() => clearFilter('stock')}>
+              In-stock only <X size={14} />
+            </button>
+          )}
+          <button className="text-button clear-all-link" onClick={() => setParams({})}>
+            Reset all
+          </button>
+        </div>
+      )}
+
+      <div className="shop-toolbar">
+        <button className="text-button filter-button" onClick={() => setFiltersOpen(!filtersOpen)}>
+          <SlidersHorizontal size={19} />
+          Filters {(brand || silhouette || size || stockOnly) && <span className="filter-dot" />}
+        </button>
+        <div className="category-tabs">
+          {['', 'Sneakers', 'Clothing', 'Accessories'].map((item) => (
+            <button
+              key={item || 'all'}
+              className={category === item ? 'active' : ''}
+              onClick={() => change('category', item)}
+            >
+              {item || 'All Pieces'}
+            </button>
+          ))}
+        </div>
+        <label className="sort-label">
+          Sort by
+          <select value={sort} onChange={(event) => change('sort', event.target.value)}>
+            <option value="new">Featured & Grails</option>
+            <option value="low">Price: Low to High</option>
+            <option value="high">Price: High to Low</option>
+          </select>
+        </label>
+      </div>
+
       <div className={'shop-layout ' + (filtersOpen ? 'has-filters' : '')}>
         {filtersOpen && (
           <aside className="filters">
-            <label>Brand<select value={brand} onChange={(event) => change('brand', event.target.value)}><option value="">All brands</option>{[...new Set(products.map((product) => product.brand))].map((item) => <option key={item}>{item}</option>)}</select></label>
-            <label>Size<select value={size} onChange={(event) => change('size', event.target.value)}><option value="">All sizes</option>{sortedFilterSizes.map((item) => <option key={item}>{item}</option>)}</select></label>
-            <label>Colour<select value={colour} onChange={(event) => change('colour', event.target.value)}><option value="">All colours</option>{[...new Set(products.map((product) => product.color))].map((value) => <option key={value}>{value}</option>)}</select></label><label>Maximum price (SGD)<input type="number" min="0" step="1" value={maxPrice || ''} onChange={(event) => change('maxPrice', event.target.value)} /></label><label className="checkbox"><input type="checkbox" checked={stockOnly} onChange={(event) => change('stock', event.target.checked ? 'true' : '')} />Available sizes only</label>
+            <label>Brand
+              <select value={brand} onChange={(event) => change('brand', event.target.value)}>
+                <option value="">All brands</option>
+                {[...new Set(products.map((product) => product.brand))].map((item) => <option key={item}>{item}</option>)}
+              </select>
+            </label>
+            <label>Silhouette
+              <select value={silhouette} onChange={(event) => change('silhouette', event.target.value)}>
+                <option value="">All models</option>
+                {allSilhouettes.map((item) => <option key={item}>{item}</option>)}
+              </select>
+            </label>
+            <label>Size
+              <select value={size} onChange={(event) => change('size', event.target.value)}>
+                <option value="">All sizes</option>
+                {sortedFilterSizes.map((item) => <option key={item}>{item}</option>)}
+              </select>
+            </label>
+            <label>Colour
+              <select value={colour} onChange={(event) => change('colour', event.target.value)}>
+                <option value="">All colours</option>
+                {[...new Set(products.map((product) => product.color))].map((value) => <option key={value}>{value}</option>)}
+              </select>
+            </label>
+            <label>Maximum price (SGD)
+              <input type="number" min="0" step="1" value={maxPrice || ''} onChange={(event) => change('maxPrice', event.target.value)} />
+            </label>
+            <label className="checkbox">
+              <input type="checkbox" checked={stockOnly} onChange={(event) => change('stock', event.target.checked ? 'true' : '')} />
+              Available sizes only
+            </label>
             <button className="text-button" onClick={() => setParams(category ? { category } : {})}>Clear filters</button>
           </aside>
         )}
         <div className="shop-results">
-          {found.length ? <ProductGrid products={visibleProducts} /> : <div className="empty"><h2>No pieces found.</h2><p>Try another search or clear your filters.</p><Button onClick={() => setParams({})}>See all pieces</Button></div>}
+          {found.length ? <ProductGrid products={visibleProducts} /> : (
+            <div className="empty">
+              <h2>No sneakers found.</h2>
+              <p>Try searching another silhouette, or reset your filters.</p>
+              <Button onClick={() => setParams({})}>Explore all sneakers</Button>
+            </div>
+          )}
         </div>
       </div>
-      {pages > 1 && <nav className="catalogue-pagination" aria-label="Catalogue pages"><button className="text-button" disabled={page === 1} onClick={() => change('page', String(page - 1))}>Previous</button><span>Page {page} of {pages}</span><button className="text-button" disabled={page === pages} onClick={() => change('page', String(page + 1))}>Next</button></nav>}
+      {pages > 1 && (
+        <nav className="catalogue-pagination" aria-label="Catalogue pages">
+          <button className="text-button" disabled={page === 1} onClick={() => change('page', String(page - 1))}>Previous</button>
+          <span>Page {page} of {pages}</span>
+          <button className="text-button" disabled={page === pages} onClick={() => change('page', String(page + 1))}>Next</button>
+        </nav>
+      )}
     </div>
   );
 }
@@ -165,6 +445,20 @@ export function ProductPage() {
           <p className="color-name">{product.color}</p>
           <p className="price">{money(product.price)}</p>
           <p className="description">{product.description}</p>
+          {sneaker && (
+            <div className="authenticity-box">
+              <div className="authenticity-box-header">
+                <ShieldCheck size={20} weight="fill" color="#566e00" />
+                <strong>100% Authentic Guaranteed</strong>
+                <span>Verified Deadstock</span>
+              </div>
+              <ul>
+                <li>✓ Multi-point physical verification by sneaker specialists</li>
+                <li>✓ Brand new in original packaging with verified security tag</li>
+                <li>✓ Dispatched locally from Singapore with tracked delivery</li>
+              </ul>
+            </div>
+          )}
           <div className="colour-row"><span>Colour</span><span>{product.color.split(' / ')[0]}</span></div>
           <div className="size-heading">
             <strong>Select size</strong>
@@ -215,7 +509,44 @@ export function ProductPage() {
         </div>
       </div>
       <section className="related"><div className="section-heading"><div><span className="eyebrow">MORE FROM THE DISTRICT</span><h2>Keep your rotation fresh</h2></div><Link to="/shop">Explore all <ArrowRight size={19} /></Link></div><ProductGrid products={products.filter((item) => item.id !== product.id).slice(0, 4)} /></section>
-      {guideOpen && <Dialog title="Find your fit" onClose={() => setGuideOpen(false)}><p>Size labels vary by brand. Check the brand’s own fit guidance and product measurements before purchase. Exact product sizing will be verified before launch.</p></Dialog>}
+      {guideOpen && (
+        <Dialog title="Sneaker Sizing & Fit Guide" onClose={() => setGuideOpen(false)}>
+          <div className="size-guide-modal-content">
+            <p>International footwear conversion matrix across UK, US Men, US Women, EU, and CM measurements:</p>
+            <div className="table-wrapper">
+              <table className="size-guide-table">
+                <thead>
+                  <tr>
+                    <th>UK</th>
+                    <th>US Men</th>
+                    <th>US Women</th>
+                    <th>EU</th>
+                    <th>CM</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>6</td><td>6.5</td><td>8</td><td>40</td><td>25.0</td></tr>
+                  <tr><td>6.5</td><td>7</td><td>8.5</td><td>40.5</td><td>25.5</td></tr>
+                  <tr><td>7</td><td>7.5</td><td>9</td><td>41</td><td>26.0</td></tr>
+                  <tr><td>7.5</td><td>8</td><td>9.5</td><td>42</td><td>26.5</td></tr>
+                  <tr><td>8</td><td>8.5</td><td>10</td><td>42.5</td><td>27.0</td></tr>
+                  <tr><td>8.5</td><td>9</td><td>10.5</td><td>43</td><td>27.5</td></tr>
+                  <tr><td>9</td><td>9.5</td><td>11</td><td>44</td><td>28.0</td></tr>
+                  <tr><td>9.5</td><td>10</td><td>11.5</td><td>44.5</td><td>28.5</td></tr>
+                  <tr><td>10</td><td>10.5</td><td>12</td><td>45</td><td>29.0</td></tr>
+                  <tr><td>10.5</td><td>11</td><td>12.5</td><td>45.5</td><td>29.5</td></tr>
+                  <tr><td>11</td><td>11.5</td><td>13</td><td>46</td><td>30.0</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div className="size-fit-tips">
+              <div><strong>Air Jordan & Nike Dunks:</strong> True to size (TTS). If you have wider feet, we suggest choosing 0.5 size up on Air Jordan 4 and Dunk Low.</div>
+              <div><strong>adidas Yeezy 350 & 700:</strong> Fits snug around the toe-box. We advise going 0.5 size up from your standard UK size.</div>
+              <div><strong>Yeezy Slide & Foam Runner:</strong> Produced in whole sizes only. In-between sizes should select the next full size up.</div>
+            </div>
+          </div>
+        </Dialog>
+      )}
       {zoom && <Dialog title={product.brand + ' ' + product.name} onClose={() => setZoom(false)}><img className="zoom-image" src={currentImage.url} alt={currentImage.alt} /></Dialog>}
 
       {/* Mobile Sticky Quick Add Bar */}
