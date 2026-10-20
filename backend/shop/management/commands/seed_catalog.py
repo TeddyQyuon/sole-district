@@ -37,30 +37,55 @@ class Command(BaseCommand):
                     "status": "active",
                     "is_illustrative": True,
                     "sourcing_status": "not_reviewed",
-                    "featured": row["id"] in {"new-balance-2002r", "adidas-samba-og", "carhartt-chase-sweatshirt", "nike-air-max-90"},
+                    "featured": row.get("featured", False),
                 },
             )
             if not created:
-                continue
-            ProductImage.objects.create(
-                product=product,
-                image_url=row["image"],
-                alt_text=product.image_alt,
-                is_primary=True,
-            )
+                product.brand = brand
+                product.category = category
+                product.name = row["name"]
+                product.colour = row["color"]
+                product.description = row["description"]
+                product.details = row["detail"]
+                product.image_url = row["image"]
+                product.price_cents = row["price"]
+                product.featured = row.get("featured", False)
+                product.save()
+
+            raw_images = row.get("images", [])
+            if not raw_images and row.get("image"):
+                raw_images = [{"url": row["image"], "alt": product.image_alt}]
+            
+            existing_urls = set(product.images.values_list("image_url", flat=True))
+            for idx, img in enumerate(raw_images):
+                img_url = img["url"] if isinstance(img, dict) else str(img)
+                img_alt = img.get("alt", product.image_alt) if isinstance(img, dict) else product.image_alt
+                if img_url not in existing_urls:
+                    ProductImage.objects.create(
+                        product=product,
+                        image_url=img_url,
+                        alt_text=img_alt,
+                        sort_order=idx,
+                        is_primary=(idx == 0),
+                    )
+                    existing_urls.add(img_url)
+
             prefix = re.sub(r"[^A-Z0-9]+", "", row["id"].upper())[:14]
             for size in row["sizes"]:
                 slug_size = re.sub(r"[^A-Z0-9]+", "-", size.upper()).strip("-")
                 quantity = 0 if size in row.get("unavailable", []) else 8
-                variant = ProductVariant.objects.create(
+                sku = (prefix + "-" + slug_size)[:64]
+                variant, v_created = ProductVariant.objects.get_or_create(
                     product=product,
-                    sku=(prefix + "-" + slug_size)[:64],
                     size=size,
-                    size_system="UK" if row["category"] == "Sneakers" else "INT",
-                    colour=row["color"],
-                    stock_on_hand=quantity,
+                    defaults={
+                        "sku": sku,
+                        "size_system": "UK" if row["category"] == "Sneakers" else "INT",
+                        "colour": row["color"],
+                        "stock_on_hand": quantity,
+                    }
                 )
-                if quantity:
+                if v_created and quantity:
                     InventoryMovement.objects.create(
                         variant=variant,
                         movement_type="received",

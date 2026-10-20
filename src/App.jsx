@@ -47,18 +47,30 @@ function Provider({ children }) {
     let active = true;
     api('catalog/').then((data) => {
       if (!active) return;
-      setProducts(data.products);
-      const variants = data.products.flatMap((product) => product.variants);
-      setCart((items) => {
-        const merged = new Map();
-        for (const item of items) {
-          const matches = variants.filter((variant) => variant.id === item.variantId || variant.legacy_id === item.variantId || (variant.sku && item.variantId === 'sku:' + variant.sku));
-          const id = matches.length === 1 ? matches[0].id : item.variantId;
-          const quantity = (merged.get(id)?.quantity || 0) + item.quantity;
-          merged.set(id, { variantId: id, quantity: Math.min(10, quantity) });
+      if (Array.isArray(data.products) && data.products.length > 0) {
+        const backendMap = new Map(data.products.map((p) => [p.id, p]));
+        const mergedList = initialProducts.map((p) => {
+          const bp = backendMap.get(p.id);
+          return bp ? { ...p, ...bp, images: bp.images?.length ? bp.images : p.images } : p;
+        });
+        for (const bp of data.products) {
+          if (!mergedList.some((p) => p.id === bp.id)) {
+            mergedList.push(bp);
+          }
         }
-        return [...merged.values()];
-      });
+        setProducts(mergedList);
+        const variants = mergedList.flatMap((product) => product.variants || []);
+        setCart((items) => {
+          const merged = new Map();
+          for (const item of items) {
+            const matches = variants.filter((variant) => variant.id === item.variantId || variant.legacy_id === item.variantId || (variant.sku && item.variantId === 'sku:' + variant.sku));
+            const id = matches.length === 1 ? matches[0].id : item.variantId;
+            const quantity = (merged.get(id)?.quantity || 0) + item.quantity;
+            merged.set(id, { variantId: id, quantity: Math.min(10, quantity) });
+          }
+          return [...merged.values()];
+        });
+      }
       setStore(data.store);
     }).catch(() => {});
     return () => { active = false; };
@@ -129,18 +141,19 @@ function Header() {
 
   return (
     <>
-      <div className="announcement">Illustrative preview · Purchases open after sourcing and stock checks</div>
+      <div className="announcement">100% Authentic Verified Sneakers · Singapore Dispatch · Complimentary Delivery Over S$150</div>
       <header className="header">
         <button className="icon mobile-menu" aria-label={menuOpen ? 'Close menu' : 'Open menu'} onClick={() => setMenuOpen(!menuOpen)}>
           {menuOpen ? <X size={23} /> : <List size={23} />}
         </button>
         <Link to="/" className="wordmark" aria-label="Sole District home">SOLE DISTRICT</Link>
         <nav aria-label="Main navigation" className={menuOpen ? 'nav open' : 'nav'}>
-          <Link to="/shop">New Arrivals</Link>
-          <Link to="/shop?category=Sneakers">Sneakers</Link>
+          <Link to="/shop">All Sneakers</Link>
+          <Link to="/shop?brand=Jordan">Jordan</Link>
+          <Link to="/shop?brand=Nike">Nike</Link>
+          <Link to="/shop?brand=adidas+Yeezy">Yeezy</Link>
           <Link to="/shop?category=Clothing">Clothing</Link>
           <Link to="/brands">Brands</Link>
-          <Link to="/journal">Journal</Link>
         </nav>
         <div className="header-actions">
           <button className="icon" aria-label="Search products" aria-expanded={searchOpen} onClick={() => setSearchOpen(!searchOpen)}><MagnifyingGlass size={22} /></button>
@@ -166,20 +179,57 @@ function Header() {
 
 export function ProductCard({ product }) {
   const { wishlist, toggleWish } = useShop();
+  const primaryImg = product.images?.[0]?.url || product.image;
+  const secondaryImg = product.images?.[1]?.url;
+  const isSneaker = product.category === 'Sneakers';
+  const badgeText = product.badge || (product.illustrative && !product.sellable ? 'Preview' : null);
+
   return (
     <article className="product-card">
       <div className="product-image">
         <Link to={'/product/' + product.id}>
-          <img src={product.image} alt={product.images?.[0]?.alt || product.brand + ' ' + product.name} loading="lazy" width="1200" height="900" />
+          <img
+            className="primary-img"
+            src={primaryImg}
+            alt={product.images?.[0]?.alt || product.brand + ' ' + product.name}
+            loading="lazy"
+            width="1200"
+            height="900"
+          />
+          {secondaryImg && (
+            <img
+              className="secondary-img"
+              src={secondaryImg}
+              alt={(product.images?.[1]?.alt || product.brand + ' ' + product.name) + ' alternate angle'}
+              loading="lazy"
+              width="1200"
+              height="900"
+            />
+          )}
         </Link>
-        <button className="wish icon" aria-label={(wishlist.includes(product.id) ? 'Remove ' : 'Save ') + product.name + ' ' + (wishlist.includes(product.id) ? 'from' : 'to') + ' wishlist'} aria-pressed={wishlist.includes(product.id)} onClick={() => toggleWish(product.id)}>
+        <button
+          className="wish icon"
+          aria-label={(wishlist.includes(product.id) ? 'Remove ' : 'Save ') + product.name + ' ' + (wishlist.includes(product.id) ? 'from' : 'to') + ' wishlist'}
+          aria-pressed={wishlist.includes(product.id)}
+          onClick={() => toggleWish(product.id)}
+        >
           <Heart size={22} weight={wishlist.includes(product.id) ? 'fill' : 'regular'} />
         </button>
-        {product.illustrative && !product.sellable && <span className="product-badge">Preview</span>}
+        <div className="product-card-tags">
+          {badgeText && <span className="product-badge">{badgeText}</span>}
+          {isSneaker && <span className="auth-pill">Verified</span>}
+        </div>
       </div>
       <Link className="product-copy" to={'/product/' + product.id}>
-        <strong>{product.brand}</strong>
-        <div><span>{product.name}</span><span>{money(product.price)}</span></div>
+        <div className="brand-line">
+          <strong>{product.brand}</strong>
+          {product.silhouette && <span className="silhouette-tag">{product.silhouette}</span>}
+        </div>
+        <div className="title-price-line">
+          <span className="shoe-name">{product.name}</span>
+          <span className="shoe-price">{money(product.price)}</span>
+        </div>
+        {product.color && <span className="shoe-colorway">{product.color}</span>}
       </Link>
     </article>
   );

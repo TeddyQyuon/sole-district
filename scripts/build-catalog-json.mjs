@@ -1,0 +1,511 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const catalogPath = path.resolve(__dirname, '../data/catalog.json');
+const previewPath = path.resolve(__dirname, '../backend/shop/catalog_preview.json');
+
+const catalog = [
+  {
+    id: "jordan-1-chicago-reimagined",
+    brand: "Jordan",
+    name: "Air Jordan 1 Retro High OG 'Chicago Lost & Found'",
+    category: "Sneakers",
+    silhouette: "Air Jordan 1",
+    badge: "Grail",
+    price: 27900,
+    color: "Varsity Red / Black / Sail",
+    image: "/assets/sneakers/jordan-1-chicago-reimagined-1.jpg",
+    images: [
+      { url: "/assets/sneakers/jordan-1-chicago-reimagined-1.jpg", alt: "Air Jordan 1 High OG Chicago Lost and Found lateral profile" },
+      { url: "/assets/sneakers/jordan-1-chicago-reimagined-2.jpg", alt: "Air Jordan 1 High OG Chicago Lost and Found 3/4 angle" }
+    ],
+    description: "An iconic reimagining of the 1985 classic. Vintage accents, aged leather details and cracked black collars celebrate the spirit of deadstock discoveries.",
+    detail: "Premium aged leather upper with cracked collar aesthetic. Air-Sole cushioning encapsulated in polyurethane midsole. Classic pivot-circle rubber traction. Includes retro packaging and spare laces.",
+    sizes: ["7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5", "11"],
+    unavailable: ["7", "11"],
+    featured: true
+  },
+  {
+    id: "jordan-4-military-black",
+    brand: "Jordan",
+    name: "Air Jordan 4 Retro 'Military Black'",
+    category: "Sneakers",
+    silhouette: "Air Jordan 4",
+    badge: "Trending",
+    price: 29900,
+    color: "White / Black / Neutral Grey",
+    image: "/assets/sneakers/jordan-4-military-black-1.jpg",
+    images: [
+      { url: "/assets/sneakers/jordan-4-military-black-1.jpg", alt: "Air Jordan 4 Military Black lateral profile" },
+      { url: "/assets/sneakers/jordan-4-military-black-2.jpg", alt: "Air Jordan 4 Military Black 3/4 angle" }
+    ],
+    description: "A clean monochromatic translation of the original 1989 silhouette. Smooth white leather paired with light grey suede mudguards and deep black accents.",
+    detail: "Genuine leather upper with soft suede overlay at the toe. Molded eyelets, quarter panel mesh netting, and visible Air-Sole unit in the heel. Sculpted polyurethane midsole and herringbone rubber outsole.",
+    sizes: ["7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5", "11"],
+    unavailable: ["10.5"],
+    featured: true
+  },
+  {
+    id: "jordan-4-bred-reimagined",
+    brand: "Jordan",
+    name: "Air Jordan 4 Retro 'Bred Reimagined'",
+    category: "Sneakers",
+    silhouette: "Air Jordan 4",
+    badge: "Iconic",
+    price: 31900,
+    color: "Black / Fire Red / Cement Grey",
+    image: "/assets/sneakers/jordan-4-bred-reimagined-1.jpg",
+    images: [
+      { url: "/assets/sneakers/jordan-4-bred-reimagined-1.jpg", alt: "Air Jordan 4 Bred Reimagined lateral profile" },
+      { url: "/assets/sneakers/jordan-4-bred-reimagined-2.jpg", alt: "Air Jordan 4 Bred Reimagined 3/4 angle" }
+    ],
+    description: "The legendary 1989 Bred colorway reimagined with a luxurious, supple tumbled leather upper in place of traditional nubuck. Completed with Nike Air heel branding.",
+    detail: "Premium black tumbled leather upper. Visible Air cushioning in the heel with encapsulated forefoot unit. TPU support wings, heritage netting, and OG Nike Air embossed heel tab.",
+    sizes: ["7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5", "11"],
+    unavailable: ["7.5"],
+    featured: true
+  },
+  {
+    id: "jordan-1-dark-mocha",
+    brand: "Jordan",
+    name: "Air Jordan 1 Retro High OG 'Dark Mocha'",
+    category: "Sneakers",
+    silhouette: "Air Jordan 1",
+    badge: "Popular",
+    price: 28900,
+    color: "Sail / Dark Mocha / Black",
+    image: "/assets/sneakers/jordan-1-dark-mocha-1.jpg",
+    images: [
+      { url: "/assets/sneakers/jordan-1-dark-mocha-1.jpg", alt: "Air Jordan 1 Dark Mocha lateral profile" },
+      { url: "/assets/sneakers/jordan-1-dark-mocha-2.jpg", alt: "Air Jordan 1 Dark Mocha 3/4 angle" }
+    ],
+    description: "One of the most sought-after modern Jordan 1 releases. Rich Dark Mocha nubuck wrapping the heel and collar, complemented by clean sail leather and black overlays.",
+    detail: "Rich nubuck heel counters and collar panels combined with full-grain leather overlays. Air-Sole cushioning in the heel. Perforated toe box for ventilation.",
+    sizes: ["7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5"],
+    unavailable: ["8"],
+    featured: false
+  },
+  {
+    id: "jordan-1-low-travis-scott-reverse-mocha",
+    brand: "Jordan",
+    name: "Air Jordan 1 Retro Low OG 'Travis Scott Reverse Mocha'",
+    category: "Sneakers",
+    silhouette: "Air Jordan 1",
+    badge: "Hype",
+    price: 39900,
+    color: "Sail / University Red / Ridgerock",
+    image: "/assets/sneakers/jordan-1-low-travis-scott-reverse-mocha-1.jpg",
+    images: [
+      { url: "/assets/sneakers/jordan-1-low-travis-scott-reverse-mocha-1.jpg", alt: "Travis Scott Jordan 1 Low Reverse Mocha lateral profile" },
+      { url: "/assets/sneakers/jordan-1-low-travis-scott-reverse-mocha-2.jpg", alt: "Travis Scott Jordan 1 Low Reverse Mocha 3/4 angle" }
+    ],
+    description: "A legendary low-top collaboration featuring Houston rapper Travis Scott's signature oversized reversed Swoosh, earthy neutral tones, and Cactus Jack embroidery.",
+    detail: "Brown nubuck base with off-white sail leather overlays. Inverted oversized leather Swoosh on the lateral side. Mismatched Cactus Jack face and Jordan Wings embroidery at heels.",
+    sizes: ["7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5"],
+    unavailable: ["7", "9.5"],
+    featured: true
+  },
+  {
+    id: "jordan-3-white-cement-reimagined",
+    brand: "Jordan",
+    name: "Air Jordan 3 Retro 'White Cement Reimagined'",
+    category: "Sneakers",
+    silhouette: "Air Jordan 3",
+    badge: "Classic",
+    price: 28900,
+    color: "Summit White / Fire Red / Cement Grey",
+    image: "/assets/sneakers/jordan-3-white-cement-reimagined-1.jpg",
+    images: [
+      { url: "/assets/sneakers/jordan-3-white-cement-reimagined-1.jpg", alt: "Air Jordan 3 White Cement Reimagined lateral profile" },
+      { url: "/assets/sneakers/jordan-3-white-cement-reimagined-2.jpg", alt: "Air Jordan 3 White Cement Reimagined 3/4 angle" }
+    ],
+    description: "Crafted to the exact 1988 specifications. Featuring vintage elephant print overlays, pre-yellowed sail midsole accents, and original Nike Air heel branding.",
+    detail: "Supple white leather upper with classic elephant print mudguards. Visible heel Air unit with pre-aged sail detailing. Polyurethane midsole and rubber outsole with vintage branding.",
+    sizes: ["7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5"],
+    unavailable: [],
+    featured: false
+  },
+  {
+    id: "jordan-11-concord",
+    brand: "Jordan",
+    name: "Air Jordan 11 Retro 'Concord'",
+    category: "Sneakers",
+    silhouette: "Air Jordan 11",
+    badge: "Heritage",
+    price: 32900,
+    color: "White / Black / Dark Concord",
+    image: "/assets/sneakers/jordan-11-concord-1.jpg",
+    images: [
+      { url: "/assets/sneakers/jordan-11-concord-1.jpg", alt: "Air Jordan 11 Concord lateral profile" },
+      { url: "/assets/sneakers/jordan-11-concord-2.jpg", alt: "Air Jordan 11 Concord 3/4 angle" }
+    ],
+    description: "Tinker Hatfield's crowning achievement and a historic basketball grail. Deep black patent leather cut high to original specs, white ballistic mesh, and ice-blue translucent soles.",
+    detail: "High-cut patent leather with breathable ballistic mesh upper. Full-length Air-Sole unit, carbon fiber shank plate, and icy translucent rubber outsole with Concord traction pods.",
+    sizes: ["7.5", "8", "8.5", "9", "9.5", "10", "10.5", "11"],
+    unavailable: ["8.5"],
+    featured: false
+  },
+  {
+    id: "jordan-1-low-wolf-grey",
+    brand: "Jordan",
+    name: "Air Jordan 1 Low 'Wolf Grey'",
+    category: "Sneakers",
+    silhouette: "Air Jordan 1",
+    badge: "Essential",
+    price: 18900,
+    color: "Wolf Grey / White / Photon Dust",
+    image: "/assets/sneakers/jordan-1-low-wolf-grey-1.jpg",
+    images: [
+      { url: "/assets/sneakers/jordan-1-low-wolf-grey-1.jpg", alt: "Air Jordan 1 Low Wolf Grey lateral profile" },
+      { url: "/assets/sneakers/jordan-1-low-wolf-grey-2.jpg", alt: "Air Jordan 1 Low Wolf Grey 3/4 angle" }
+    ],
+    description: "Celebrated for its resemblance to ultra-luxury collaborations. Clean white leather base, soft grey leather overlays, and an icy semi-translucent outsole.",
+    detail: "Smooth leather upper with stitched overlays. Encapsulated Air-Sole cushioning in heel. Semi-translucent icy rubber outsole.",
+    sizes: ["6", "6.5", "7", "7.5", "8", "8.5", "9", "9.5", "10"],
+    unavailable: ["6"],
+    featured: false
+  },
+  {
+    id: "yeezy-boost-350-v2-zebra",
+    brand: "adidas Yeezy",
+    name: "Yeezy Boost 350 V2 'Zebra'",
+    category: "Sneakers",
+    silhouette: "Yeezy 350",
+    badge: "Iconic",
+    price: 34900,
+    color: "White / Core Black / Red",
+    image: "/assets/sneakers/yeezy-boost-350-v2-zebra-1.jpg",
+    images: [
+      { url: "/assets/sneakers/yeezy-boost-350-v2-zebra-1.jpg", alt: "adidas Yeezy Boost 350 V2 Zebra lateral profile" },
+      { url: "/assets/sneakers/yeezy-boost-350-v2-zebra-2.jpg", alt: "adidas Yeezy Boost 350 V2 Zebra 3/4 angle" }
+    ],
+    description: "An enduring icon of modern sneaker history. Re-engineered Primeknit upper featuring black and white zebra marbling and reversed red 'SPLY-350' script.",
+    detail: "Breathable Primeknit upper in contrasting stripe pattern. Full-length Boost midsole encapsulated in translucent ribbed TPU sidewalls. Matching heel pull tab.",
+    sizes: ["6.5", "7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5", "11"],
+    unavailable: ["7", "10.5"],
+    featured: true
+  },
+  {
+    id: "yeezy-boost-350-v2-onyx",
+    brand: "adidas Yeezy",
+    name: "Yeezy Boost 350 V2 'Onyx'",
+    category: "Sneakers",
+    silhouette: "Yeezy 350",
+    badge: "Popular",
+    price: 33900,
+    color: "Onyx / Core Black / Charcoal",
+    image: "/assets/sneakers/yeezy-boost-350-v2-onyx-1.jpg",
+    images: [
+      { url: "/assets/sneakers/yeezy-boost-350-v2-onyx-1.jpg", alt: "adidas Yeezy Boost 350 V2 Onyx lateral profile" },
+      { url: "/assets/sneakers/yeezy-boost-350-v2-onyx-2.jpg", alt: "adidas Yeezy Boost 350 V2 Onyx 3/4 angle" }
+    ],
+    description: "A versatile blackout edition of the 350 V2 silhouette. Monochromatic charcoal Primeknit with a sheer monofilament side stripe and pillowy Boost cushioning.",
+    detail: "Engineered Primeknit upper in muted charcoal tones. Post-dyed monofilament side stripe. Responsive full-length Boost cushioning in semi-translucent rubber cage.",
+    sizes: ["6.5", "7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5"],
+    unavailable: ["8.5"],
+    featured: true
+  },
+  {
+    id: "yeezy-boost-700-wave-runner",
+    brand: "adidas Yeezy",
+    name: "Yeezy Boost 700 'Wave Runner'",
+    category: "Sneakers",
+    silhouette: "Yeezy 700",
+    badge: "Grail",
+    price: 38900,
+    color: "Solid Grey / Chalk White / Core Black",
+    image: "/assets/sneakers/yeezy-boost-700-wave-runner-1.jpg",
+    images: [
+      { url: "/assets/sneakers/yeezy-boost-700-wave-runner-1.jpg", alt: "adidas Yeezy Boost 700 Wave Runner lateral profile" },
+      { url: "/assets/sneakers/yeezy-boost-700-wave-runner-2.jpg", alt: "adidas Yeezy Boost 700 Wave Runner 3/4 angle" }
+    ],
+    description: "The shoe that defined the dad-shoe era. Multi-layered panels of suede, premium leather, and mesh with vibrant teal, neon laces, and sculpted orange midsole accents.",
+    detail: "Layered upper combining grey suede, blue mesh, and leather overlays. Sculpted full-length Boost midsole with vibrant orange accents. Reflective three-stripe elements beneath side mesh.",
+    sizes: ["7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5"],
+    unavailable: ["9"],
+    featured: true
+  },
+  {
+    id: "yeezy-slide-bone",
+    brand: "adidas Yeezy",
+    name: "Yeezy Slide 'Bone'",
+    category: "Sneakers",
+    silhouette: "Yeezy Slide",
+    badge: "Trending",
+    price: 14900,
+    color: "Bone / Bone",
+    image: "/assets/sneakers/yeezy-slide-bone-1.jpg",
+    images: [
+      { url: "/assets/sneakers/yeezy-slide-bone-1.jpg", alt: "adidas Yeezy Slide Bone lateral profile" },
+      { url: "/assets/sneakers/yeezy-slide-bone-2.jpg", alt: "adidas Yeezy Slide Bone 3/4 angle" }
+    ],
+    description: "Minimalist slip-on luxury with seamless one-piece injection-molded EVA foam construction for lightweight, resilient comfort.",
+    detail: "Injected EVA foam compound for lightweight comfort. Soft top layer in the footbed offers immediate step-in cushioning. Strategic groove outsole delivers optimal flexibility and traction.",
+    sizes: ["6", "7", "8", "9", "10", "11"],
+    unavailable: ["7"],
+    featured: false
+  },
+  {
+    id: "yeezy-foam-runner-onyx",
+    brand: "adidas Yeezy",
+    name: "Yeezy Foam Runner 'Onyx'",
+    category: "Sneakers",
+    silhouette: "Yeezy Foam Runner",
+    badge: "Future",
+    price: 17900,
+    color: "Onyx / Carbon",
+    image: "/assets/sneakers/yeezy-foam-runner-onyx-1.jpg",
+    images: [
+      { url: "/assets/sneakers/yeezy-foam-runner-onyx-1.jpg", alt: "adidas Yeezy Foam Runner Onyx lateral profile" },
+      { url: "/assets/sneakers/yeezy-foam-runner-onyx-2.jpg", alt: "adidas Yeezy Foam Runner Onyx 3/4 angle" }
+    ],
+    description: "Futuristic sculpted slip-on footwear engineered from an innovative blend of lightweight EVA foam and harvested algae.",
+    detail: "One-piece molded EVA and algae foam construction. Strategically mapped ventilation ports for breathability and airflow. Textured footbed prevents foot slippage.",
+    sizes: ["7", "8", "9", "10", "11"],
+    unavailable: ["8"],
+    featured: false
+  },
+  {
+    id: "yeezy-foam-runner-sand",
+    brand: "adidas Yeezy",
+    name: "Yeezy Foam Runner 'Sand'",
+    category: "Sneakers",
+    silhouette: "Yeezy Foam Runner",
+    badge: "Popular",
+    price: 17900,
+    color: "Sand / Cream",
+    image: "/assets/sneakers/yeezy-foam-runner-sand-1.jpg",
+    images: [
+      { url: "/assets/sneakers/yeezy-foam-runner-sand-1.jpg", alt: "adidas Yeezy Foam Runner Sand lateral profile" },
+      { url: "/assets/sneakers/yeezy-foam-runner-sand-2.jpg", alt: "adidas Yeezy Foam Runner Sand 3/4 angle" }
+    ],
+    description: "Lightweight sculptural footwear rendered in warm desert sand tones, blending bio-based materials and aerated organic ergonomics.",
+    detail: "One-piece molded EVA and algae foam construction. Flowing lines with strategically mapped ventilation ports. Seamless slip-on comfort.",
+    sizes: ["7", "8", "9", "10", "11"],
+    unavailable: [],
+    featured: false
+  },
+  {
+    id: "nike-dunk-low-panda",
+    brand: "Nike",
+    name: "Dunk Low 'Panda'",
+    category: "Sneakers",
+    silhouette: "Dunk Low",
+    badge: "Top Seller",
+    price: 17900,
+    color: "White / Black",
+    image: "/assets/sneakers/nike-dunk-low-panda-1.jpg",
+    images: [
+      { url: "/assets/sneakers/nike-dunk-low-panda-1.jpg", alt: "Nike Dunk Low Panda lateral profile" },
+      { url: "/assets/sneakers/nike-dunk-low-panda-2.jpg", alt: "Nike Dunk Low Panda 3/4 angle" }
+    ],
+    description: "The undisputed streetwear rotation essential. Crisp two-tone white and black leather color blocking that effortlessly pairs with any wardrobe.",
+    detail: "Smooth leather upper with contrasting black overlays. Low-cut padded collar and perforated toe box. Lightweight foam midsole with durable pivot-circle rubber outsole.",
+    sizes: ["6", "6.5", "7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5"],
+    unavailable: ["6.5"],
+    featured: true
+  },
+  {
+    id: "nike-dunk-low-grey-fog",
+    brand: "Nike",
+    name: "Dunk Low 'Grey Fog'",
+    category: "Sneakers",
+    silhouette: "Dunk Low",
+    badge: "Essential",
+    price: 18900,
+    color: "White / Grey Fog",
+    image: "/assets/sneakers/nike-dunk-low-grey-fog-1.jpg",
+    images: [
+      { url: "/assets/sneakers/nike-dunk-low-grey-fog-1.jpg", alt: "Nike Dunk Low Grey Fog lateral profile" },
+      { url: "/assets/sneakers/nike-dunk-low-grey-fog-2.jpg", alt: "Nike Dunk Low Grey Fog 3/4 angle" }
+    ],
+    description: "An understated, elevated neutral take on the basketball-turned-skate icon. Clean white leather base with soft grey fog leather overlays.",
+    detail: "Full-grain leather upper with tonal grey swoosh and heel tab. Breathable nylon tongue and cushioned collar. Two-tone rubber cupsole with foam wedge.",
+    sizes: ["6.5", "7", "7.5", "8", "8.5", "9", "9.5", "10"],
+    unavailable: ["8"],
+    featured: false
+  },
+  {
+    id: "nike-air-force-1-triple-white",
+    brand: "Nike",
+    name: "Air Force 1 '07 'Triple White'",
+    category: "Sneakers",
+    silhouette: "Air Force 1",
+    badge: "Classic",
+    price: 15900,
+    color: "White / White / White",
+    image: "/assets/sneakers/nike-air-force-1-triple-white-1.jpg",
+    images: [
+      { url: "/assets/sneakers/nike-air-force-1-triple-white-1.jpg", alt: "Nike Air Force 1 07 Triple White lateral profile" },
+      { url: "/assets/sneakers/nike-air-force-1-triple-white-2.jpg", alt: "Nike Air Force 1 07 Triple White 3/4 angle" }
+    ],
+    description: "The all-time classic. Crisp leather edges, clean lines, and timeless comfort that set the standard for street style across generations.",
+    detail: "Real leather upper with stitched overlays. Encapsulated Nike Air unit for lightweight all-day cushioning. Perforated toe box and metal 'AF-1' lace deubre.",
+    sizes: ["6", "6.5", "7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5", "11"],
+    unavailable: ["6"],
+    featured: false
+  },
+  {
+    id: "nike-sb-dunk-low-dodgers",
+    brand: "Nike",
+    name: "Nike SB Dunk Low Pro 'Los Angeles Dodgers'",
+    category: "Sneakers",
+    silhouette: "Dunk Low",
+    badge: "Collab",
+    price: 25900,
+    color: "Deep Royal Blue / White / Sport Red",
+    image: "/assets/sneakers/nike-sb-dunk-low-dodgers-1.jpg",
+    images: [
+      { url: "/assets/sneakers/nike-sb-dunk-low-dodgers-1.jpg", alt: "Nike SB Dunk Low Dodgers lateral profile" },
+      { url: "/assets/sneakers/nike-sb-dunk-low-dodgers-2.jpg", alt: "Nike SB Dunk Low Dodgers 3/4 angle" }
+    ],
+    description: "MLB-inspired skateboarding grail featuring rich royal blue suede over crisp white leather, finished with a gum sole displaying a pink bubblegum hit on the heel.",
+    detail: "Plush suede and leather upper. Padded fat tongue with hidden inner tongue graphics (palm tree and welcome sign). Zoom Air heel unit in the insole.",
+    sizes: ["7", "7.5", "8", "8.5", "9", "9.5", "10"],
+    unavailable: ["7"],
+    featured: true
+  },
+  {
+    id: "nike-air-max-1-travis-scott-wheat",
+    brand: "Nike",
+    name: "Air Max 1 'Travis Scott Cactus Jack Wheat'",
+    category: "Sneakers",
+    silhouette: "Air Max 1",
+    badge: "Hype",
+    price: 34900,
+    color: "Wheat / Lemon Drop / Baroque Brown",
+    image: "/assets/sneakers/nike-air-max-1-travis-scott-wheat-1.jpg",
+    images: [
+      { url: "/assets/sneakers/nike-air-max-1-travis-scott-wheat-1.jpg", alt: "Nike Air Max 1 Travis Scott Wheat lateral profile" },
+      { url: "/assets/sneakers/nike-air-max-1-travis-scott-wheat-2.jpg", alt: "Nike Air Max 1 Travis Scott Wheat 3/4 angle" }
+    ],
+    description: "Outdoor-inspired rework of the visible Air pioneer with custom webbing, reverse lateral Swoosh, CACT.US CORP heel crest, and trail lacing.",
+    detail: "Mixed material upper with mesh underlays and rich wheat nubuck. Reverse Swoosh insignia. Patterned nylon webbing straps and bungee-style toggle lacing.",
+    sizes: ["7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5"],
+    unavailable: ["10.5"],
+    featured: true
+  },
+  {
+    id: "new-balance-2002r",
+    brand: "New Balance",
+    name: "2002R",
+    category: "Sneakers",
+    silhouette: "2002R",
+    badge: "Popular",
+    price: 22900,
+    color: "Rain Cloud / Marblehead",
+    image: "/assets/new-balance.webp",
+    images: [
+      { url: "/assets/new-balance.webp", alt: "New Balance 2002R Rain Cloud Marblehead" }
+    ],
+    description: "A considered everyday classic. Suede overlays, breathable mesh and cushioned support.",
+    detail: "Suede and mesh upper. Cushioned midsole and durable rubber outsole. Standard fit; consult the size guide before choosing your size.",
+    sizes: ["6", "6.5", "7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5"],
+    unavailable: ["6", "10.5"],
+    featured: true
+  },
+  {
+    id: "adidas-samba-og",
+    brand: "adidas Originals",
+    name: "Samba OG",
+    category: "Sneakers",
+    silhouette: "Samba",
+    badge: "Trending",
+    price: 16900,
+    color: "Cloud White / Core Black",
+    image: "/assets/samba.webp",
+    images: [
+      { url: "/assets/samba.webp", alt: "adidas Originals Samba OG Cloud White Core Black" }
+    ],
+    description: "From the terrace to the everyday. A low-profile icon with leather texture and a classic gum sole.",
+    detail: "Leather upper, textile lining and gum rubber outsole. Wipe clean with a soft cloth. Refer to the size guide for fit.",
+    sizes: ["6", "6.5", "7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5"],
+    unavailable: ["6.5"],
+    featured: true
+  },
+  {
+    id: "nike-air-max-90",
+    brand: "Nike",
+    name: "Air Max 90",
+    category: "Sneakers",
+    silhouette: "Air Max 90",
+    badge: "Classic",
+    price: 20900,
+    color: "White / Wolf Grey",
+    image: "/assets/air-max.webp",
+    images: [
+      { url: "/assets/air-max.webp", alt: "Nike Air Max 90 White Wolf Grey" }
+    ],
+    description: "A street staple in an understated palette. Layered textures and visible cushioning, made for your daily rotation.",
+    detail: "Mixed-material upper and rubber outsole. Visible heel cushioning. Clean with a soft brush; avoid machine washing.",
+    sizes: ["6", "6.5", "7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5"],
+    unavailable: ["7.5"],
+    featured: false
+  },
+  {
+    id: "carhartt-chase-sweatshirt",
+    brand: "Carhartt WIP",
+    name: "Chase Sweatshirt",
+    category: "Clothing",
+    silhouette: "Sweatshirt",
+    badge: "Essential",
+    price: 14900,
+    color: "Ash Heather / Gold",
+    image: "/assets/sweatshirt.webp",
+    images: [
+      { url: "/assets/sweatshirt.webp", alt: "Carhartt WIP Chase Sweatshirt" }
+    ],
+    description: "An easy layer with a substantial feel. Clean lines, a relaxed silhouette and an understated chest detail.",
+    detail: "Cotton-blend fleece. Ribbed cuffs and hem. Wash cold with similar colours and dry away from direct heat.",
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+    unavailable: ["XS"],
+    featured: false
+  },
+  {
+    id: "district-heavyweight-hoodie",
+    brand: "District Essentials",
+    name: "Heavyweight Hoodie",
+    category: "Clothing",
+    silhouette: "Hoodie",
+    badge: "District",
+    price: 11900,
+    color: "Olive",
+    image: "/assets/hoodie.webp",
+    images: [
+      { url: "/assets/hoodie.webp", alt: "District Essentials Heavyweight Hoodie" }
+    ],
+    description: "An understated uniform for the off-duty hours. A generous hood, weighty fabric and a relaxed fit.",
+    detail: "Heavyweight cotton fleece. Relaxed fit and kangaroo pocket. Wash inside out at a low temperature.",
+    sizes: ["XS", "S", "M", "L", "XL"],
+    unavailable: [],
+    featured: false
+  },
+  {
+    id: "district-six-panel-cap",
+    brand: "District Essentials",
+    name: "Six-panel Cap",
+    category: "Accessories",
+    silhouette: "Headwear",
+    badge: "District",
+    price: 4500,
+    color: "Charcoal",
+    image: "/assets/cap.webp",
+    images: [
+      { url: "/assets/cap.webp", alt: "District Essentials Six-panel Cap" }
+    ],
+    description: "The finishing touch. A classic curved brim with an adjustable strap for an everyday fit.",
+    detail: "Cotton twill. Adjustable back strap. One size. Spot clean only.",
+    sizes: ["One size"],
+    unavailable: [],
+    featured: false
+  }
+];
+
+fs.writeFileSync(catalogPath, JSON.stringify(catalog, null, 2), 'utf-8');
+fs.writeFileSync(previewPath, JSON.stringify(catalog, null, 2), 'utf-8');
+console.log(`Successfully wrote ${catalog.length} products to:`);
+console.log(`- ${catalogPath}`);
+console.log(`- ${previewPath}`);

@@ -24,7 +24,9 @@ export const initialProducts = seed.map((product) => ({
   ...product,
   illustrative: true,
   sellable: false,
-  images: [{ url: product.image, alt: product.brand + ' ' + product.name }],
+  images: Array.isArray(product.images) && product.images.length
+    ? product.images
+    : [{ url: product.image, alt: product.brand + ' ' + product.name }],
   variants: sortVariantsBySize(product.sizes.map((size) => ({
     id: product.id + ':' + size,
     legacy_id: product.id + ':' + size,
