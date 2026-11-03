@@ -1,76 +1,274 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import {
-  ArrowLeft, ArrowRight, ArrowUpRight, CaretDown, Check, CheckCircle, Heart, LockSimple,
-  MapPin, Package, Plus, ShieldCheck, SlidersHorizontal, Sparkle, Tag, Truck, X,
+  ArrowLeft, ArrowRight, ArrowUpRight, CaretDown, CaretLeft, CaretRight, Check, CheckCircle,
+  Fire, Funnel, GridFour, Heart, LockSimple, MapPin, Package, Plus, Rows, ShieldCheck,
+  SlidersHorizontal, Sparkle, SquaresFour, Tag, Truck, X,
 } from '@phosphor-icons/react';
-import { Button, Dialog, LineItem, ProductGrid, useShop } from './App';
+import { Button, Dialog, LineItem, ProductCard, ProductGrid, useShop } from './App';
 import { GuestAccess } from './Account';
 import { PublishedPolicy } from './StoreInformation';
 import { AddressAutocomplete } from './components/AddressAutocomplete';
-import { api, money, shipping, sortVariantsBySize, trackEvent } from './shop';
+import {
+  getPostalSectorInfo, lookupSingaporeAddress, validateSingaporeAddress,
+} from './utils/singaporeAddress';
+import {
+  api, money, readStored, saveStored, shipping, sortVariantsBySize, trackEvent,
+} from './shop';
+import {
+  ACCESSORY_SUBCATEGORIES, CLOTHING_SUBCATEGORIES, discountPercent, getAvailableSizeCount,
+  getDerivedBrands, getDerivedSilhouettes, getDerivedSubcategories, isLowStock, isNewIn, isOnSale, isSoldOut,
+} from './catalogHelpers';
+import { AnimatedCount, BrandTicker, Reveal, handleSpotlightMove } from './motion';
 
 export function Home() {
   const { products } = useShop();
-  const clothing = products.find((product) => product.category === 'Clothing') || products[0];
+  const [apparelTab, setApparelTab] = useState('All');
+  const newInRef = useRef(null);
 
-  const brandCounts = useMemo(() => {
-    const counts = {};
-    for (const p of products) {
-      counts[p.brand] = (counts[p.brand] || 0) + 1;
-    }
-    return counts;
+  const derivedBrands = useMemo(() => getDerivedBrands(products), [products]);
+
+  const newInProducts = useMemo(() => {
+    const fresh = products
+      .filter((p) => isNewIn(p))
+      .sort((a, b) => (b.addedAt || '').localeCompare(a.addedAt || ''));
+    return fresh.length >= 4 ? fresh.slice(0, 12) : products.filter((p) => p.featured || p.badge).slice(0, 10);
   }, [products]);
 
-  const trendingSneakers = products.filter((p) => p.featured || p.badge === 'Grail' || p.badge === 'Trending').slice(0, 8);
-  const yeezySneakers = products.filter((p) => p.brand === 'adidas Yeezy').slice(0, 4);
-  const jordanSneakers = products.filter((p) => p.brand === 'Jordan').slice(0, 4);
+  const trendingSneakers = useMemo(
+    () => products.filter((p) => p.category === 'Sneakers' && (p.featured || p.badge === 'Grail' || p.badge === 'Trending')).slice(0, 8),
+    [products]
+  );
+  const yeezySneakers = useMemo(
+    () => products.filter((p) => p.brand === 'adidas Yeezy').slice(0, 4),
+    [products]
+  );
+  const jordanSneakers = useMemo(
+    () => products.filter((p) => p.brand === 'Jordan').slice(0, 4),
+    [products]
+  );
+
+  const streetwearProducts = useMemo(() => {
+    const allApparel = products.filter((p) => p.category === 'Clothing' || p.category === 'Accessories');
+    if (apparelTab === 'All') return allApparel.slice(0, 8);
+    if (apparelTab === 'Accessories') return allApparel.filter((p) => p.category === 'Accessories').slice(0, 8);
+    return allApparel.filter((p) => p.subcategory === apparelTab).slice(0, 8);
+  }, [products, apparelTab]);
+
+  // Dynamic category image tiles
+  const categoryTiles = useMemo(() => {
+    const findImg = (predicate, fallbackIdx = 0) => {
+      const match = products.find(predicate) || products[fallbackIdx] || products[0];
+      return match?.images?.[0]?.url || match?.image || '/assets/hero.webp';
+    };
+    const countMatch = (predicate) => products.filter(predicate).length;
+
+    return [
+      {
+        title: 'Sneakers',
+        eyebrow: 'VERIFIED DEADSTOCK',
+        to: '/shop?category=Sneakers',
+        count: countMatch((p) => p.category === 'Sneakers'),
+        image: findImg((p) => p.category === 'Sneakers' && p.featured, 0),
+      },
+      {
+        title: 'Hoodies & Sweats',
+        eyebrow: 'HEAVYWEIGHT FLEECE',
+        to: '/shop?category=Clothing&subcategory=' + encodeURIComponent('Hoodies & Sweats'),
+        count: countMatch((p) => p.subcategory === 'Hoodies & Sweats' || (p.category === 'Clothing' && /hoodie|sweat|crew/i.test(p.name))),
+        image: findImg((p) => p.subcategory === 'Hoodies & Sweats' || (p.category === 'Clothing' && /hoodie|sweat|crew|fleece/i.test(p.name)), 1),
+      },
+      {
+        title: 'Tees & Graphic Tops',
+        eyebrow: 'DAILY ROTATION',
+        to: '/shop?category=Clothing&subcategory=Tees',
+        count: countMatch((p) => p.subcategory === 'Tees' || (p.category === 'Clothing' && /tee|t-shirt/i.test(p.name))),
+        image: findImg((p) => p.subcategory === 'Tees' || (p.category === 'Clothing' && /tee|t-shirt|shirt/i.test(p.name)), 2),
+      },
+      {
+        title: 'Outerwear & Pants',
+        eyebrow: 'UTILITARIAN LAYERS',
+        to: '/shop?category=Clothing',
+        count: countMatch((p) => p.category === 'Clothing'),
+        image: findImg((p) => p.subcategory === 'Outerwear' || p.subcategory === 'Pants & Shorts' || p.category === 'Clothing', 3),
+      },
+      {
+        title: 'Headwear & Goods',
+        eyebrow: 'ACCESSORIES',
+        to: '/shop?category=Accessories',
+        count: countMatch((p) => p.category === 'Accessories'),
+        image: findImg((p) => p.category === 'Accessories', 4),
+      },
+    ];
+  }, [products]);
+
+  const clothingFeature = products.find((product) => product.category === 'Clothing') || products[0];
+
+  const scrollCarousel = (dir) => {
+    if (!newInRef.current) return;
+    const width = newInRef.current.clientWidth * 0.78;
+    newInRef.current.scrollBy({ left: dir * width, behavior: 'smooth' });
+  };
 
   return (
     <>
       <section className="hero">
         <img className="hero-photo" src="/assets/hero.webp" alt="Streetwear and authentic sneakers curation" fetchPriority="high" width="1586" height="992" />
+        <div className="hero-scrim" aria-hidden="true" />
         <div className="hero-copy">
-          <span className="eyebrow">100% AUTHENTIC SNEAKERS & STREETWEAR</span>
-          <h1>THE NEXT<br />STREET STANDARD.</h1>
-          <p>Verified authentic Jordan, Nike, and Yeezy. Hand-inspected by sneaker specialists, dispatched directly from Singapore.</p>
-          <div className="hero-cta-group">
-            <Button to="/shop">Explore collection <ArrowRight size={21} /></Button>
-            <Link to="/shop?brand=adidas+Yeezy" className="button button-outline-hero">Shop Yeezy</Link>
+          <div className="hero-live-row hero-stagger hero-stagger-1">
+            <span className="eyebrow">
+              <span className="live-pulse-dot" aria-hidden="true" />
+              100% AUTHENTIC SNEAKERS & STREETWEAR
+            </span>
+            <span className="hero-live-count">{products.length} VERIFIED PIECES · SG</span>
+          </div>
+          <h1 className="hero-headline">
+            <span className="hero-line-mask"><span className="hero-line-inner hero-line-1">THE NEXT</span></span>
+            <span className="hero-line-mask"><span className="hero-line-inner hero-line-2">STREET STANDARD.</span></span>
+          </h1>
+          <p className="hero-stagger hero-stagger-3">Verified authentic sneakers, heavyweight streetwear apparel, and accessories. Hand-inspected by specialists, dispatched directly from Singapore.</p>
+          <div className="hero-cta-group hero-stagger hero-stagger-4">
+            <Button to="/shop" className="hero-primary-cta">Explore collection <ArrowRight size={21} /></Button>
+            <Link to="/shop?new=true" className="button button-outline-hero">New Arrivals</Link>
+            <Link to="/shop?category=Clothing" className="button button-outline-hero">Streetwear Apparel</Link>
           </div>
         </div>
       </section>
 
-      {/* Brand Quick-Access Rail */}
-      <section className="brand-rail-section">
+      {/* Kinetic Infinite Streetwear Label Strip */}
+      <BrandTicker brands={derivedBrands} />
+
+      {/* Dynamic Brand Marquee / Quick-Access Rail */}
+      <section className="brand-rail-section" aria-label="Shop by brand">
         <div className="brand-pills-bar">
           <Link to="/shop" className="brand-pill-btn active">
             <span>All Pieces</span>
             <span className="pill-count">{products.length}</span>
           </Link>
-          {['Jordan', 'Nike', 'adidas Yeezy', 'New Balance', 'adidas Originals'].map((brandName) => (
-            <Link key={brandName} to={'/shop?brand=' + encodeURIComponent(brandName)} className="brand-pill-btn">
-              <span>{brandName}</span>
-              {brandCounts[brandName] ? <span className="pill-count">{brandCounts[brandName]}</span> : null}
+          <Link to="/shop?new=true" className="brand-pill-btn brand-pill-new">
+            <span>New In</span>
+          </Link>
+          {derivedBrands.map((b) => (
+            <Link key={b.name} to={'/shop?brand=' + encodeURIComponent(b.name)} className="brand-pill-btn">
+              <span>{b.name}</span>
+              <span className="pill-count">{b.count}</span>
             </Link>
           ))}
         </div>
       </section>
 
-      {/* Trending Heat Grid */}
-      <section className="section fresh">
+      {/* Editorial Shop By Category Image Tiles */}
+      <Reveal as="section" className="section category-tiles-section">
+        <div className="section-heading">
+          <div>
+            <span className="eyebrow">CURATED DEPARTMENTS</span>
+            <h2>Shop by Category</h2>
+          </div>
+          <Link to="/shop" className="arrow-glide-link">Browse full archive <ArrowRight size={19} /></Link>
+        </div>
+        <div className="category-tiles-grid">
+          {categoryTiles.map((tile, idx) => (
+            <Link
+              key={tile.title}
+              to={tile.to}
+              className="category-tile-card spotlight-surface"
+              style={{ '--tile-idx': idx }}
+              onPointerMove={handleSpotlightMove}
+            >
+              <div className="category-tile-media">
+                <img src={tile.image} alt={tile.title} loading="lazy" />
+              </div>
+              <div className="category-tile-overlay">
+                <span className="eyebrow">{tile.eyebrow}</span>
+                <div className="category-tile-bottom">
+                  <h3>{tile.title}</h3>
+                  <span className="category-tile-cta">
+                    {tile.count > 0 ? `${tile.count} pieces` : 'Explore'} <ArrowUpRight size={16} />
+                  </span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </Reveal>
+
+      {/* New In Horizontal Scroller Carousel */}
+      <Reveal as="section" className="section new-in-carousel-section">
+        <div className="section-heading">
+          <div>
+            <span className="eyebrow">JUST LANDED IN SINGAPORE</span>
+            <h2>New In Rotation</h2>
+          </div>
+          <div className="carousel-controls-group">
+            <div className="carousel-arrows">
+              <button type="button" className="carousel-arrow-btn" aria-label="Scroll previous" onClick={() => scrollCarousel(-1)}>
+                <CaretLeft size={18} weight="bold" />
+              </button>
+              <button type="button" className="carousel-arrow-btn" aria-label="Scroll next" onClick={() => scrollCarousel(1)}>
+                <CaretRight size={18} weight="bold" />
+              </button>
+            </div>
+            <Link to="/shop?new=true" className="carousel-view-all arrow-glide-link">Shop all New In <ArrowRight size={18} /></Link>
+          </div>
+        </div>
+        <div className="horizontal-scroller" ref={newInRef}>
+          {newInProducts.map((product, idx) => (
+            <div key={product.id} className="scroller-item">
+              <ProductCard product={product} index={idx} />
+            </div>
+          ))}
+        </div>
+      </Reveal>
+
+      {/* Streetwear Apparel & Essentials Section */}
+      <Reveal as="section" className="section apparel-showcase-section">
+        <div className="section-heading apparel-heading">
+          <div>
+            <span className="eyebrow">HEAVYWEIGHT STREETWEAR & GOODS</span>
+            <h2>Streetwear Apparel & Essentials</h2>
+          </div>
+          <div className="apparel-filter-pills" role="tablist" aria-label="Filter streetwear showcase">
+            {['All', 'Hoodies & Sweats', 'Tees', 'Pants & Shorts', 'Outerwear', 'Accessories'].map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                role="tab"
+                aria-selected={apparelTab === tab}
+                className={'silhouette-chip ' + (apparelTab === tab ? 'active' : '')}
+                onClick={() => setApparelTab(tab)}
+              >
+                {tab === 'All' ? 'All Streetwear' : tab}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div key={apparelTab} className="tab-stage">
+          <ProductGrid
+            products={streetwearProducts.length ? streetwearProducts : products.filter((p) => p.category !== 'Sneakers').slice(0, 8)}
+          />
+        </div>
+        <div className="section-footer-cta">
+          <Button to="/shop?category=Clothing" className="button-light">
+            Explore All Clothing & Accessories <ArrowRight size={18} />
+          </Button>
+        </div>
+      </Reveal>
+
+      {/* Trending Sneaker Heat Grid */}
+      <Reveal as="section" className="section fresh">
         <div className="section-heading">
           <div>
             <span className="eyebrow">IN THE DISTRICT</span>
-            <h2>Trending Heat</h2>
+            <h2>Trending Footwear Heat</h2>
           </div>
-          <Link to="/shop">View all {products.length} pieces <ArrowRight size={19} /></Link>
+          <Link to="/shop?category=Sneakers" className="arrow-glide-link">View all sneakers <ArrowRight size={19} /></Link>
         </div>
         <ProductGrid products={trendingSneakers.length ? trendingSneakers : products.slice(0, 8)} />
-      </section>
+      </Reveal>
 
       {/* The Yeezy Vault Feature Banner */}
-      <section className="vault-banner">
+      <Reveal as="section" className="vault-banner" variant="scale">
         <div className="vault-content">
           <span className="eyebrow vault-eyebrow">EXCLUSIVE ARCHIVE</span>
           <h2>THE YEEZY VAULT.</h2>
@@ -80,69 +278,69 @@ export function Home() {
         <div className="vault-preview-grid">
           <ProductGrid products={yeezySneakers} />
         </div>
-      </section>
+      </Reveal>
 
       {/* Air Jordan Retro Collection */}
-      <section className="section jordan-section">
+      <Reveal as="section" className="section jordan-section">
         <div className="section-heading">
           <div>
             <span className="eyebrow">HERITAGE GRAILS</span>
             <h2>Air Jordan Collection</h2>
           </div>
-          <Link to="/shop?brand=Jordan">Shop all Jordan <ArrowRight size={19} /></Link>
+          <Link to="/shop?brand=Jordan" className="arrow-glide-link">Shop all Jordan <ArrowRight size={19} /></Link>
         </div>
         <ProductGrid products={jordanSneakers} />
-      </section>
+      </Reveal>
 
       {/* Authenticity Trust Standard */}
-      <section className="auth-trust-banner">
+      <Reveal as="section" className="auth-trust-banner">
         <div className="auth-trust-header">
           <div>
             <span className="eyebrow">VERIFICATION PROMISE</span>
             <h2>THE 4-POINT AUTHENTICITY STANDARD.</h2>
           </div>
-          <p>Every pair that passes through Sole District undergoes rigorous physical evaluation before reaching your doorstep.</p>
+          <p>Every sneaker, garment, and accessory that passes through Sole District undergoes rigorous physical evaluation before reaching your doorstep.</p>
         </div>
         <div className="auth-trust-grid">
-          <div className="auth-trust-card">
+          <div className="auth-trust-card spotlight-surface" onPointerMove={handleSpotlightMove}>
             <span className="card-step">01 / PHYSICAL AUDIT</span>
-            <h3>Stitching & Geometry</h3>
-            <p>Every seam, collar height, stitch spacing, and heel curve is measured against verified production baselines.</p>
+            <h3>Stitching, Weave & Geometry</h3>
+            <p>Every seam, collar height, heavyweight fleece GSM, and silhouette curve is measured against verified production baselines.</p>
           </div>
-          <div className="auth-trust-card">
+          <div className="auth-trust-card spotlight-surface" onPointerMove={handleSpotlightMove}>
             <span className="card-step">02 / OPTICAL & UV</span>
-            <h3>Materials & Blacklight</h3>
-            <p>Full UV blacklight examination to verify fabric glow, invisible production stamps, and dye consistency.</p>
+            <h3>Materials, Labels & Blacklight</h3>
+            <p>Full UV examination and woven neck/wash label inspection to verify typography, ink density, and dye consistency.</p>
           </div>
-          <div className="auth-trust-card">
+          <div className="auth-trust-card spotlight-surface" onPointerMove={handleSpotlightMove}>
             <span className="card-step">03 / DEADSTOCK AUDIT</span>
-            <h3>Box, Laces & Tags</h3>
-            <p>Original retail box labels, typography, barcode checks, tissue paper graphics, and factory spare laces.</p>
+            <h3>Packaging, Tags & Hardware</h3>
+            <p>Original retail boxes, dust bags, hangtags, YKK/custom zippers, barcode checks, and factory accessories.</p>
           </div>
-          <div className="auth-trust-card">
+          <div className="auth-trust-card spotlight-surface" onPointerMove={handleSpotlightMove}>
             <span className="card-step">04 / DISPATCH SEAL</span>
             <h3>Tamper-Evident Seal</h3>
-            <p>Dispatched with an individually numbered Sole District security tag and backed by our 100% guarantee.</p>
+            <p>Dispatched with an individually numbered Sole District security tag and backed by our 100% authenticity guarantee.</p>
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* The Everyday Edit */}
-      <section className="edit">
+      <Reveal as="section" className="edit">
         <div>
           <span className="eyebrow">THE EVERYDAY EDIT</span>
           <h2>Good pieces.<br />Great rotation.</h2>
-          <p>Considered layers and familiar classics. Discover the pieces that work harder in your wardrobe.</p>
+          <p>Considered layers, heavyweight hoodies, graphic tees, and familiar footwear classics. Discover the pieces that work harder in your wardrobe.</p>
           <Button to="/shop?category=Clothing">Explore clothing <ArrowRight size={20} /></Button>
         </div>
-        {clothing && <Link to={'/product/' + clothing.id}><img src={clothing.image} alt={clothing.brand + ' ' + clothing.name} loading="lazy" /></Link>}
-      </section>
+        {clothingFeature && <Link to={'/product/' + clothingFeature.id} className="edit-feature-link"><img src={clothingFeature.image} alt={clothingFeature.brand + ' ' + clothingFeature.name} loading="lazy" /></Link>}
+      </Reveal>
 
-      <section className="trust-strip">
-        <div><span>01</span><strong>Guaranteed Authentic</strong><p>Multi-point physical verification on every single sneaker.</p></div>
-        <div><span>02</span><strong>Singapore Dispatch</strong><p>Local stock with same-day dispatch and tracking.</p></div>
+      <Reveal as="section" className="trust-strip">
+        <div><span>01</span><strong><AnimatedCount value={products.length} suffix="+" /> Verified Pieces</strong><p>Multi-point physical verification across <AnimatedCount value={derivedBrands.length} /> global labels in stock.</p></div>
+        <div><span>02</span><strong>Singapore Dispatch</strong><p>Local stock with same-day dispatch and tracked courier delivery across all 28 SG districts.</p></div>
         <div><span>03</span><strong>Complimentary Delivery</strong><p>Complimentary tracked delivery on all orders over S$150.</p></div>
-      </section>
+      </Reveal>
     </>
   );
 }
@@ -150,21 +348,42 @@ export function Home() {
 export function ShopPage() {
   const { products } = useShop();
   const [params, setParams] = useSearchParams();
-  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [desktopSidebarOpen, setDesktopSidebarOpen] = useState(true);
+  const [gridCols, setGridCols] = useState(() => readStored('sd-grid-cols', 3));
+  const [extraBatchCount, setExtraBatchCount] = useState(0);
+
   const query = params.get('q') || '';
   const category = params.get('category') || '';
+  const subcategory = params.get('subcategory') || '';
   const brand = params.get('brand') || '';
   const silhouette = params.get('silhouette') || '';
   const size = params.get('size') || '';
   const sort = params.get('sort') || 'new';
   const stockOnly = params.get('stock') === 'true';
+  const newOnly = params.get('new') === 'true';
+  const saleOnly = params.get('sale') === 'true';
   const colour = params.get('colour') || '';
   const maxPrice = Number(params.get('maxPrice')) || 0;
   const requestedPage = Math.max(1, Number(params.get('page')) || 1);
 
+  // Reset extra loaded batches when primary filter parameters change
+  useEffect(() => {
+    setExtraBatchCount(0);
+  }, [query, category, subcategory, brand, silhouette, size, sort, stockOnly, newOnly, saleOnly, colour, maxPrice, requestedPage]);
+
+  const handleSetCols = (cols) => {
+    setGridCols(cols);
+    saveStored('sd-grid-cols', cols);
+  };
+
   const change = (key, value) => {
     const next = new URLSearchParams(params);
     if (key !== 'page') next.delete('page');
+    if (key === 'category' && value !== category) {
+      next.delete('subcategory');
+      next.delete('silhouette');
+    }
     if (value) next.set(key, value);
     else next.delete(key);
     setParams(next);
@@ -177,53 +396,298 @@ export function ShopPage() {
     setParams(next);
   };
 
-  const rawSizes = [...new Set(products.filter((product) => !category || product.category === category).flatMap((product) => product.sizes || []))];
-  const sortedFilterSizes = sortVariantsBySize(rawSizes.map((s) => ({ size: s }))).map((v) => v.size);
+  const derivedBrands = useMemo(() => getDerivedBrands(products), [products]);
+  const derivedSubcategories = useMemo(
+    () => getDerivedSubcategories(products, category),
+    [products, category]
+  );
+  const allSilhouettes = useMemo(
+    () => getDerivedSilhouettes(products, brand).map((s) => s.name),
+    [products, brand]
+  );
 
-  const allSilhouettes = useMemo(() => {
-    return [...new Set(products.filter((p) => p.silhouette).map((p) => p.silhouette))];
+  const sortedFilterSizes = useMemo(() => {
+    const rawSizes = [
+      ...new Set(
+        products
+          .filter((p) => (!category || p.category === category) && (!subcategory || p.subcategory === subcategory))
+          .flatMap((p) => p.sizes || [])
+      ),
+    ];
+    return sortVariantsBySize(rawSizes.map((s) => ({ size: s }))).map((v) => v.size);
+  }, [products, category, subcategory]);
+
+  const categoryCounts = useMemo(() => {
+    const counts = { All: products.length, Sneakers: 0, Clothing: 0, Accessories: 0 };
+    for (const p of products) {
+      if (counts[p.category] !== undefined) counts[p.category] += 1;
+    }
+    return counts;
   }, [products]);
 
-  const activeBrands = useMemo(() => {
-    return ['Jordan', 'Nike', 'adidas Yeezy', 'New Balance', 'adidas Originals', 'Carhartt WIP'];
-  }, []);
+  let found = products.filter((product) => {
+    if (category && product.category !== category) return false;
+    if (subcategory && product.subcategory !== subcategory) return false;
+    if (brand && product.brand !== brand) return false;
+    if (silhouette && product.silhouette !== silhouette) return false;
+    if (newOnly && !isNewIn(product)) return false;
+    if (saleOnly && !isOnSale(product)) return false;
+    if (query) {
+      const hay = `${product.brand} ${product.name} ${product.color || ''} ${product.category || ''} ${product.subcategory || ''} ${product.silhouette || ''} ${(product.tags || []).join(' ')}`.toLowerCase();
+      if (!hay.includes(query.toLowerCase())) return false;
+    }
+    if (size && !product.variants.some((variant) => variant.size === size && variant.available > 0)) return false;
+    if (stockOnly && !product.variants.some((variant) => variant.available > 0)) return false;
+    if (colour && product.color !== colour) return false;
+    if (maxPrice && product.price > maxPrice * 100) return false;
+    return true;
+  });
 
-  let found = products.filter((product) => (
-    (!category || product.category === category) &&
-    (!brand || product.brand === brand) &&
-    (!silhouette || product.silhouette === silhouette) &&
-    (!query || (product.brand + ' ' + product.name + ' ' + product.color + ' ' + (product.silhouette || '')).toLowerCase().includes(query.toLowerCase())) &&
-    (!size || product.variants.some((variant) => variant.size === size && variant.available > 0)) &&
-    (!stockOnly || product.variants.some((variant) => variant.available > 0)) &&
-    (!colour || product.color === colour) && (!maxPrice || product.price <= maxPrice * 100)
-  ));
+  if (sort === 'low') {
+    found = [...found].sort((a, b) => a.price - b.price);
+  } else if (sort === 'high') {
+    found = [...found].sort((a, b) => b.price - a.price);
+  } else if (sort === 'newest' || (sort === 'new' && newOnly)) {
+    found = [...found].sort((a, b) => {
+      const dateA = a.addedAt || '';
+      const dateB = b.addedAt || '';
+      if (dateA !== dateB) return dateB.localeCompare(dateA);
+      return Number(Boolean(b.featured)) - Number(Boolean(a.featured));
+    });
+  } else if (sort === 'new') {
+    found = [...found].sort((a, b) => {
+      const featDiff = Number(Boolean(b.featured)) - Number(Boolean(a.featured));
+      if (featDiff !== 0) return featDiff;
+      return (b.addedAt || '').localeCompare(a.addedAt || '');
+    });
+  }
 
-  if (sort === 'low') found = [...found].sort((a, b) => a.price - b.price);
-  if (sort === 'high') found = [...found].sort((a, b) => b.price - a.price);
-
-  const pages = Math.max(1, Math.ceil(found.length / 12));
+  const perPage = 12;
+  const pages = Math.max(1, Math.ceil(found.length / perPage));
   const page = Math.min(requestedPage, pages);
-  const visibleProducts = found.slice((page - 1) * 12, page * 12);
-  const hasActiveFilters = Boolean(brand || silhouette || size || colour || maxPrice || stockOnly || query);
+  const startIdx = (page - 1) * perPage;
+  const endIdx = Math.min(found.length, (page + extraBatchCount) * perPage);
+  const visibleProducts = found.slice(startIdx, endIdx);
+  const progressPct = found.length > 0 ? Math.min(100, Math.round((endIdx / found.length) * 100)) : 100;
+
+  const hasActiveFilters = Boolean(
+    brand || subcategory || silhouette || size || colour || maxPrice || stockOnly || newOnly || saleOnly || query
+  );
+
+  const headingTitle = useMemo(() => {
+    if (query) return `Results for “${query}”`;
+    if (newOnly && subcategory) return `New In: ${subcategory}`;
+    if (newOnly && category) return `New In ${category}`;
+    if (newOnly) return 'New Arrivals';
+    if (saleOnly && category) return `${category} Archive Sale`;
+    if (saleOnly) return 'Archive Sale';
+    if (subcategory && brand) return `${brand} · ${subcategory}`;
+    if (subcategory) return subcategory;
+    if (silhouette) return silhouette;
+    if (brand && category) return `${brand} ${category}`;
+    if (brand) return brand;
+    if (category) return category;
+    return 'All Sneakers, Streetwear & Goods';
+  }, [query, newOnly, saleOnly, subcategory, silhouette, brand, category]);
+
+  const renderFilterGroups = () => (
+    <>
+      {/* Status & Curations */}
+      <details className="filter-group" open>
+        <summary>Release & Availability <CaretDown size={14} /></summary>
+        <div className="filter-group-body filter-checks">
+          <label className="checkbox">
+            <input type="checkbox" checked={newOnly} onChange={(e) => change('new', e.target.checked ? 'true' : '')} />
+            <span>New In (Last 45 days)</span>
+          </label>
+          <label className="checkbox">
+            <input type="checkbox" checked={saleOnly} onChange={(e) => change('sale', e.target.checked ? 'true' : '')} />
+            <span>On Sale</span>
+          </label>
+          <label className="checkbox">
+            <input type="checkbox" checked={stockOnly} onChange={(e) => change('stock', e.target.checked ? 'true' : '')} />
+            <span>In Stock Only</span>
+          </label>
+        </div>
+      </details>
+
+      {/* Category */}
+      <details className="filter-group" open>
+        <summary>Category <CaretDown size={14} /></summary>
+        <div className="filter-group-body filter-list-buttons">
+          {['', 'Sneakers', 'Clothing', 'Accessories'].map((cat) => {
+            const label = cat || 'All Categories';
+            const cnt = cat ? categoryCounts[cat] : categoryCounts.All;
+            return (
+              <button
+                key={label}
+                type="button"
+                className={'filter-list-btn ' + (category === cat ? 'active' : '')}
+                onClick={() => change('category', cat)}
+              >
+                <span>{label}</span>
+                <span className="filter-item-count">{cnt}</span>
+              </button>
+            );
+          })}
+        </div>
+      </details>
+
+      {/* Subcategory */}
+      {(category === 'Clothing' || category === 'Accessories' || !category) && derivedSubcategories.length > 0 && (
+        <details className="filter-group" open>
+          <summary>Subcategory <CaretDown size={14} /></summary>
+          <div className="filter-group-body filter-list-buttons">
+            <button
+              type="button"
+              className={'filter-list-btn ' + (!subcategory ? 'active' : '')}
+              onClick={() => change('subcategory', '')}
+            >
+              <span>All Subcategories</span>
+            </button>
+            {derivedSubcategories.map((sub) => (
+              <button
+                key={sub.name}
+                type="button"
+                className={'filter-list-btn ' + (subcategory === sub.name ? 'active' : '')}
+                onClick={() => change('subcategory', subcategory === sub.name ? '' : sub.name)}
+              >
+                <span>{sub.name}</span>
+                <span className="filter-item-count">{sub.count}</span>
+              </button>
+            ))}
+          </div>
+        </details>
+      )}
+
+      {/* Brand with counts */}
+      <details className="filter-group" open>
+        <summary>Brand ({derivedBrands.length}) <CaretDown size={14} /></summary>
+        <div className="filter-group-body filter-list-buttons filter-scroll-box">
+          <button
+            type="button"
+            className={'filter-list-btn ' + (!brand ? 'active' : '')}
+            onClick={() => change('brand', '')}
+          >
+            <span>All Brands</span>
+            <span className="filter-item-count">{products.length}</span>
+          </button>
+          {derivedBrands.map((b) => (
+            <button
+              key={b.name}
+              type="button"
+              className={'filter-list-btn ' + (brand === b.name ? 'active' : '')}
+              onClick={() => change('brand', brand === b.name ? '' : b.name)}
+            >
+              <span>{b.name}</span>
+              <span className="filter-item-count">{b.count}</span>
+            </button>
+          ))}
+        </div>
+      </details>
+
+      {/* Size Buttons Grid */}
+      <details className="filter-group" open>
+        <summary>Size {size && `(${size})`} <CaretDown size={14} /></summary>
+        <div className="filter-group-body">
+          <div className="filter-size-grid">
+            {sortedFilterSizes.map((item) => (
+              <button
+                key={item}
+                type="button"
+                className={'filter-size-btn ' + (size === item ? 'active' : '')}
+                onClick={() => change('size', size === item ? '' : item)}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+        </div>
+      </details>
+
+      {/* Price Range */}
+      <details className="filter-group" open>
+        <summary>Price Range (SGD) <CaretDown size={14} /></summary>
+        <div className="filter-group-body">
+          <div className="price-tier-chips">
+            {[150, 250, 400, 600].map((tier) => (
+              <button
+                key={tier}
+                type="button"
+                className={'price-tier-chip ' + (maxPrice === tier ? 'active' : '')}
+                onClick={() => change('maxPrice', maxPrice === tier ? '' : String(tier))}
+              >
+                Under S${tier}
+              </button>
+            ))}
+          </div>
+          <label className="max-price-input-label">
+            <span>Max SGD</span>
+            <input
+              type="number"
+              min="0"
+              step="10"
+              placeholder="No limit"
+              value={maxPrice || ''}
+              onChange={(event) => change('maxPrice', event.target.value)}
+            />
+          </label>
+        </div>
+      </details>
+
+      {/* Silhouette */}
+      {(!category || category === 'Sneakers') && allSilhouettes.length > 0 && (
+        <details className="filter-group">
+          <summary>Silhouette <CaretDown size={14} /></summary>
+          <div className="filter-group-body">
+            <select value={silhouette} onChange={(event) => change('silhouette', event.target.value)} aria-label="Silhouette">
+              <option value="">All silhouettes</option>
+              {allSilhouettes.map((item) => <option key={item} value={item}>{item}</option>)}
+            </select>
+          </div>
+        </details>
+      )}
+    </>
+  );
 
   return (
     <div className="section shop-page">
       <div className="breadcrumb">
         <Link to="/">Home</Link>
         <span>/</span>
-        <span>{silhouette || brand || category || 'Sneakers'}</span>
+        <Link to="/shop">Shop</Link>
+        {category && (
+          <>
+            <span>/</span>
+            <Link to={`/shop?category=${encodeURIComponent(category)}`}>{category}</Link>
+          </>
+        )}
+        {subcategory && (
+          <>
+            <span>/</span>
+            <span>{subcategory}</span>
+          </>
+        )}
+        {!subcategory && (brand || silhouette || newOnly || saleOnly) && (
+          <>
+            <span>/</span>
+            <span>{silhouette || brand || (newOnly ? 'New In' : 'Sale')}</span>
+          </>
+        )}
       </div>
 
       <div className="page-heading">
         <div>
-          <span className="eyebrow">AUTHENTIC ROTATION</span>
-          <h1>{query ? `Results for “${query}”` : silhouette ? `${silhouette}` : brand || category || 'All Sneakers & Apparel'}</h1>
-          <p>Hand-verified authentic grails, modern classics, and daily essentials.</p>
+          <span className="eyebrow">
+            {newOnly ? 'FRESH ROTATION' : saleOnly ? 'LIMITED ARCHIVE MARKDOWNS' : 'AUTHENTIC ROTATION'}
+          </span>
+          <h1>{headingTitle}</h1>
+          <p>Hand-verified authentic footwear grails, heavyweight streetwear apparel, and everyday accessories.</p>
         </div>
-        <span>{found.length} {found.length === 1 ? 'piece' : 'pieces'}</span>
+        <span className="results-counter-badge">{found.length} {found.length === 1 ? 'piece' : 'pieces'}</span>
       </div>
 
-      {/* Brand Quick Switcher */}
+      {/* Dynamic Brand Quick Switcher */}
       <div className="brand-pills-bar shop-brand-bar">
         <button
           className={'brand-pill-btn ' + (!brand ? 'active' : '')}
@@ -231,31 +695,61 @@ export function ShopPage() {
         >
           All Brands ({products.length})
         </button>
-        {activeBrands.map((bName) => {
-          const count = products.filter((p) => p.brand === bName).length;
-          return (
-            <button
-              key={bName}
-              className={'brand-pill-btn ' + (brand === bName ? 'active' : '')}
-              onClick={() => change('brand', brand === bName ? '' : bName)}
-            >
-              <span>{bName}</span>
-              <span className="pill-count">{count}</span>
-            </button>
-          );
-        })}
+        {derivedBrands.map((b) => (
+          <button
+            key={b.name}
+            className={'brand-pill-btn ' + (brand === b.name ? 'active' : '')}
+            onClick={() => change('brand', brand === b.name ? '' : b.name)}
+          >
+            <span>{b.name}</span>
+            <span className="pill-count">{b.count}</span>
+          </button>
+        ))}
       </div>
 
-      {/* Silhouette Filter Chips */}
-      {(!category || category === 'Sneakers') && (
-        <div className="silhouette-filter-bar" aria-label="Filter by silhouette">
+      {/* Contextual Subcategory or Silhouette Filter Chips */}
+      {(category === 'Clothing' || category === 'Accessories') ? (
+        <div className="silhouette-filter-bar" aria-label="Filter by subcategory">
           <button
-            className={'silhouette-chip ' + (!silhouette ? 'active' : '')}
-            onClick={() => change('silhouette', '')}
+            className={'silhouette-chip ' + (!subcategory ? 'active' : '')}
+            onClick={() => change('subcategory', '')}
           >
-            All Silhouettes
+            All {category}
           </button>
-          {allSilhouettes.map((sil) => (
+          {(category === 'Clothing' ? CLOTHING_SUBCATEGORIES : ACCESSORY_SUBCATEGORIES).map((sub) => (
+            <button
+              key={sub}
+              className={'silhouette-chip ' + (subcategory === sub ? 'active' : '')}
+              onClick={() => change('subcategory', subcategory === sub ? '' : sub)}
+            >
+              {sub}
+            </button>
+          ))}
+        </div>
+      ) : (
+        <div className="silhouette-filter-bar" aria-label="Filter by silhouette or subcategory">
+          <button
+            className={'silhouette-chip ' + (!silhouette && !subcategory ? 'active' : '')}
+            onClick={() => {
+              const next = new URLSearchParams(params);
+              next.delete('silhouette');
+              next.delete('subcategory');
+              next.delete('page');
+              setParams(next);
+            }}
+          >
+            All Styles
+          </button>
+          {CLOTHING_SUBCATEGORIES.slice(0, 3).map((sub) => (
+            <button
+              key={sub}
+              className={'silhouette-chip ' + (subcategory === sub ? 'active' : '')}
+              onClick={() => change('subcategory', subcategory === sub ? '' : sub)}
+            >
+              {sub}
+            </button>
+          ))}
+          {allSilhouettes.slice(0, 10).map((sil) => (
             <button
               key={sil}
               className={'silhouette-chip ' + (silhouette === sil ? 'active' : '')}
@@ -271,6 +765,21 @@ export function ShopPage() {
       {hasActiveFilters && (
         <div className="active-filter-chips">
           <span className="active-filter-label">Active:</span>
+          {newOnly && (
+            <button className="filter-chip-remove" onClick={() => clearFilter('new')}>
+              New In <X size={14} />
+            </button>
+          )}
+          {saleOnly && (
+            <button className="filter-chip-remove" onClick={() => clearFilter('sale')}>
+              On Sale <X size={14} />
+            </button>
+          )}
+          {subcategory && (
+            <button className="filter-chip-remove" onClick={() => clearFilter('subcategory')}>
+              {subcategory} <X size={14} />
+            </button>
+          )}
           {brand && (
             <button className="filter-chip-remove" onClick={() => clearFilter('brand')}>
               Brand: {brand} <X size={14} />
@@ -283,12 +792,17 @@ export function ShopPage() {
           )}
           {size && (
             <button className="filter-chip-remove" onClick={() => clearFilter('size')}>
-              Size: UK {size} <X size={14} />
+              Size: {size} <X size={14} />
             </button>
           )}
           {colour && (
             <button className="filter-chip-remove" onClick={() => clearFilter('colour')}>
               {colour} <X size={14} />
+            </button>
+          )}
+          {maxPrice > 0 && (
+            <button className="filter-chip-remove" onClick={() => clearFilter('maxPrice')}>
+              Under S${maxPrice} <X size={14} />
             </button>
           )}
           {query && (
@@ -308,10 +822,27 @@ export function ShopPage() {
       )}
 
       <div className="shop-toolbar">
-        <button className="text-button filter-button" onClick={() => setFiltersOpen(!filtersOpen)}>
-          <SlidersHorizontal size={19} />
-          Filters {(brand || silhouette || size || stockOnly) && <span className="filter-dot" />}
-        </button>
+        <div className="toolbar-left">
+          <button
+            type="button"
+            className="text-button filter-button desktop-filter-toggle"
+            onClick={() => setDesktopSidebarOpen(!desktopSidebarOpen)}
+          >
+            <SlidersHorizontal size={18} />
+            <span>{desktopSidebarOpen ? 'Hide Filters' : 'Show Filters'}</span>
+            {hasActiveFilters && <span className="filter-dot" />}
+          </button>
+          <button
+            type="button"
+            className="text-button filter-button mobile-filter-toggle"
+            onClick={() => setMobileFiltersOpen(true)}
+          >
+            <SlidersHorizontal size={18} />
+            <span>Filters & Sort</span>
+            {hasActiveFilters && <span className="filter-dot" />}
+          </button>
+        </div>
+
         <div className="category-tabs">
           {['', 'Sneakers', 'Clothing', 'Accessories'].map((item) => (
             <button
@@ -323,69 +854,138 @@ export function ShopPage() {
             </button>
           ))}
         </div>
-        <label className="sort-label">
-          Sort by
-          <select value={sort} onChange={(event) => change('sort', event.target.value)}>
-            <option value="new">Featured & Grails</option>
-            <option value="low">Price: Low to High</option>
-            <option value="high">Price: High to Low</option>
-          </select>
-        </label>
+
+        <div className="toolbar-right">
+          <div className="grid-density-toggle" role="group" aria-label="Grid density">
+            {[2, 3, 4].map((cols) => (
+              <button
+                key={cols}
+                type="button"
+                className={'density-btn ' + (gridCols === cols ? 'active' : '')}
+                onClick={() => handleSetCols(cols)}
+                aria-label={`${cols} columns`}
+                aria-pressed={gridCols === cols}
+              >
+                {cols}
+              </button>
+            ))}
+          </div>
+
+          <label className="sort-label">
+            Sort by
+            <select value={sort} onChange={(event) => change('sort', event.target.value)}>
+              <option value="new">Featured & Grails</option>
+              <option value="newest">Newest Arrivals</option>
+              <option value="low">Price: Low to High</option>
+              <option value="high">Price: High to Low</option>
+            </select>
+          </label>
+        </div>
       </div>
 
-      <div className={'shop-layout ' + (filtersOpen ? 'has-filters' : '')}>
-        {filtersOpen && (
-          <aside className="filters">
-            <label>Brand
-              <select value={brand} onChange={(event) => change('brand', event.target.value)}>
-                <option value="">All brands</option>
-                {[...new Set(products.map((product) => product.brand))].map((item) => <option key={item}>{item}</option>)}
-              </select>
-            </label>
-            <label>Silhouette
-              <select value={silhouette} onChange={(event) => change('silhouette', event.target.value)}>
-                <option value="">All models</option>
-                {allSilhouettes.map((item) => <option key={item}>{item}</option>)}
-              </select>
-            </label>
-            <label>Size
-              <select value={size} onChange={(event) => change('size', event.target.value)}>
-                <option value="">All sizes</option>
-                {sortedFilterSizes.map((item) => <option key={item}>{item}</option>)}
-              </select>
-            </label>
-            <label>Colour
-              <select value={colour} onChange={(event) => change('colour', event.target.value)}>
-                <option value="">All colours</option>
-                {[...new Set(products.map((product) => product.color))].map((value) => <option key={value}>{value}</option>)}
-              </select>
-            </label>
-            <label>Maximum price (SGD)
-              <input type="number" min="0" step="1" value={maxPrice || ''} onChange={(event) => change('maxPrice', event.target.value)} />
-            </label>
-            <label className="checkbox">
-              <input type="checkbox" checked={stockOnly} onChange={(event) => change('stock', event.target.checked ? 'true' : '')} />
-              Available sizes only
-            </label>
-            <button className="text-button" onClick={() => setParams(category ? { category } : {})}>Clear filters</button>
+      <div className={'shop-layout ' + (desktopSidebarOpen ? 'has-filters' : 'no-sidebar')}>
+        {desktopSidebarOpen && (
+          <aside className="filters desktop-filters-sidebar" aria-label="Product filters">
+            <div className="filters-sidebar-header">
+              <strong>Filter By</strong>
+              {hasActiveFilters && (
+                <button type="button" className="text-button" onClick={() => setParams(category ? { category } : {})}>
+                  Clear all
+                </button>
+              )}
+            </div>
+            {renderFilterGroups()}
           </aside>
         )}
+
         <div className="shop-results">
-          {found.length ? <ProductGrid products={visibleProducts} /> : (
+          {found.length ? (
+            <>
+              <ProductGrid products={visibleProducts} columns={gridCols} />
+
+              {/* Showing X of Y + Progress Bar + Load More + Pagination */}
+              <div className="catalogue-footer">
+                <div className="catalogue-progress-wrap">
+                  <span className="catalogue-progress-text">
+                    Showing <strong>{visibleProducts.length}</strong> of <strong>{found.length}</strong> pieces
+                  </span>
+                  <div className="catalogue-progress-bar">
+                    <div className="catalogue-progress-fill" style={{ width: `${progressPct}%` }} />
+                  </div>
+                </div>
+
+                {endIdx < found.length && (
+                  <Button
+                    type="button"
+                    className="button-light load-more-btn"
+                    onClick={() => setExtraBatchCount((c) => c + 1)}
+                  >
+                    Load more pieces ({found.length - endIdx} remaining) <Plus size={16} />
+                  </Button>
+                )}
+
+                {pages > 1 && (
+                  <nav className="catalogue-pagination" aria-label="Catalogue pages">
+                    <button
+                      className="text-button"
+                      disabled={page === 1}
+                      onClick={() => change('page', String(page - 1))}
+                    >
+                      Previous
+                    </button>
+                    <span>Page {page} of {pages}</span>
+                    <button
+                      className="text-button"
+                      disabled={page === pages}
+                      onClick={() => change('page', String(page + 1))}
+                    >
+                      Next
+                    </button>
+                  </nav>
+                )}
+              </div>
+            </>
+          ) : (
             <div className="empty">
-              <h2>No sneakers found.</h2>
-              <p>Try searching another silhouette, or reset your filters.</p>
-              <Button onClick={() => setParams({})}>Explore all sneakers</Button>
+              <h2>No pieces match your current filters.</h2>
+              <p>Try selecting another brand, category, or size — or reset your active filters to explore the full collection.</p>
+              <Button onClick={() => setParams({})}>Explore all pieces</Button>
             </div>
           )}
         </div>
       </div>
-      {pages > 1 && (
-        <nav className="catalogue-pagination" aria-label="Catalogue pages">
-          <button className="text-button" disabled={page === 1} onClick={() => change('page', String(page - 1))}>Previous</button>
-          <span>Page {page} of {pages}</span>
-          <button className="text-button" disabled={page === pages} onClick={() => change('page', String(page + 1))}>Next</button>
-        </nav>
+
+      {/* Off-Canvas Mobile Filter Drawer */}
+      {mobileFiltersOpen && (
+        <div className="mobile-filter-backdrop" onClick={() => setMobileFiltersOpen(false)}>
+          <aside className="mobile-filter-drawer" aria-label="Mobile filters" onClick={(e) => e.stopPropagation()}>
+            <div className="mobile-filter-header">
+              <h2>Filter & Sort ({found.length})</h2>
+              <button type="button" className="icon" onClick={() => setMobileFiltersOpen(false)} aria-label="Close filters">
+                <X size={22} />
+              </button>
+            </div>
+            <div className="mobile-filter-body">
+              {renderFilterGroups()}
+            </div>
+            <div className="mobile-filter-footer">
+              <button
+                type="button"
+                className="button button-light"
+                onClick={() => setParams({})}
+              >
+                Reset all
+              </button>
+              <button
+                type="button"
+                className="button"
+                onClick={() => setMobileFiltersOpen(false)}
+              >
+                View {found.length} pieces
+              </button>
+            </div>
+          </aside>
+        </div>
       )}
     </div>
   );
@@ -400,6 +1000,7 @@ export function ProductPage() {
   const [guideOpen, setGuideOpen] = useState(false);
   const [activeImage, setActiveImage] = useState(0);
   const [sizeError, setSizeError] = useState(false);
+  const [recentlyViewedIds, setRecentlyViewedIds] = useState(() => readStored('sd-recently-viewed', []));
   const sizeGridRef = useRef(null);
 
   useEffect(() => {
@@ -407,15 +1008,83 @@ export function ProductPage() {
     setActiveImage(0);
     setSizeError(false);
   }, [pathname]);
+
   useEffect(() => {
-    if (product) trackEvent('product_viewed', { product_id: product.id });
+    if (!product) return;
+    trackEvent('product_viewed', { product_id: product.id });
+    setRecentlyViewedIds((prev) => {
+      const list = Array.isArray(prev) ? prev : [];
+      const next = [product.id, ...list.filter((id) => id !== product.id)].slice(0, 10);
+      saveStored('sd-recently-viewed', next);
+      return next;
+    });
   }, [product?.id]);
+
+  // Precompute cross-sell ("Complete the look"), similar items, and recently viewed
+  const completeTheLook = useMemo(() => {
+    if (!product) return [];
+    const targetCategories = product.category === 'Sneakers'
+      ? ['Clothing', 'Accessories']
+      : ['Sneakers', product.category === 'Clothing' ? 'Accessories' : 'Clothing'];
+    const pool = products.filter((p) => p.id !== product.id && targetCategories.includes(p.category));
+    // Prefer items from different subcategories/categories for a balanced outfit
+    const picked = [];
+    const seenSub = new Set();
+    for (const candidate of pool) {
+      const key = candidate.subcategory || candidate.category;
+      if (!seenSub.has(key) && picked.length < 4) {
+        picked.push(candidate);
+        seenSub.add(key);
+      }
+    }
+    for (const candidate of pool) {
+      if (picked.length >= 4) break;
+      if (!picked.some((p) => p.id === candidate.id)) picked.push(candidate);
+    }
+    return picked.slice(0, 4);
+  }, [product, products]);
+
+  const similarItems = useMemo(() => {
+    if (!product) return [];
+    const completeIds = new Set(completeTheLook.map((p) => p.id));
+    return products
+      .filter((p) => p.id !== product.id && !completeIds.has(p.id))
+      .map((p) => {
+        let score = 0;
+        if (p.category === product.category) score += 4;
+        if (product.subcategory && p.subcategory === product.subcategory) score += 6;
+        if (product.silhouette && p.silhouette === product.silhouette) score += 6;
+        if (p.brand === product.brand) score += 5;
+        return { p, score };
+      })
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 4)
+      .map((entry) => entry.p);
+  }, [product, products, completeTheLook]);
+
+  const recentlyViewedProducts = useMemo(() => {
+    if (!product || !Array.isArray(recentlyViewedIds)) return [];
+    return recentlyViewedIds
+      .filter((id) => id !== product.id)
+      .map((id) => products.find((p) => p.id === id))
+      .filter(Boolean)
+      .slice(0, 4);
+  }, [product, recentlyViewedIds, products]);
+
   if (!product) return <NotFound />;
+
   const sortedVariants = sortVariantsBySize(product.variants || []);
   const selectedVariant = sortedVariants.find((variant) => variant.id === selected);
   const images = product.images?.length ? product.images : [{ url: product.image, alt: product.brand + ' ' + product.name }];
   const currentImage = images[activeImage] || images[0];
-  const sneaker = product.category === 'Sneakers';
+  const isSneaker = product.category === 'Sneakers';
+  const isClothing = product.category === 'Clothing';
+  const onSale = isOnSale(product);
+  const salePct = discountPercent(product);
+  const newIn = isNewIn(product);
+  const lowStock = isLowStock(product);
+  const soldOut = isSoldOut(product);
+
   const addToBag = () => {
     if (!selectedVariant) {
       setSizeError(true);
@@ -431,120 +1100,337 @@ export function ProductPage() {
 
   return (
     <div className="section product-page">
-      <div className="breadcrumb"><Link to="/">Home</Link><span>/</span><Link to={'/shop?category=' + encodeURIComponent(product.category)}>{product.category}</Link><span>/</span><Link to={'/shop?brand=' + encodeURIComponent(product.brand)}>{product.brand}</Link><span>/</span><span>{product.name}</span></div>
+      <div className="breadcrumb">
+        <Link to="/">Home</Link>
+        <span>/</span>
+        <Link to={'/shop?category=' + encodeURIComponent(product.category)}>{product.category}</Link>
+        {product.subcategory && (
+          <>
+            <span>/</span>
+            <Link to={`/shop?category=${encodeURIComponent(product.category)}&subcategory=${encodeURIComponent(product.subcategory)}`}>
+              {product.subcategory}
+            </Link>
+          </>
+        )}
+        <span>/</span>
+        <Link to={'/shop?brand=' + encodeURIComponent(product.brand)}>{product.brand}</Link>
+        <span>/</span>
+        <span>{product.name}</span>
+      </div>
+
       <div className="product-layout">
         <div className="gallery">
           <div className="thumbs">
-            {images.map((image, index) => <button key={image.url + index} className={activeImage === index ? 'selected' : ''} onClick={() => setActiveImage(index)} aria-label={'Show product image ' + (index + 1)}><img src={image.url} alt="" /></button>)}
-          </div>
-          <button className="main-product-photo" onClick={() => setZoom(true)} aria-label="Enlarge product image"><img src={currentImage.url} alt={currentImage.alt} /><span><Plus size={17} />Enlarge</span></button>
-        </div>
-        <div className="purchase-panel">
-          <span className="eyebrow">{product.brand}</span>
-          <h1>{product.name}</h1>
-          <p className="color-name">{product.color}</p>
-          <p className="price">{money(product.price)}</p>
-          <p className="description">{product.description}</p>
-          {sneaker && (
-            <div className="authenticity-box">
-              <div className="authenticity-box-header">
-                <ShieldCheck size={20} weight="fill" color="#566e00" />
-                <strong>100% Authentic Guaranteed</strong>
-                <span>Verified Deadstock</span>
-              </div>
-              <ul>
-                <li>✓ Multi-point physical verification by sneaker specialists</li>
-                <li>✓ Brand new in original packaging with verified security tag</li>
-                <li>✓ Dispatched locally from Singapore with tracked delivery</li>
-              </ul>
-            </div>
-          )}
-          <div className="colour-row"><span>Colour</span><span>{product.color.split(' / ')[0]}</span></div>
-          <div className="size-heading">
-            <strong>Select size</strong>
-            {sizeError && <span className="size-prompt-pill" role="alert">Please select a size</span>}
-            <button className="underlined" onClick={() => setGuideOpen(true)}>Size guide</button>
-          </div>
-          <p className="size-system">Sizes shown with each variant’s recorded size system.</p>
-          <div ref={sizeGridRef} className={'sizes' + (sizeError ? ' shake-sizes' : '')}>
-            {sortedVariants.map((variant) => (
+            {images.map((image, index) => (
               <button
-                key={variant.id}
-                className={selected === variant.id ? 'selected' : ''}
-                disabled={variant.available < 1}
-                aria-pressed={selected === variant.id}
-                aria-label={`${variant.size_system} ${variant.size}${variant.available < 1 ? ' — sold out' : ''}`}
-                onClick={() => {
-                  setSelected(variant.id);
-                  setSizeError(false);
-                }}
+                key={image.url + index}
+                className={activeImage === index ? 'selected' : ''}
+                onClick={() => setActiveImage(index)}
+                aria-label={'Show product image ' + (index + 1)}
               >
-                {variant.size_system} {variant.size}
-                {variant.colour && sortedVariants.some((row) => row.size === variant.size && row.id !== variant.id) ? ' · ' + variant.colour : ''}
+                <img src={image.url} alt="" />
               </button>
             ))}
           </div>
+          <button className="main-product-photo" onClick={() => setZoom(true)} aria-label="Enlarge product image">
+            <img key={currentImage.url} className="pdp-hero-img" src={currentImage.url} alt={currentImage.alt} />
+            <span><Plus size={17} />Enlarge</span>
+          </button>
+        </div>
+
+        <div className="purchase-panel">
+          <div className="pdp-badges-row">
+            <Link to={'/shop?brand=' + encodeURIComponent(product.brand)} className="eyebrow pdp-brand-link">{product.brand}</Link>
+            {newIn && <span className="product-badge badge-new">New In</span>}
+            {onSale && <span className="product-badge badge-sale">Sale −{salePct}%</span>}
+            {product.badge && <span className="product-badge">{product.badge}</span>}
+            {lowStock && !soldOut && <span className="product-badge badge-lowstock">Low Stock</span>}
+            {soldOut && <span className="product-badge badge-soldout">Sold Out</span>}
+          </div>
+
+          <h1>{product.name}</h1>
+          <p className="color-name">
+            {product.color}
+            {(product.subcategory || product.silhouette) && ` · ${product.subcategory || product.silhouette}`}
+          </p>
+
+          <div className="pdp-price-block">
+            <span className={'price' + (onSale ? ' price-sale' : '')}>{money(product.price)}</span>
+            {onSale && (
+              <>
+                <del className="pdp-retail-price">{money(product.retailPrice)}</del>
+                <span className="pdp-save-pill">Save {money(product.retailPrice - product.price)} ({salePct}%)</span>
+              </>
+            )}
+          </div>
+
+          {product.tags?.length > 0 && (
+            <div className="pdp-tags-row">
+              {product.tags.map((tag) => (
+                <span key={tag} className="pdp-tag-chip">#{tag}</span>
+              ))}
+            </div>
+          )}
+
+          <p className="description">{product.description}</p>
+
+          {/* Authenticity Box for all categories (Sneakers, Clothing, Accessories) */}
+          <div className="authenticity-box">
+            <div className="authenticity-box-header">
+              <ShieldCheck size={20} weight="fill" color="#566e00" />
+              <strong>100% Authentic Guaranteed</strong>
+              <span>{isSneaker ? 'Verified Deadstock' : 'Verified Brand New'}</span>
+            </div>
+            <ul>
+              {isSneaker ? (
+                <>
+                  <li>✓ Multi-point physical verification by sneaker specialists</li>
+                  <li>✓ Brand new in original packaging with verified security tag</li>
+                  <li>✓ Dispatched locally from Singapore with tracked delivery</li>
+                </>
+              ) : (
+                <>
+                  <li>✓ Multi-point garment fabric weight, weave, wash tag & hardware inspection</li>
+                  <li>✓ Brand new with original retail tags & tamper-evident District seal</li>
+                  <li>✓ Dispatched locally from Singapore with tracked courier delivery</li>
+                </>
+              )}
+            </ul>
+          </div>
+
+          <div className="colour-row"><span>Colourway</span><span>{product.color.split(' / ')[0]}</span></div>
+
+          <div className="size-heading">
+            <strong>Select size {isSneaker ? '(UK)' : ''}</strong>
+            {sizeError && <span className="size-prompt-pill" role="alert">Please select a size</span>}
+            <button className="underlined" onClick={() => setGuideOpen(true)}>
+              {isClothing ? 'Clothing size guide' : isSneaker ? 'Sneaker size guide' : 'Sizing & dimensions'}
+            </button>
+          </div>
+          <p className="size-system">
+            {isSneaker
+              ? 'UK sizing shown. Click Size guide for US / EU / CM conversion.'
+              : isClothing
+                ? 'International streetwear sizing (XS–XXL). Click Size guide for chest & length in cm.'
+                : 'Standard accessory sizing shown.'}
+          </p>
+
+          <div ref={sizeGridRef} className={'sizes' + (sizeError ? ' shake-sizes' : '')}>
+            {sortedVariants.map((variant) => {
+              const labelPrefix = variant.size_system === 'UK' ? 'UK ' : '';
+              return (
+                <button
+                  key={variant.id}
+                  className={selected === variant.id ? 'selected' : ''}
+                  disabled={variant.available < 1}
+                  aria-pressed={selected === variant.id}
+                  aria-label={`${labelPrefix}${variant.size}${variant.available < 1 ? ' — sold out' : ''}`}
+                  onClick={() => {
+                    setSelected(variant.id);
+                    setSizeError(false);
+                  }}
+                >
+                  {labelPrefix}{variant.size}
+                  {variant.colour && sortedVariants.some((row) => row.size === variant.size && row.id !== variant.id) ? ' · ' + variant.colour : ''}
+                </button>
+              );
+            })}
+          </div>
+
           <p className={'stock-message ' + (selected ? 'ready' : '') + (sizeError ? ' text-error' : '')}>
             {sizeError
               ? 'Please choose your size above before adding to bag.'
               : product.illustrative && !product.sellable
-                ? selectedVariant ? `Preview availability only · ${selectedVariant.size_system} ${selectedVariant.size} selected` : 'Illustrative sizes · preview only'
-                : selectedVariant ? `✓ ${selectedVariant.size_system} ${selectedVariant.size} selected · ${selectedVariant.available} available` : 'Choose your size to continue'}
+                ? selectedVariant
+                  ? `Preview availability only · ${selectedVariant.size_system === 'UK' ? 'UK ' : ''}${selectedVariant.size} selected${selectedVariant.available <= 3 ? ` · Only ${selectedVariant.available} left` : ''}`
+                  : lowStock
+                    ? '⚡ Low stock across remaining sizes · Illustrative preview'
+                    : 'Illustrative sizes · preview only'
+                : selectedVariant
+                  ? `✓ ${selectedVariant.size_system === 'UK' ? 'UK ' : ''}${selectedVariant.size} selected · ${selectedVariant.available} available`
+                  : 'Choose your size to continue'}
           </p>
+
           <div className="purchase-actions">
             <Button
-              disabled={selectedVariant && selectedVariant.available < 1}
+              disabled={soldOut || (selectedVariant && selectedVariant.available < 1)}
               onClick={addToBag}
               className={!selectedVariant ? 'button-prompt-size' : ''}
             >
-              {!selectedVariant ? 'Select size to add' : 'Add to bag'} <ArrowRight size={20} />
+              {soldOut ? 'Sold out' : !selectedVariant ? 'Select size to add' : 'Add to bag'} <ArrowRight size={20} />
             </Button>
-            <button className="outline-icon" aria-label="Save to wishlist" aria-pressed={wishlist.includes(product.id)} onClick={() => toggleWish(product.id)}><Heart size={22} weight={wishlist.includes(product.id) ? 'fill' : 'regular'} /></button>
+            <button
+              className="outline-icon"
+              aria-label="Save to wishlist"
+              aria-pressed={wishlist.includes(product.id)}
+              onClick={() => toggleWish(product.id)}
+            >
+              <Heart size={22} weight={wishlist.includes(product.id) ? 'fill' : 'regular'} />
+            </button>
           </div>
-          <div className="delivery-perks"><span><Truck size={21} />Tracked delivery</span><span><Package size={21} />Return requests</span></div>
-          <details><summary>Details & care <CaretDown size={16} /></summary><p>{product.detail}</p></details>
-          <details><summary>Delivery & returns <CaretDown size={16} /></summary><p>Singapore delivery is estimated at S$8, complimentary from S$150. Final terms will appear before payment. <Link to="/help/delivery">Delivery information</Link></p></details>
-          <details><summary>Sourcing & verification <CaretDown size={16} /></summary><p>{product.illustrative && !product.sellable ? 'This is an illustrative preview. Supplier evidence and physical product checks have not been recorded, so this item cannot be purchased.' : 'Sourcing information and authentic product checks are verified for this product.'}</p></details>
+
+          <div className="delivery-perks">
+            <span><Truck size={21} />Tracked SG delivery (Free over S$150)</span>
+            <span><Package size={21} />Easy return requests</span>
+          </div>
+
+          <details open>
+            <summary>Details & composition <CaretDown size={16} /></summary>
+            <p>{product.detail}</p>
+          </details>
+          <details>
+            <summary>Delivery & returns <CaretDown size={16} /></summary>
+            <p>Singapore delivery is estimated at S$8, complimentary from S$150. Final terms will appear before payment. <Link to="/help/delivery">Delivery information</Link></p>
+          </details>
+          <details>
+            <summary>Sourcing & verification <CaretDown size={16} /></summary>
+            <p>{product.illustrative && !product.sellable ? 'This is an illustrative preview. Supplier evidence and physical product checks have not been recorded, so this item cannot be purchased.' : 'Sourcing information and authentic product checks are verified for this product.'}</p>
+          </details>
           <button className="underlined sizing-help" onClick={() => setGuideOpen(true)}>Need help with sizing?</button>
         </div>
       </div>
-      <section className="related"><div className="section-heading"><div><span className="eyebrow">MORE FROM THE DISTRICT</span><h2>Keep your rotation fresh</h2></div><Link to="/shop">Explore all <ArrowRight size={19} /></Link></div><ProductGrid products={products.filter((item) => item.id !== product.id).slice(0, 4)} /></section>
-      {guideOpen && (
-        <Dialog title="Sneaker Sizing & Fit Guide" onClose={() => setGuideOpen(false)}>
-          <div className="size-guide-modal-content">
-            <p>International footwear conversion matrix across UK, US Men, US Women, EU, and CM measurements:</p>
-            <div className="table-wrapper">
-              <table className="size-guide-table">
-                <thead>
-                  <tr>
-                    <th>UK</th>
-                    <th>US Men</th>
-                    <th>US Women</th>
-                    <th>EU</th>
-                    <th>CM</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr><td>6</td><td>6.5</td><td>8</td><td>40</td><td>25.0</td></tr>
-                  <tr><td>6.5</td><td>7</td><td>8.5</td><td>40.5</td><td>25.5</td></tr>
-                  <tr><td>7</td><td>7.5</td><td>9</td><td>41</td><td>26.0</td></tr>
-                  <tr><td>7.5</td><td>8</td><td>9.5</td><td>42</td><td>26.5</td></tr>
-                  <tr><td>8</td><td>8.5</td><td>10</td><td>42.5</td><td>27.0</td></tr>
-                  <tr><td>8.5</td><td>9</td><td>10.5</td><td>43</td><td>27.5</td></tr>
-                  <tr><td>9</td><td>9.5</td><td>11</td><td>44</td><td>28.0</td></tr>
-                  <tr><td>9.5</td><td>10</td><td>11.5</td><td>44.5</td><td>28.5</td></tr>
-                  <tr><td>10</td><td>10.5</td><td>12</td><td>45</td><td>29.0</td></tr>
-                  <tr><td>10.5</td><td>11</td><td>12.5</td><td>45.5</td><td>29.5</td></tr>
-                  <tr><td>11</td><td>11.5</td><td>13</td><td>46</td><td>30.0</td></tr>
-                </tbody>
-              </table>
+
+      {/* Complete The Look Cross-Sell Section */}
+      {completeTheLook.length > 0 && (
+        <Reveal as="section" className="related complete-look-section">
+          <div className="section-heading">
+            <div>
+              <span className="eyebrow">STYLE IT WITH</span>
+              <h2>Complete the Look</h2>
             </div>
-            <div className="size-fit-tips">
-              <div><strong>Air Jordan & Nike Dunks:</strong> True to size (TTS). If you have wider feet, we suggest choosing 0.5 size up on Air Jordan 4 and Dunk Low.</div>
-              <div><strong>adidas Yeezy 350 & 700:</strong> Fits snug around the toe-box. We advise going 0.5 size up from your standard UK size.</div>
-              <div><strong>Yeezy Slide & Foam Runner:</strong> Produced in whole sizes only. In-between sizes should select the next full size up.</div>
+            <Link to={isSneaker ? '/shop?category=Clothing' : '/shop?category=Sneakers'} className="arrow-glide-link">
+              Shop {isSneaker ? 'Streetwear Apparel' : 'Sneakers'} <ArrowRight size={19} />
+            </Link>
+          </div>
+          <ProductGrid products={completeTheLook} />
+        </Reveal>
+      )}
+
+      {/* Similar Items Section */}
+      <Reveal as="section" className="related">
+        <div className="section-heading">
+          <div>
+            <span className="eyebrow">SIMILAR ROTATION PIECES</span>
+            <h2>You Might Also Like</h2>
+          </div>
+          <Link to={'/shop?category=' + encodeURIComponent(product.category)} className="arrow-glide-link">
+            Explore all {product.category} <ArrowRight size={19} />
+          </Link>
+        </div>
+        <ProductGrid products={similarItems} />
+      </Reveal>
+
+      {/* Recently Viewed Rail */}
+      {recentlyViewedProducts.length > 0 && (
+        <Reveal as="section" className="related recently-viewed-section">
+          <div className="section-heading">
+            <div>
+              <span className="eyebrow">YOUR ARCHIVE TRAIL</span>
+              <h2>Recently Viewed</h2>
             </div>
           </div>
+          <ProductGrid products={recentlyViewedProducts} />
+        </Reveal>
+      )}
+
+      {/* Category-Aware Size Guide Modal */}
+      {guideOpen && (
+        <Dialog
+          title={
+            isClothing
+              ? 'Streetwear Apparel Sizing & Fit Guide'
+              : isSneaker
+                ? 'Sneaker Sizing & Fit Guide'
+                : 'Accessories & Headwear Sizing Guide'
+          }
+          onClose={() => setGuideOpen(false)}
+        >
+          {isClothing ? (
+            <div className="size-guide-modal-content">
+              <p>Garment measurements in centimetres (cm) taken flat across chest and from highest shoulder point to hem:</p>
+              <div className="table-wrapper">
+                <table className="size-guide-table">
+                  <thead>
+                    <tr>
+                      <th>Size (INT)</th>
+                      <th>Chest Width (cm)</th>
+                      <th>Body Length (cm)</th>
+                      <th>Shoulder (cm)</th>
+                      <th>Equivalent</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>XS</td><td>108</td><td>67</td><td>50</td><td>UK 34 / US XS</td></tr>
+                    <tr><td>S</td><td>114</td><td>70</td><td>52</td><td>UK 36 / US S</td></tr>
+                    <tr><td>M</td><td>120</td><td>73</td><td>54</td><td>UK 38–40 / US M</td></tr>
+                    <tr><td>L</td><td>126</td><td>76</td><td>56</td><td>UK 42 / US L</td></tr>
+                    <tr><td>XL</td><td>132</td><td>79</td><td>58</td><td>UK 44 / US XL</td></tr>
+                    <tr><td>XXL</td><td>138</td><td>81</td><td>60</td><td>UK 46 / US XXL</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="size-fit-tips">
+                <div><strong>Fear of God Essentials & Boxy Cuts:</strong> Designed with a dropped shoulder and relaxed, oversized drape. Take your normal size for the intended boxy look, or size down once for a closer fit.</div>
+                <div><strong>Stüssy, Supreme & Palace Tees/Hoodies:</strong> Relaxed skate fit. True to size (TTS) for everyday streetwear comfort.</div>
+                <div><strong>Carhartt WIP & Outerwear:</strong> Structured workwear silhouette with room for layering underneath.</div>
+              </div>
+            </div>
+          ) : isSneaker ? (
+            <div className="size-guide-modal-content">
+              <p>International footwear conversion matrix across UK, US Men, US Women, EU, and CM measurements:</p>
+              <div className="table-wrapper">
+                <table className="size-guide-table">
+                  <thead>
+                    <tr>
+                      <th>UK</th>
+                      <th>US Men</th>
+                      <th>US Women</th>
+                      <th>EU</th>
+                      <th>CM</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>6</td><td>6.5</td><td>8</td><td>40</td><td>25.0</td></tr>
+                    <tr><td>6.5</td><td>7</td><td>8.5</td><td>40.5</td><td>25.5</td></tr>
+                    <tr><td>7</td><td>7.5</td><td>9</td><td>41</td><td>26.0</td></tr>
+                    <tr><td>7.5</td><td>8</td><td>9.5</td><td>42</td><td>26.5</td></tr>
+                    <tr><td>8</td><td>8.5</td><td>10</td><td>42.5</td><td>27.0</td></tr>
+                    <tr><td>8.5</td><td>9</td><td>10.5</td><td>43</td><td>27.5</td></tr>
+                    <tr><td>9</td><td>9.5</td><td>11</td><td>44</td><td>28.0</td></tr>
+                    <tr><td>9.5</td><td>10</td><td>11.5</td><td>44.5</td><td>28.5</td></tr>
+                    <tr><td>10</td><td>10.5</td><td>12</td><td>45</td><td>29.0</td></tr>
+                    <tr><td>10.5</td><td>11</td><td>12.5</td><td>45.5</td><td>29.5</td></tr>
+                    <tr><td>11</td><td>11.5</td><td>13</td><td>46</td><td>30.0</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="size-fit-tips">
+                <div><strong>Air Jordan & Nike Dunks:</strong> True to size (TTS). If you have wider feet, we suggest choosing 0.5 size up on Air Jordan 4 and Dunk Low.</div>
+                <div><strong>adidas Yeezy 350 & 700:</strong> Fits snug around the toe-box. We advise going 0.5 size up from your standard UK size.</div>
+                <div><strong>Yeezy Slide & Foam Runner:</strong> Produced in whole sizes only. In-between sizes should select the next full size up.</div>
+              </div>
+            </div>
+          ) : (
+            <div className="size-guide-modal-content">
+              <p>Accessory sizing reference for headwear, crew socks, and everyday carry bags:</p>
+              <div className="table-wrapper">
+                <table className="size-guide-table">
+                  <thead>
+                    <tr>
+                      <th>Category</th>
+                      <th>Size</th>
+                      <th>Measurement / Fit</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Headwear (Caps & Beanies)</td><td>One size</td><td>55 – 60 cm circumference (adjustable strap / stretch rib)</td></tr>
+                    <tr><td>Crew Socks</td><td>S / M / L</td><td>S: UK 4–6 · M: UK 7–9 · L: UK 10–12</td></tr>
+                    <tr><td>Bags & Small Goods</td><td>One size</td><td>Dimensions listed in product details above</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
         </Dialog>
       )}
       {zoom && <Dialog title={product.brand + ' ' + product.name} onClose={() => setZoom(false)}><img className="zoom-image" src={currentImage.url} alt={currentImage.alt} /></Dialog>}
@@ -566,20 +1452,20 @@ export function ProductPage() {
             }}
             aria-label="Select size"
           >
-            <option value="">{selectedVariant ? `${selectedVariant.size_system} ${selectedVariant.size}` : 'Size'}</option>
+            <option value="">{selectedVariant ? `${selectedVariant.size_system === 'UK' ? 'UK ' : ''}${selectedVariant.size}` : 'Size'}</option>
             {sortedVariants.map((v) => (
               <option key={v.id} value={v.id} disabled={v.available < 1}>
-                {v.size_system} {v.size} {v.available < 1 ? '(Sold out)' : ''}
+                {v.size_system === 'UK' ? 'UK ' : ''}{v.size} {v.available < 1 ? '(Sold out)' : ''}
               </option>
             ))}
           </select>
           <button
             type="button"
             className="button sticky-add-btn"
-            disabled={selectedVariant && selectedVariant.available < 1}
+            disabled={soldOut || (selectedVariant && selectedVariant.available < 1)}
             onClick={addToBag}
           >
-            {!selectedVariant ? 'Select size' : 'Add to bag'}
+            {soldOut ? 'Sold out' : !selectedVariant ? 'Select size' : 'Add to bag'}
           </button>
         </div>
       </div>
@@ -619,7 +1505,10 @@ export function Checkout() {
     line1: '',
     line2: '',
     postal_code: '',
+    building: '',
+    property_type: 'highrise',
   });
+  const [addressValidState, setAddressValidState] = useState({ valid: false, errors: {} });
 
   // Promo code state
   const [promoInput, setPromoInput] = useState('');
@@ -697,16 +1586,20 @@ export function Checkout() {
     if (busy || !lines.length) return;
     setError('');
 
-    const activeAddress = savedAddresses.length > 0 && !useNewAddress
-      ? savedAddresses[selectedAddressIndex]
-      : deliveryAddress;
+    const isSaved = savedAddresses.length > 0 && !useNewAddress;
+    const activeAddress = isSaved ? savedAddresses[selectedAddressIndex] : deliveryAddress;
 
-    if (!activeAddress.recipient?.trim()) {
-      setError('Please provide a recipient name for delivery.');
-      return;
-    }
-    if (!activeAddress.line1?.trim() || !activeAddress.postal_code?.trim()) {
-      setError('Please provide a valid Singapore delivery address and 6-digit postal code.');
+    const lookup = await lookupSingaporeAddress(activeAddress.postal_code);
+    const check = validateSingaporeAddress(activeAddress, {
+      requireContact: true,
+      requirePhone: !isSaved || Boolean(activeAddress.phone),
+      propertyType: activeAddress.property_type || (activeAddress.line2 ? 'highrise' : 'landed'),
+      postalLookupStatus: lookup.status,
+      verifiedMatches: lookup.results,
+    });
+
+    if (!check.valid) {
+      setError(Object.values(check.errors)[0] || 'Please provide a valid Singapore delivery address.');
       return;
     }
 
@@ -744,36 +1637,52 @@ export function Checkout() {
       
       <div className="checkout-layout">
         <section className="checkout-items">
-          {/* STEP 1: Singapore Delivery Address Auto-Recommendation */}
+          {/* STEP 1: Singapore Delivery Address & OneMap Validator */}
           <div className="checkout-step-card">
-            <div className="step-card-header">
-              <div className="step-badge"><MapPin size={20} weight="bold" /></div>
-              <div>
-                <span className="eyebrow">DESTINATION</span>
-                <h2>Singapore Delivery Address</h2>
+            <div className="step-card-header sg-checkout-header">
+              <div className="step-header-left">
+                <div className="step-badge"><MapPin size={20} weight="bold" /></div>
+                <div>
+                  <span className="eyebrow">DESTINATION</span>
+                  <h2>Singapore Delivery Address</h2>
+                </div>
               </div>
+              {!(savedAddresses.length > 0 && !useNewAddress) && addressValidState.valid && (
+                <span className="sg-header-ready-pill">
+                  <CheckCircle size={14} weight="fill" /> Dispatch Ready
+                </span>
+              )}
             </div>
 
             {savedAddresses.length > 0 && !useNewAddress ? (
               <div className="saved-addresses-selector">
                 <p className="step-subhead">Choose a saved delivery address for Singapore courier dispatch:</p>
                 <div className="address-chip-grid">
-                  {savedAddresses.map((addr, idx) => (
-                    <button
-                      type="button"
-                      key={addr.id || idx}
-                      className={`address-chip ${selectedAddressIndex === idx ? 'selected' : ''}`}
-                      onClick={() => setSelectedAddressIndex(idx)}
-                    >
-                      <div className="chip-top">
-                        <strong>{addr.label || 'Home'}</strong>
-                        {selectedAddressIndex === idx && <CheckCircle size={16} weight="fill" />}
-                      </div>
-                      <span className="chip-name">{addr.recipient}</span>
-                      <span className="chip-line">{addr.line1}{addr.line2 ? `, ${addr.line2}` : ''}</span>
-                      <span className="chip-postal">Singapore {addr.postal_code}</span>
-                    </button>
-                  ))}
+                  {savedAddresses.map((addr, idx) => {
+                    const sec = getPostalSectorInfo(addr.postal_code);
+                    return (
+                      <button
+                        type="button"
+                        key={addr.id || idx}
+                        className={`address-chip ${selectedAddressIndex === idx ? 'selected' : ''}`}
+                        onClick={() => setSelectedAddressIndex(idx)}
+                      >
+                        <div className="chip-top">
+                          <strong>{addr.label || 'Home'}</strong>
+                          <div className="sg-saved-badges">
+                            {sec.district && <span className="sg-district-mini">{sec.district}</span>}
+                            {selectedAddressIndex === idx && <CheckCircle size={16} weight="fill" />}
+                          </div>
+                        </div>
+                        <span className="chip-name">{addr.recipient}{addr.phone ? ` · ${addr.phone}` : ''}</span>
+                        <span className="chip-line">{addr.line1}{addr.line2 ? `, ${addr.line2}` : ''}</span>
+                        <span className="chip-postal">
+                          Singapore {addr.postal_code}
+                          {sec.area ? ` · ${sec.area}` : ''}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
                 <button type="button" className="text-button new-address-toggle" onClick={() => setUseNewAddress(true)}>
                   + Deliver to a different address
@@ -786,12 +1695,13 @@ export function Checkout() {
                     ← Use saved address
                   </button>
                 )}
-                <p className="step-subhead">Enter your 6-digit postal code or building name for instant auto-recommendation:</p>
                 <AddressAutocomplete
                   value={deliveryAddress}
                   onChange={setDeliveryAddress}
+                  onValidityChange={setAddressValidState}
                   disabled={busy}
                   showContact={true}
+                  requirePhone={true}
                 />
               </div>
             )}
@@ -1105,13 +2015,33 @@ export function Wishlist() {
 
 export function Brands() {
   const { products } = useShop();
-  const brands = [...new Set(products.map((product) => product.brand))];
-  return <div className="section brands-page"><span className="eyebrow">LABELS IN THE DISTRICT</span><h1>The brands</h1><p>Familiar classics. Fresh perspectives.</p><div>{brands.map((brand, index) => <Link key={brand} to={'/shop?brand=' + encodeURIComponent(brand)}><span className="muted">{String(index + 1).padStart(2, '0')}</span><h2>{brand}</h2><ArrowUpRight size={28} /></Link>)}</div></div>;
+  const brands = useMemo(() => getDerivedBrands(products), [products]);
+  return (
+    <div className="section brands-page">
+      <span className="eyebrow">LABELS IN THE DISTRICT</span>
+      <h1>The Brands ({brands.length})</h1>
+      <p>Heritage footwear icons, global streetwear houses, and contemporary essentials — ranked by collection depth.</p>
+      <div className="brands-directory-grid">
+        {brands.map((brand, index) => (
+          <Link key={brand.name} to={'/shop?brand=' + encodeURIComponent(brand.name)} className="brand-directory-card">
+            <span className="muted">{String(index + 1).padStart(2, '0')}</span>
+            <div className="brand-directory-info">
+              <h2>{brand.name}</h2>
+              <span className="brand-directory-meta">
+                {brand.categories.join(' · ')} · {brand.count} {brand.count === 1 ? 'piece' : 'pieces'}
+              </span>
+            </div>
+            <ArrowUpRight size={26} />
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export function Journal() {
   const { products } = useShop();
-  return <div className="section journal-page"><span className="eyebrow">THE DISTRICT JOURNAL</span><h1>Wear it your way.</h1><img src="/assets/hero.webp" alt="Neutral streetwear editorial" /><div className="journal-copy"><h2>Build a rotation, not a collection.</h2><p>Start with pieces you reach for every day: a familiar pair of sneakers, an easy layer and a fit that feels like you. A thoughtful wardrobe is built around what you actually wear.</p><p>Neutral colours make mixing easier. Let texture do the work: soft fleece, worn-in suede and structured cotton. Choose fewer pieces, then find more ways to wear them.</p><Button to="/shop">Find your everyday pieces <ArrowRight size={19} /></Button><span className="muted">{products.length} preview pieces in the collection</span></div></div>;
+  return <div className="section journal-page"><span className="eyebrow">THE DISTRICT JOURNAL</span><h1>Wear it your way.</h1><img src="/assets/hero.webp" alt="Neutral streetwear editorial" /><div className="journal-copy"><h2>Build a rotation, not a collection.</h2><p>Start with pieces you reach for every day: a familiar pair of sneakers, a heavyweight hoodie, and a graphic tee that feels like you. A thoughtful wardrobe is built around what you actually wear.</p><p>Neutral colours make mixing easier. Let texture do the work: soft fleece, worn-in suede and structured cotton. Choose fewer pieces, then find more ways to wear them.</p><Button to="/shop">Find your everyday pieces <ArrowRight size={19} /></Button><span className="muted">{products.length} preview pieces in the collection</span></div></div>;
 }
 
 export function Help() {

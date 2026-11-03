@@ -98,7 +98,9 @@
     "unavailable": [
       "XS"
     ],
-    "featured": false
+    "featured": false,
+    "subcategory": "Hoodies & Sweats",
+    "addedAt": "2026-10-05"
   },
   {
     "id": "district-heavyweight-hoodie",
@@ -126,7 +128,9 @@
       "XL"
     ],
     "unavailable": [],
-    "featured": false
+    "featured": false,
+    "subcategory": "Hoodies & Sweats",
+    "addedAt": "2026-10-08"
   },
   {
     "id": "district-six-panel-cap",
@@ -150,7 +154,9 @@
       "One size"
     ],
     "unavailable": [],
-    "featured": false
+    "featured": false,
+    "subcategory": "Headwear",
+    "addedAt": "2026-10-10"
   },
   {
     "id": "air-jordan-1-retro-high-og-chicago-reimagined",
@@ -4394,5 +4400,2475 @@
       "10.5"
     ],
     "featured": true
+  },
+  {
+    "id": "fog-essentials-hoodie-light-oatmeal",
+    "brand": "Fear of God Essentials",
+    "name": "Essentials Pullover Hoodie (Light Oatmeal)",
+    "category": "Clothing",
+    "subcategory": "Hoodies & Sweats",
+    "silhouette": "Hoodie",
+    "badge": "Trending",
+    "price": 18500,
+    "retailPrice": 21500,
+    "color": "Light Oatmeal / Black",
+    "image": "/assets/apparel/fog-essentials-hoodie-light-oatmeal-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/fog-essentials-hoodie-light-oatmeal-1.jpg",
+        "alt": "Fear of God Essentials Essentials Pullover Hoodie (Light Oatmeal)"
+      }
+    ],
+    "description": "Signature Fear of God Essentials boxy pullover hoodie in Light Oatmeal fleece with tonal rubberized chest branding and a double-layered hood.",
+    "detail": "80% cotton, 20% polyester heavyweight core fleece (380gsm). Rubberized logo patch at hood and chest. Dropped shoulders, rib-knit cuffs and waist hem. Hand wash cold, lay flat to dry.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XS",
+      "XXL"
+    ],
+    "featured": true,
+    "addedAt": "2026-11-02",
+    "tags": [
+      "essentials",
+      "fleece",
+      "sale"
+    ]
+  },
+  {
+    "id": "fog-essentials-hoodie-desert-taupe",
+    "brand": "Fear of God Essentials",
+    "name": "Essentials Pullover Hoodie (Desert Taupe)",
+    "category": "Clothing",
+    "subcategory": "Hoodies & Sweats",
+    "silhouette": "Hoodie",
+    "badge": "Essential",
+    "price": 18900,
+    "color": "Desert Taupe / Earth Brown",
+    "image": "/assets/apparel/fog-essentials-hoodie-desert-taupe-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/fog-essentials-hoodie-desert-taupe-1.jpg",
+        "alt": "Fear of God Essentials Essentials Pullover Hoodie (Desert Taupe)"
+      }
+    ],
+    "description": "The quintessential daily tonal hoodie from Jerry Lorenzo’s Essentials line in Desert Taupe, cut with dropped shoulders and minimal tonal branding.",
+    "detail": "80% cotton, 20% polyester heavyweight fleece. Kangaroo pocket, rubberized brand label on hood. Relaxed oversized fit—size down for a standard fit.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XXL"
+    ],
+    "featured": true,
+    "addedAt": "2026-11-01",
+    "tags": [
+      "essentials",
+      "fleece"
+    ]
+  },
+  {
+    "id": "fog-essentials-hoodie-smoke",
+    "brand": "Fear of God Essentials",
+    "name": "Essentials Pullover Hoodie (Smoke)",
+    "category": "Clothing",
+    "subcategory": "Hoodies & Sweats",
+    "silhouette": "Hoodie",
+    "badge": "Popular",
+    "price": 18500,
+    "color": "Smoke / Washed Charcoal",
+    "image": "/assets/apparel/fog-essentials-hoodie-smoke-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/fog-essentials-hoodie-smoke-1.jpg",
+        "alt": "Fear of God Essentials Essentials Pullover Hoodie (Smoke)"
+      }
+    ],
+    "description": "Washed Smoke grey pullover built with substantial cotton-blend fleece and signature architectural proportions.",
+    "detail": "80% cotton, 20% polyester fleece. Mock-neck hood entry, side seam pockets, and flocked tonal chest graphic.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XS"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-29",
+    "tags": [
+      "essentials",
+      "fleece"
+    ]
+  },
+  {
+    "id": "fog-essentials-hoodie-coral",
+    "brand": "Fear of God Essentials",
+    "name": "Essentials Pullover Hoodie (Coral)",
+    "category": "Clothing",
+    "subcategory": "Hoodies & Sweats",
+    "silhouette": "Hoodie",
+    "badge": "Sale",
+    "price": 16900,
+    "retailPrice": 20500,
+    "color": "Washed Coral / Terracotta",
+    "image": "/assets/apparel/fog-essentials-hoodie-coral-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/fog-essentials-hoodie-coral-1.jpg",
+        "alt": "Fear of God Essentials Essentials Pullover Hoodie (Coral)"
+      }
+    ],
+    "description": "Sun-drenched Coral colorway meets Fear of God’s signature cropped-body, wide-shoulder fleece silhouette.",
+    "detail": "380gsm cotton-poly fleece. Ribbed cuffs and waist hem. Silicone branding at chest and crown of hood.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XS",
+      "XL"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-24",
+    "tags": [
+      "essentials",
+      "sale"
+    ]
+  },
+  {
+    "id": "fog-essentials-hoodie-wood",
+    "brand": "Fear of God Essentials",
+    "name": "Essentials Pullover Hoodie (Wood)",
+    "category": "Clothing",
+    "subcategory": "Hoodies & Sweats",
+    "silhouette": "Hoodie",
+    "badge": null,
+    "price": 18500,
+    "color": "Wood / Taupe Brown",
+    "image": "/assets/apparel/fog-essentials-hoodie-wood-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/fog-essentials-hoodie-wood-1.jpg",
+        "alt": "Fear of God Essentials Essentials Pullover Hoodie (Wood)"
+      }
+    ],
+    "description": "Warm neutral Wood brown colorway crafted from brushed back fleece for effortless layered styling.",
+    "detail": "80% cotton, 20% polyester heavyweight fleece. Dropped shoulder seams and kangaroo pouch pocket.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "S"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-21",
+    "tags": [
+      "essentials"
+    ]
+  },
+  {
+    "id": "fog-essentials-tee-stretch-limo",
+    "brand": "Fear of God Essentials",
+    "name": "Essentials Boxy Tee (Stretch Limo)",
+    "category": "Clothing",
+    "subcategory": "Tees",
+    "silhouette": "Tee",
+    "badge": "Essential",
+    "price": 8900,
+    "color": "Stretch Limo / Black",
+    "image": "/assets/apparel/fog-essentials-tee-stretch-limo-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/fog-essentials-tee-stretch-limo-1.jpg",
+        "alt": "Fear of God Essentials Essentials Boxy Tee (Stretch Limo)"
+      }
+    ],
+    "description": "Heavyweight single-jersey cotton tee in Stretch Limo black with a high ribbed mock-neck collar and boxy drape.",
+    "detail": "100% cotton jersey (250gsm). High rib-knit crew neckline, dropped shoulders, rubberized back collar patch.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XXL"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-28",
+    "tags": [
+      "essentials",
+      "tees"
+    ]
+  },
+  {
+    "id": "fog-essentials-sweatpants-desert-taupe",
+    "brand": "Fear of God Essentials",
+    "name": "Essentials Lounge Sweatpants (Desert Taupe)",
+    "category": "Clothing",
+    "subcategory": "Pants & Shorts",
+    "silhouette": "Sweatpants",
+    "badge": "Essential",
+    "price": 16500,
+    "color": "Desert Taupe / Cream",
+    "image": "/assets/apparel/fog-essentials-sweatpants-desert-taupe-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/fog-essentials-sweatpants-desert-taupe-1.jpg",
+        "alt": "Fear of God Essentials Essentials Lounge Sweatpants (Desert Taupe)"
+      }
+    ],
+    "description": "Tapered heavyweight fleece sweatpants with elongated cream drawstrings, gusseted drop-crotch construction, and elastic ankle cuffs.",
+    "detail": "80% cotton, 20% polyester fleece. Elasticized waist with extended drawcord, side seam pockets, rubberized logo patch at center front.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XS",
+      "XXL"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-27",
+    "tags": [
+      "essentials",
+      "loungewear"
+    ]
+  },
+  {
+    "id": "supreme-box-logo-hoodie-black",
+    "brand": "Supreme",
+    "name": "Box Logo Hooded Sweatshirt (Black)",
+    "category": "Clothing",
+    "subcategory": "Hoodies & Sweats",
+    "silhouette": "Hoodie",
+    "badge": "Grail",
+    "price": 54900,
+    "color": "Black / Red / White",
+    "image": "/assets/apparel/supreme-box-logo-hoodie-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/supreme-box-logo-hoodie-black-1.jpg",
+        "alt": "Supreme Box Logo Hooded Sweatshirt (Black)"
+      }
+    ],
+    "description": "The undisputed crown jewel of New York skateboarding history. Heavyweight crossgrain brushed-back fleece with the iconic embroidered Box Logo chest patch.",
+    "detail": "Heavyweight cotton crossgrain fleece. Ribbed gussets, pouch pocket, and dense woven embroidery at chest. Verified authentic deadstock.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XS",
+      "S",
+      "XXL"
+    ],
+    "featured": true,
+    "addedAt": "2026-11-03",
+    "tags": [
+      "grail",
+      "limited",
+      "bogo"
+    ]
+  },
+  {
+    "id": "supreme-box-logo-hoodie-heather-grey",
+    "brand": "Supreme",
+    "name": "Box Logo Hooded Sweatshirt (Heather Grey)",
+    "category": "Clothing",
+    "subcategory": "Hoodies & Sweats",
+    "silhouette": "Hoodie",
+    "badge": "Grail",
+    "price": 52900,
+    "color": "Heather Grey / Red",
+    "image": "/assets/apparel/supreme-box-logo-hoodie-heather-grey-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/supreme-box-logo-hoodie-heather-grey-1.jpg",
+        "alt": "Supreme Box Logo Hooded Sweatshirt (Heather Grey)"
+      }
+    ],
+    "description": "Archival heather grey crossgrain fleece featuring the classic red embroidered Supreme Box Logo on the chest.",
+    "detail": "Heavyweight cotton crossgrain fleece. Side rib panels for structure and zero shrinkage.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XS",
+      "XL",
+      "XXL"
+    ],
+    "featured": true,
+    "addedAt": "2026-10-31",
+    "tags": [
+      "grail",
+      "limited",
+      "bogo"
+    ]
+  },
+  {
+    "id": "supreme-box-logo-crewneck-black",
+    "brand": "Supreme",
+    "name": "Box Logo Crewneck (FW22 Black)",
+    "category": "Clothing",
+    "subcategory": "Hoodies & Sweats",
+    "silhouette": "Sweatshirt",
+    "badge": "Hype",
+    "price": 42900,
+    "color": "Black / White",
+    "image": "/assets/apparel/supreme-box-logo-crewneck-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/supreme-box-logo-crewneck-black-1.jpg",
+        "alt": "Supreme Box Logo Crewneck (FW22 Black)"
+      }
+    ],
+    "description": "Classic heavyweight crewneck sweatshirt from Supreme’s Fall/Winter collection with a crisp embroidered Box Logo at center chest.",
+    "detail": "Heavyweight crossgrain cotton fleece with ribbed collar, cuffs, hem, and side panels.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XS",
+      "XXL"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-26",
+    "tags": [
+      "limited",
+      "bogo"
+    ]
+  },
+  {
+    "id": "supreme-motion-logo-hoodie-black",
+    "brand": "Supreme",
+    "name": "Motion Logo Hooded Sweatshirt (Black)",
+    "category": "Clothing",
+    "subcategory": "Hoodies & Sweats",
+    "silhouette": "Hoodie",
+    "badge": "Popular",
+    "price": 32900,
+    "color": "Black / White",
+    "image": "/assets/apparel/supreme-motion-logo-hoodie-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/supreme-motion-logo-hoodie-black-1.jpg",
+        "alt": "Supreme Motion Logo Hooded Sweatshirt (Black)"
+      }
+    ],
+    "description": "Inspired by the opening title sequence of Martin Scorsese’s Goodfellas, featuring the blurred Supreme Motion Logo across heavyweight cotton fleece.",
+    "detail": "100% heavyweight cotton crossgrain fleece. Screen-printed chest graphic, pouch pocket, ribbed gussets.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XS"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-22",
+    "tags": [
+      "supreme",
+      "fleece"
+    ]
+  },
+  {
+    "id": "supreme-s-logo-hoodie-black",
+    "brand": "Supreme",
+    "name": "S Logo Hooded Sweatshirt (Black)",
+    "category": "Clothing",
+    "subcategory": "Hoodies & Sweats",
+    "silhouette": "Hoodie",
+    "badge": null,
+    "price": 31900,
+    "retailPrice": 35900,
+    "color": "Black / White",
+    "image": "/assets/apparel/supreme-s-logo-hoodie-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/supreme-s-logo-hoodie-black-1.jpg",
+        "alt": "Supreme S Logo Hooded Sweatshirt (Black)"
+      }
+    ],
+    "description": "Heavyweight Supreme pullover featuring chenille and embroidered S-Logo applique at the left chest and small S embroidery on the hood.",
+    "detail": "Heavyweight crossgrain brushed-back fleece. Ribbed side gussets, cuffs, and waist hem.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XS",
+      "XXL"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-19",
+    "tags": [
+      "supreme",
+      "sale"
+    ]
+  },
+  {
+    "id": "supreme-tiffany-box-logo-tee-white",
+    "brand": "Supreme",
+    "name": "Supreme x Tiffany & Co. Box Logo Tee",
+    "category": "Clothing",
+    "subcategory": "Tees",
+    "silhouette": "Tee",
+    "badge": "Grail",
+    "price": 44900,
+    "color": "White / Tiffany Blue",
+    "image": "/assets/apparel/supreme-tiffany-box-logo-tee-white-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/supreme-tiffany-box-logo-tee-white-1.jpg",
+        "alt": "Supreme Supreme x Tiffany & Co. Box Logo Tee"
+      }
+    ],
+    "description": "Landmark luxury-meets-street collaboration pairing Supreme’s Box Logo in signature Robin’s Egg Tiffany Blue with \"Return to Supreme\" back print.",
+    "detail": "100% pre-shrunk heavyweight ringspun cotton. Co-branded Tiffany & Co. neck label.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XS",
+      "XL",
+      "XXL"
+    ],
+    "featured": true,
+    "addedAt": "2026-11-02",
+    "tags": [
+      "collab",
+      "grail",
+      "bogo",
+      "tees"
+    ]
+  },
+  {
+    "id": "supreme-bandana-box-logo-tee-black",
+    "brand": "Supreme",
+    "name": "Bandana Box Logo Tee (Black)",
+    "category": "Clothing",
+    "subcategory": "Tees",
+    "silhouette": "Tee",
+    "badge": "Hype",
+    "price": 34900,
+    "color": "Black / Paisley White",
+    "image": "/assets/apparel/supreme-bandana-box-logo-tee-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/supreme-bandana-box-logo-tee-black-1.jpg",
+        "alt": "Supreme Bandana Box Logo Tee (Black)"
+      }
+    ],
+    "description": "FW19 archival classic featuring a paisley bandana fill inside the signature chest Box Logo on heavyweight black cotton.",
+    "detail": "100% cotton jersey. Classic skate fit with seamless double-needle collar.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XS",
+      "XXL"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-25",
+    "tags": [
+      "bogo",
+      "tees",
+      "limited"
+    ]
+  },
+  {
+    "id": "supreme-andre-3000-photo-tee-black",
+    "brand": "Supreme",
+    "name": "André 3000 Photo Tee (Black)",
+    "category": "Clothing",
+    "subcategory": "Tees",
+    "silhouette": "Tee",
+    "badge": "Iconic",
+    "price": 14900,
+    "color": "Black / Multi",
+    "image": "/assets/apparel/supreme-andre-3000-photo-tee-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/supreme-andre-3000-photo-tee-black-1.jpg",
+        "alt": "Supreme André 3000 Photo Tee (Black)"
+      }
+    ],
+    "description": "From Supreme’s legendary Portrait Series, featuring OutKast icon André Benjamin wearing a classic red Box Logo.",
+    "detail": "100% ringspun cotton. High-definition plastisol photo print at center chest.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XXL"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-18",
+    "tags": [
+      "photo-tee",
+      "tees"
+    ]
+  },
+  {
+    "id": "supreme-tnf-nuptse-jacket-black",
+    "brand": "Supreme",
+    "name": "Supreme x The North Face Down Jacket",
+    "category": "Clothing",
+    "subcategory": "Outerwear",
+    "silhouette": "Jacket",
+    "badge": "Collab",
+    "price": 68900,
+    "color": "Black / White",
+    "image": "/assets/apparel/supreme-tnf-nuptse-jacket-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/supreme-tnf-nuptse-jacket-black-1.jpg",
+        "alt": "Supreme Supreme x The North Face Down Jacket"
+      }
+    ],
+    "description": "Coveted collaborative outerwear from Supreme and The North Face, engineered with water-resistant shell fabric and dual-branded patch detailing on the right sleeve.",
+    "detail": "Water-resistant ripstop nylon shell with 700-fill down insulation, stowable hood, and dual-branded woven patches on sleeve.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XS",
+      "XL",
+      "XXL"
+    ],
+    "featured": true,
+    "addedAt": "2026-11-01",
+    "tags": [
+      "collab",
+      "outerwear",
+      "limited"
+    ]
+  },
+  {
+    "id": "stussy-8-ball-pigment-dyed-tee-natural",
+    "brand": "Stüssy",
+    "name": "8 Ball Pigment Dyed Tee (Natural)",
+    "category": "Clothing",
+    "subcategory": "Tees",
+    "silhouette": "Tee",
+    "badge": "Trending",
+    "price": 9500,
+    "color": "Natural / Black",
+    "image": "/assets/apparel/stussy-8-ball-pigment-dyed-tee-natural-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/stussy-8-ball-pigment-dyed-tee-natural-1.jpg",
+        "alt": "Stüssy 8 Ball Pigment Dyed Tee (Natural)"
+      }
+    ],
+    "description": "California surf-and-street heritage rendered on a vintage pigment-dyed cotton tee with Stüssy’s iconic 8-Ball graphic.",
+    "detail": "100% carded cotton jersey, individually pigment-dyed for a lived-in vintage finish. Screen-printed front and oversized back graphics.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XS"
+    ],
+    "featured": true,
+    "addedAt": "2026-11-02",
+    "tags": [
+      "streetwear",
+      "tees"
+    ]
+  },
+  {
+    "id": "stussy-basic-logo-tee-black",
+    "brand": "Stüssy",
+    "name": "Basic Stüssy Logo Tee (Black)",
+    "category": "Clothing",
+    "subcategory": "Tees",
+    "silhouette": "Tee",
+    "badge": "Essential",
+    "price": 8500,
+    "color": "Black / White",
+    "image": "/assets/apparel/stussy-basic-logo-tee-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/stussy-basic-logo-tee-black-1.jpg",
+        "alt": "Stüssy Basic Stüssy Logo Tee (Black)"
+      }
+    ],
+    "description": "Shawn Stussy’s unmistakable hand-drawn graffiti signature printed at the left chest and across the back on mid-weight ringspun cotton.",
+    "detail": "100% cotton. Ribbed crewneck collar, relaxed standard fit. Machine wash cold.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XXL"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-28",
+    "tags": [
+      "streetwear",
+      "tees"
+    ]
+  },
+  {
+    "id": "stussy-world-tour-zip-hoodie-black",
+    "brand": "Stüssy",
+    "name": "World Tour Full-Zip Hoodie (Black)",
+    "category": "Clothing",
+    "subcategory": "Hoodies & Sweats",
+    "silhouette": "Hoodie",
+    "badge": "Popular",
+    "price": 22900,
+    "color": "Black / White",
+    "image": "/assets/apparel/stussy-world-tour-zip-hoodie-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/stussy-world-tour-zip-hoodie-black-1.jpg",
+        "alt": "Stüssy World Tour Full-Zip Hoodie (Black)"
+      }
+    ],
+    "description": "Stüssy’s global roll call—New York, Los Angeles, Tokyo, London, Paris—mixed with Bronze, Compton, Santa Ana, Brooklyn, and Venice on a heavyweight full-zip fleece.",
+    "detail": "80% cotton, 20% polyester fleece. YKK metal zipper, split kangaroo pocket, screen-printed chest and back World Tour script.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XS",
+      "XXL"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-27",
+    "tags": [
+      "streetwear",
+      "fleece"
+    ]
+  },
+  {
+    "id": "bape-color-camo-shark-full-zip-hoodie",
+    "brand": "BAPE",
+    "name": "Color Camo Shark Full Zip Hoodie (Purple)",
+    "category": "Clothing",
+    "subcategory": "Hoodies & Sweats",
+    "silhouette": "Hoodie",
+    "badge": "Iconic",
+    "price": 48900,
+    "color": "Purple Camo / Multi",
+    "image": "/assets/apparel/bape-color-camo-shark-full-zip-hoodie-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/bape-color-camo-shark-full-zip-hoodie-1.jpg",
+        "alt": "BAPE Color Camo Shark Full Zip Hoodie (Purple)"
+      }
+    ],
+    "description": "Ura-Harajuku legend from A Bathing Ape. Full-zip loopwheel cotton hoodie with the signature felt and chenille Shark face appliqué on the hood and WGM varsity lettering.",
+    "detail": "100% Japanese heavyweight cotton terry. Full dual-way zipper extending to the crown of the hood, woven Ape Head sleeve tag.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XS",
+      "S"
+    ],
+    "featured": true,
+    "addedAt": "2026-11-01",
+    "tags": [
+      "bape",
+      "camo",
+      "grail"
+    ]
+  },
+  {
+    "id": "bape-1st-camo-shark-full-zip-hoodie-yellow",
+    "brand": "BAPE",
+    "name": "1st Camo Shark Full Zip Hoodie (Yellow)",
+    "category": "Clothing",
+    "subcategory": "Hoodies & Sweats",
+    "silhouette": "Hoodie",
+    "badge": "Hype",
+    "price": 49900,
+    "color": "Yellow 1st Camo / Green / Multi",
+    "image": "/assets/apparel/bape-1st-camo-shark-full-zip-hoodie-yellow-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/bape-1st-camo-shark-full-zip-hoodie-yellow-1.jpg",
+        "alt": "BAPE 1st Camo Shark Full Zip Hoodie (Yellow)"
+      }
+    ],
+    "description": "Nigo’s original 1st Camo pattern in vibrant yellow and olive green, crowned with the chenille WGM Tiger and Shark hood appliqué.",
+    "detail": "100% cotton terry. Dual-way full hood zipper, ribbed cuffs and hem, woven golden Ape tag at sleeve.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XS",
+      "XXL"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-26",
+    "tags": [
+      "bape",
+      "camo"
+    ]
+  },
+  {
+    "id": "bape-college-logo-tee-black",
+    "brand": "BAPE",
+    "name": "College Logo Tee (Black)",
+    "category": "Clothing",
+    "subcategory": "Tees",
+    "silhouette": "Tee",
+    "badge": "Classic",
+    "price": 13500,
+    "color": "Black / White / Brown",
+    "image": "/assets/apparel/bape-college-logo-tee-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/bape-college-logo-tee-black-1.jpg",
+        "alt": "BAPE College Logo Tee (Black)"
+      }
+    ],
+    "description": "Iconic A Bathing Ape collegiate arch logo framing the Ape Head emblem on crisp Japanese cotton jersey.",
+    "detail": "100% cotton. Woven Ape Head tab on left sleeve cuff. Standard Japanese sizing (consider sizing up one size).",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XS"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-19",
+    "tags": [
+      "bape",
+      "tees"
+    ]
+  },
+  {
+    "id": "palace-tri-ferg-hoodie-black",
+    "brand": "Palace",
+    "name": "Tri-Ferg Pullover Hood (Black)",
+    "category": "Clothing",
+    "subcategory": "Hoodies & Sweats",
+    "silhouette": "Hoodie",
+    "badge": "Popular",
+    "price": 24900,
+    "color": "Black / White",
+    "image": "/assets/apparel/palace-tri-ferg-hoodie-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/palace-tri-ferg-hoodie-black-1.jpg",
+        "alt": "Palace Tri-Ferg Pullover Hood (Black)"
+      }
+    ],
+    "description": "London skate royalty. Heavyweight loopback cotton hoodie sporting Fergus Purcell’s iconic Penrose triangle Tri-Ferg emblem.",
+    "detail": "100% heavyweight loopback cotton. Branded metal aglets, pouch pocket, ribbed cuffs and hem.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XS",
+      "XXL"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-22",
+    "tags": [
+      "skate",
+      "palace"
+    ]
+  },
+  {
+    "id": "palace-classic-tri-ferg-hood-black",
+    "brand": "Palace",
+    "name": "Classic Tri-Ferg Hood (Black / White)",
+    "category": "Clothing",
+    "subcategory": "Hoodies & Sweats",
+    "silhouette": "Hoodie",
+    "badge": "Trending",
+    "price": 25900,
+    "color": "Black / Crisp White",
+    "image": "/assets/apparel/palace-classic-tri-ferg-hood-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/palace-classic-tri-ferg-hood-black-1.jpg",
+        "alt": "Palace Classic Tri-Ferg Hood (Black / White)"
+      }
+    ],
+    "description": "Southbank skate staple featuring high-contrast white Tri-Ferg branding on the left chest and full back.",
+    "detail": "Heavyweight 450gsm loopback cotton fleece. Custom Palace embossed drawcord tips.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XS"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-20",
+    "tags": [
+      "skate",
+      "palace"
+    ]
+  },
+  {
+    "id": "palace-tri-ferg-tee-white",
+    "brand": "Palace",
+    "name": "Tri-Ferg Skate Tee (White)",
+    "category": "Clothing",
+    "subcategory": "Tees",
+    "silhouette": "Tee",
+    "badge": "Trending",
+    "price": 10900,
+    "color": "White / Multi",
+    "image": "/assets/apparel/palace-tri-ferg-tee-white-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/palace-tri-ferg-tee-white-1.jpg",
+        "alt": "Palace Tri-Ferg Skate Tee (White)"
+      }
+    ],
+    "description": "Soho skate staple with left-chest and oversized back Tri-Ferg screenprint on soft combed cotton.",
+    "detail": "100% ringspun cotton jersey. Ribbed crew neckline. Machine washable.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XXL"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-18",
+    "tags": [
+      "skate",
+      "palace",
+      "tees"
+    ]
+  },
+  {
+    "id": "nike-tech-fleece-full-zip-hoodie-black",
+    "brand": "Nike",
+    "name": "Sportswear Tech Fleece Windrunner Hoodie (Black)",
+    "category": "Clothing",
+    "subcategory": "Outerwear",
+    "silhouette": "Jacket",
+    "badge": "Essential",
+    "price": 18900,
+    "retailPrice": 21900,
+    "color": "Black / Black",
+    "image": "/assets/apparel/nike-tech-fleece-full-zip-hoodie-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/nike-tech-fleece-full-zip-hoodie-black-1.jpg",
+        "alt": "Nike Sportswear Tech Fleece Windrunner Hoodie (Black)"
+      }
+    ],
+    "description": "Engineered double-sided spacer fabric delivers lightweight warmth without extra bulk, finished with signature bonded Windrunner chevron tape.",
+    "detail": "53% cotton, 47% polyester Tech Fleece. Zip sleeve pocket, 4-panel scuba hood, articulated elbows.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XS"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-25",
+    "tags": [
+      "tech-fleece",
+      "outerwear",
+      "sale"
+    ]
+  },
+  {
+    "id": "denim-tears-cotton-wreath-hoodie-black",
+    "brand": "Denim Tears",
+    "name": "The Cotton Wreath Sweatshirt Hoodie (Black)",
+    "category": "Clothing",
+    "subcategory": "Hoodies & Sweats",
+    "silhouette": "Hoodie",
+    "badge": "Hype",
+    "price": 42900,
+    "color": "Black / White",
+    "image": "/assets/apparel/denim-tears-cotton-wreath-hoodie-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/denim-tears-cotton-wreath-hoodie-black-1.jpg",
+        "alt": "Denim Tears The Cotton Wreath Sweatshirt Hoodie (Black)"
+      }
+    ],
+    "description": "Tremaine Emory’s signature cultural statement piece featuring raised puff-print cotton wreath motifs across heavyweight American fleece.",
+    "detail": "100% heavyweight ringspun cotton fleece. All-over raised puff screenprint, double-lined hood without drawstring, kangaroo pocket.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XS",
+      "XXL"
+    ],
+    "featured": true,
+    "addedAt": "2026-11-03",
+    "tags": [
+      "hype",
+      "puff-print"
+    ]
+  },
+  {
+    "id": "denim-tears-cotton-wreath-sweatpants-grey",
+    "brand": "Denim Tears",
+    "name": "The Cotton Wreath Sweatpants (Heather Grey)",
+    "category": "Clothing",
+    "subcategory": "Pants & Shorts",
+    "silhouette": "Sweatpants",
+    "badge": "Trending",
+    "price": 36900,
+    "color": "Heather Grey / White",
+    "image": "/assets/apparel/denim-tears-cotton-wreath-sweatpants-grey-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/denim-tears-cotton-wreath-sweatpants-grey-1.jpg",
+        "alt": "Denim Tears The Cotton Wreath Sweatpants (Heather Grey)"
+      }
+    ],
+    "description": "Matching heavyweight fleece sweatpants finished with raised white puff-print cotton wreath graphics from waist to hem.",
+    "detail": "100% cotton heavyweight fleece. Elasticated waistband and ankle cuffs, side seam pockets.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XS",
+      "XL",
+      "XXL"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-29",
+    "tags": [
+      "hype",
+      "puff-print"
+    ]
+  },
+  {
+    "id": "carhartt-wip-detroit-jacket-black",
+    "brand": "Carhartt WIP",
+    "name": "OG Detroit Jacket (Dearborn Canvas)",
+    "category": "Clothing",
+    "subcategory": "Outerwear",
+    "silhouette": "Jacket",
+    "badge": "Classic",
+    "price": 34900,
+    "color": "Black / Tobacco Contrast Collar",
+    "image": "/assets/apparel/carhartt-wip-detroit-jacket-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/carhartt-wip-detroit-jacket-black-1.jpg",
+        "alt": "Carhartt WIP OG Detroit Jacket (Dearborn Canvas)"
+      }
+    ],
+    "description": "Workwear heritage built from 12oz organic Dearborn Canvas with a corduroy top collar, zippered chest pocket, and woven Square Label.",
+    "detail": "100% organic cotton Dearborn Canvas (340gsm). Blanket-lined body, corduroy collar, adjustable snap cuffs and bottom band.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XS",
+      "XXL"
+    ],
+    "featured": true,
+    "addedAt": "2026-10-24",
+    "tags": [
+      "workwear",
+      "outerwear"
+    ]
+  },
+  {
+    "id": "kith-treats-box-logo-tee",
+    "brand": "Kith",
+    "name": "Classic Logo Williams III Hoodie",
+    "category": "Clothing",
+    "subcategory": "Hoodies & Sweats",
+    "silhouette": "Hoodie",
+    "badge": "Popular",
+    "price": 26900,
+    "retailPrice": 29900,
+    "color": "Black / White",
+    "image": "/assets/apparel/kith-treats-box-logo-tee-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/kith-treats-box-logo-tee-1.jpg",
+        "alt": "Kith Classic Logo Williams III Hoodie"
+      }
+    ],
+    "description": "Ronnie Fieg’s signature Williams III silhouette crafted from garment-washed 500gsm cotton fleece with an embroidered Kith classic box logo.",
+    "detail": "100% cotton 500gsm fleece. Two-piece hood, ribbed side panels, and garment-dyed enzyme wash for a soft hand feel.",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "unavailable": [
+      "XS",
+      "XXL"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-15",
+    "tags": [
+      "streetwear",
+      "sale"
+    ]
+  },
+  {
+    "id": "new-era-ny-yankees-59fifty-fitted-navy",
+    "brand": "New Era",
+    "name": "NY Yankees 59FIFTY Fitted Cap",
+    "category": "Accessories",
+    "subcategory": "Headwear",
+    "silhouette": "Headwear",
+    "badge": "Classic",
+    "price": 7500,
+    "color": "Navy / White / Grey Undervisor",
+    "image": "/assets/apparel/new-era-ny-yankees-59fifty-fitted-navy-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/new-era-ny-yankees-59fifty-fitted-navy-1.jpg",
+        "alt": "New Era NY Yankees 59FIFTY Fitted Cap"
+      }
+    ],
+    "description": "Structured high-crown 59FIFTY fitted cap featuring raised front embroidery, flat visor, and classic grey underbrim.",
+    "detail": "100% woven wool/polyester crown. Structured 6-panel construction with embroidered eyelets. Spot clean only.",
+    "sizes": [
+      "One size"
+    ],
+    "unavailable": [],
+    "featured": false,
+    "addedAt": "2026-10-28",
+    "tags": [
+      "headwear",
+      "fitted"
+    ]
+  },
+  {
+    "id": "stussy-big-stock-bucket-hat-black",
+    "brand": "Stüssy",
+    "name": "Big Stock Bucket Hat (Black)",
+    "category": "Accessories",
+    "subcategory": "Headwear",
+    "silhouette": "Headwear",
+    "badge": "Popular",
+    "price": 7900,
+    "color": "Black / White",
+    "image": "/assets/apparel/stussy-big-stock-bucket-hat-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/stussy-big-stock-bucket-hat-black-1.jpg",
+        "alt": "Stüssy Big Stock Bucket Hat (Black)"
+      }
+    ],
+    "description": "90s streetwear silhouette in heavy cotton twill with oversized embroidered Stüssy stock script wrapped across the crown.",
+    "detail": "100% cotton unstructured twill bucket hat with stitched brim and embroidered ventilation eyelets.",
+    "sizes": [
+      "One size"
+    ],
+    "unavailable": [],
+    "featured": false,
+    "addedAt": "2026-10-30",
+    "tags": [
+      "headwear",
+      "bucket-hat"
+    ]
+  },
+  {
+    "id": "carhartt-wip-acrylic-watch-hat-black",
+    "brand": "Carhartt WIP",
+    "name": "Acrylic Watch Hat Beanie (Black)",
+    "category": "Accessories",
+    "subcategory": "Headwear",
+    "silhouette": "Headwear",
+    "badge": "Essential",
+    "price": 4900,
+    "color": "Black / Gold Square Label",
+    "image": "/assets/apparel/carhartt-wip-acrylic-watch-hat-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/carhartt-wip-acrylic-watch-hat-black-1.jpg",
+        "alt": "Carhartt WIP Acrylic Watch Hat Beanie (Black)"
+      }
+    ],
+    "description": "An icon of utilitarian headwear. Warm 9-gauge rib-knit acrylic beanie finished with the signature woven Carhartt WIP Square Label on the cuff.",
+    "detail": "100% acrylic stretchable rib-knit fabric. Height: 23.5 cm / 9.1 inch. Hand wash cold.",
+    "sizes": [
+      "One size"
+    ],
+    "unavailable": [],
+    "featured": false,
+    "addedAt": "2026-10-26",
+    "tags": [
+      "headwear",
+      "workwear",
+      "essentials"
+    ]
+  },
+  {
+    "id": "supreme-new-era-box-logo-beanie-black",
+    "brand": "Supreme",
+    "name": "New Era Box Logo Beanie (Black)",
+    "category": "Accessories",
+    "subcategory": "Headwear",
+    "silhouette": "Headwear",
+    "badge": "Trending",
+    "price": 11900,
+    "color": "Black / Red / White",
+    "image": "/assets/apparel/supreme-new-era-box-logo-beanie-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/supreme-new-era-box-logo-beanie-black-1.jpg",
+        "alt": "Supreme New Era Box Logo Beanie (Black)"
+      }
+    ],
+    "description": "Cold-weather streetwear staple crafted by New Era with an embroidered Supreme Box Logo on the fold-over cuff and \"World Famous\" script at the rear.",
+    "detail": "100% acrylic rib-knit crown with fold-over cuff. Embroidered Box Logo patch on front cuff, New Era flag on side.",
+    "sizes": [
+      "One size"
+    ],
+    "unavailable": [],
+    "featured": true,
+    "addedAt": "2026-11-02",
+    "tags": [
+      "headwear",
+      "bogo"
+    ]
+  },
+  {
+    "id": "supreme-loose-gauge-beanie-heather-grey",
+    "brand": "Supreme",
+    "name": "Loose Gauge Beanie",
+    "category": "Accessories",
+    "subcategory": "Headwear",
+    "silhouette": "Headwear",
+    "badge": "Essential",
+    "price": 8900,
+    "retailPrice": 10500,
+    "color": "Heather Grey / White",
+    "image": "/assets/apparel/supreme-loose-gauge-beanie-heather-grey-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/supreme-loose-gauge-beanie-heather-grey-1.jpg",
+        "alt": "Supreme Loose Gauge Beanie"
+      }
+    ],
+    "description": "Chunky rib-knit cuffed beanie with direct Supreme embroidery across the front fold.",
+    "detail": "100% breathable cotton/acrylic knit. Relaxed stretch fit. Hand wash cold.",
+    "sizes": [
+      "One size"
+    ],
+    "unavailable": [],
+    "featured": false,
+    "addedAt": "2026-10-21",
+    "tags": [
+      "headwear",
+      "sale"
+    ]
+  },
+  {
+    "id": "supreme-cordura-shoulder-bag-black",
+    "brand": "Supreme",
+    "name": "Cordura Ripstop Shoulder Bag (Black)",
+    "category": "Accessories",
+    "subcategory": "Bags",
+    "silhouette": "Bag",
+    "badge": "Trending",
+    "price": 17900,
+    "color": "Black / Red Box Logo",
+    "image": "/assets/apparel/supreme-cordura-shoulder-bag-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/supreme-cordura-shoulder-bag-black-1.jpg",
+        "alt": "Supreme Cordura Ripstop Shoulder Bag (Black)"
+      }
+    ],
+    "description": "Compact daily utility bag built from abrasion-resistant Cordura ripstop nylon with a woven red Supreme Box Logo patch on the front panel.",
+    "detail": "Water-resistant 610D Cordura® nylon with embossed logo lining. Zippered main compartment, front zip pocket, adjustable jacquard webbing strap.",
+    "sizes": [
+      "One size"
+    ],
+    "unavailable": [],
+    "featured": true,
+    "addedAt": "2026-11-01",
+    "tags": [
+      "bags",
+      "cordura",
+      "utility"
+    ]
+  },
+  {
+    "id": "supreme-cordura-waist-bag-black",
+    "brand": "Supreme",
+    "name": "Cordura Crossbody Waist Bag (Black)",
+    "category": "Accessories",
+    "subcategory": "Bags",
+    "silhouette": "Bag",
+    "badge": "Popular",
+    "price": 19900,
+    "color": "Black / White",
+    "image": "/assets/apparel/supreme-cordura-waist-bag-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/supreme-cordura-waist-bag-black-1.jpg",
+        "alt": "Supreme Cordura Crossbody Waist Bag (Black)"
+      }
+    ],
+    "description": "Versatile crossbody or waist pack constructed in heavy-duty Cordura nylon with jacquard logo repeat strap and dual zip compartments.",
+    "detail": "100% Cordura® ballistic nylon. Padded mesh back panel, quick-release buckle strap, interior organizer pocket.",
+    "sizes": [
+      "One size"
+    ],
+    "unavailable": [],
+    "featured": false,
+    "addedAt": "2026-10-25",
+    "tags": [
+      "bags",
+      "cordura"
+    ]
+  },
+  {
+    "id": "supreme-backpack-black",
+    "brand": "Supreme",
+    "name": "Cordura Utility Backpack (Black)",
+    "category": "Accessories",
+    "subcategory": "Bags",
+    "silhouette": "Bag",
+    "badge": "Hype",
+    "price": 28900,
+    "color": "Black / White",
+    "image": "/assets/apparel/supreme-backpack-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/supreme-backpack-black-1.jpg",
+        "alt": "Supreme Cordura Utility Backpack (Black)"
+      }
+    ],
+    "description": "Full-sized everyday commuter backpack with padded laptop sleeve, side mesh bottle pockets, and signature Supreme Box Logo patch.",
+    "detail": "21L capacity. Water-resistant Cordura® nylon shell, ergonomic padded shoulder straps with sternum clip.",
+    "sizes": [
+      "One size"
+    ],
+    "unavailable": [],
+    "featured": false,
+    "addedAt": "2026-10-22",
+    "tags": [
+      "bags",
+      "commuter"
+    ]
+  },
+  {
+    "id": "telfar-shopping-bag-small-black",
+    "brand": "Telfar",
+    "name": "Small Shopping Bag (Black)",
+    "category": "Accessories",
+    "subcategory": "Bags",
+    "silhouette": "Bag",
+    "badge": "Iconic",
+    "price": 23900,
+    "retailPrice": 26900,
+    "color": "Black / Monochrome",
+    "image": "/assets/apparel/telfar-shopping-bag-small-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/telfar-shopping-bag-small-black-1.jpg",
+        "alt": "Telfar Small Shopping Bag (Black) primary view"
+      },
+      {
+        "url": "/assets/apparel/telfar-shopping-bag-small-black-2.jpg",
+        "alt": "Telfar Small Shopping Bag (Black) alternate angle"
+      }
+    ],
+    "description": "The Bushwick Birkin. Unisex everyday structured tote featuring the embossed Telfar TC monogram, dual top handles, and crossbody straps.",
+    "detail": "Vegan faux leather exterior with twill lining. Magnetic snap closure and interior zip compartment.",
+    "sizes": [
+      "One size"
+    ],
+    "unavailable": [],
+    "featured": false,
+    "addedAt": "2026-10-17",
+    "tags": [
+      "bags",
+      "sale"
+    ]
+  },
+  {
+    "id": "supreme-hanes-crew-socks-4-pack-white",
+    "brand": "Supreme",
+    "name": "Supreme x Hanes Crew Socks (4 Pack White)",
+    "category": "Accessories",
+    "subcategory": "Socks",
+    "silhouette": "Socks",
+    "badge": "Essential",
+    "price": 5500,
+    "color": "White / Red",
+    "image": "/assets/apparel/supreme-hanes-crew-socks-4-pack-white-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/supreme-hanes-crew-socks-4-pack-white-1.jpg",
+        "alt": "Supreme Supreme x Hanes Crew Socks (4 Pack White)"
+      }
+    ],
+    "description": "Daily rotation essential. Four-pack of cushioned ribbed cotton crew socks with knitted red Supreme logo below the upper welt.",
+    "detail": "Cotton/polyester/spandex blend with cushioned footbed and reinforced heel/toe. Pack of 4 pairs.",
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "unavailable": [
+      "S"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-30",
+    "tags": [
+      "socks",
+      "essentials"
+    ]
+  },
+  {
+    "id": "supreme-hanes-crew-socks-4-pack-black",
+    "brand": "Supreme",
+    "name": "Supreme x Hanes Crew Socks (4 Pack Black)",
+    "category": "Accessories",
+    "subcategory": "Socks",
+    "silhouette": "Socks",
+    "badge": "Essential",
+    "price": 5500,
+    "color": "Black / White",
+    "image": "/assets/apparel/supreme-hanes-crew-socks-4-pack-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/supreme-hanes-crew-socks-4-pack-black-1.jpg",
+        "alt": "Supreme Supreme x Hanes Crew Socks (4 Pack Black)"
+      }
+    ],
+    "description": "Four-pack of all-black cushioned crew socks featuring white jacquard-knit Supreme branding at the ankle.",
+    "detail": "Breathable ribbed cotton blend with arch support and cushioned sole. Pack of 4 pairs.",
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "unavailable": [],
+    "featured": false,
+    "addedAt": "2026-10-29",
+    "tags": [
+      "socks",
+      "essentials"
+    ]
+  },
+  {
+    "id": "supreme-zippo-lighter-red",
+    "brand": "Supreme",
+    "name": "Box Logo Zippo Lighter (Red)",
+    "category": "Accessories",
+    "subcategory": "Small Goods",
+    "silhouette": "Small Goods",
+    "badge": "Collectible",
+    "price": 9900,
+    "color": "Red / White",
+    "image": "/assets/apparel/supreme-zippo-lighter-red-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/supreme-zippo-lighter-red-1.jpg",
+        "alt": "Supreme Box Logo Zippo Lighter (Red)"
+      }
+    ],
+    "description": "Genuine American-made windproof Zippo lighter finished in matte red powder coat with the classic white Supreme Box Logo.",
+    "detail": "All-metal hinged case manufactured in Bradford, PA. Ships unfilled per safety regulations.",
+    "sizes": [
+      "One size"
+    ],
+    "unavailable": [],
+    "featured": false,
+    "addedAt": "2026-10-14",
+    "tags": [
+      "collectible",
+      "small-goods"
+    ]
+  },
+  {
+    "id": "supreme-steiff-bear-heather-grey",
+    "brand": "Supreme",
+    "name": "Supreme x Steiff Box Logo Bear",
+    "category": "Accessories",
+    "subcategory": "Small Goods",
+    "silhouette": "Small Goods",
+    "badge": "Collab",
+    "price": 34900,
+    "color": "Heather Grey / Red",
+    "image": "/assets/apparel/supreme-steiff-bear-heather-grey-1.jpg",
+    "images": [
+      {
+        "url": "/assets/apparel/supreme-steiff-bear-heather-grey-1.jpg",
+        "alt": "Supreme Supreme x Steiff Box Logo Bear"
+      }
+    ],
+    "description": "Collector-grade collaborative plush crafted by German heritage toymaker Steiff, dressed in a miniature heather grey Supreme Box Logo hoodie.",
+    "detail": "Steiff mohair plush with signature stainless steel \"Button in Ear\" tag and removable miniature cotton fleece Box Logo hoodie.",
+    "sizes": [
+      "One size"
+    ],
+    "unavailable": [],
+    "featured": false,
+    "addedAt": "2026-10-12",
+    "tags": [
+      "collectible",
+      "collab",
+      "small-goods"
+    ]
+  },
+  {
+    "id": "new-balance-550-white-green",
+    "brand": "New Balance",
+    "name": "550 'White Green'",
+    "category": "Sneakers",
+    "silhouette": "550",
+    "badge": "Classic",
+    "price": 18900,
+    "retailPrice": 21900,
+    "color": "White / Team Forest Green / Black",
+    "image": "/assets/sneakers/new-balance-550-white-green-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/new-balance-550-white-green-1.jpg",
+        "alt": "New Balance 550 'White Green' primary view"
+      },
+      {
+        "url": "/assets/sneakers/new-balance-550-white-green-2.jpg",
+        "alt": "New Balance 550 'White Green' alternate angle"
+      }
+    ],
+    "description": "Revived from the 1989 basketball archives, the New Balance 550 pairs perforated white leather uppers with vintage varsity forest green accents.",
+    "detail": "Style Code: BB550WT1. Smooth and perforated leather upper, EVA cushioning midsole, non-marking rubber cupsole.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5",
+      "10.5"
+    ],
+    "featured": true,
+    "addedAt": "2026-11-02",
+    "tags": [
+      "retro-basketball",
+      "sale"
+    ]
+  },
+  {
+    "id": "new-balance-550-white-grey",
+    "brand": "New Balance",
+    "name": "550 'White Grey'",
+    "category": "Sneakers",
+    "silhouette": "550",
+    "badge": "Essential",
+    "price": 17900,
+    "color": "White / Neutral Grey / Black",
+    "image": "/assets/sneakers/new-balance-550-white-grey-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/new-balance-550-white-grey-1.jpg",
+        "alt": "New Balance 550 'White Grey' primary view"
+      },
+      {
+        "url": "/assets/sneakers/new-balance-550-white-grey-2.jpg",
+        "alt": "New Balance 550 'White Grey' alternate angle"
+      }
+    ],
+    "description": "Clean monochrome versatility on the low-top 1989 court silhouette with subtle suede toe-wrap overlays and neutral grey detailing.",
+    "detail": "Style Code: BB550PB1. Leather and suede upper with breathable mesh collar and durable rubber outsole.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "7.5"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-28",
+    "tags": [
+      "retro-basketball",
+      "essentials"
+    ]
+  },
+  {
+    "id": "new-balance-2002r-rain-cloud",
+    "brand": "New Balance",
+    "name": "2002R 'Rain Cloud'",
+    "category": "Sneakers",
+    "silhouette": "2002R",
+    "badge": "Grail",
+    "price": 28900,
+    "color": "Rain Cloud / Magnet / Vintage Cream",
+    "image": "/assets/sneakers/new-balance-2002r-rain-cloud-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/new-balance-2002r-rain-cloud-1.jpg",
+        "alt": "New Balance 2002R 'Rain Cloud' primary view"
+      },
+      {
+        "url": "/assets/sneakers/new-balance-2002r-rain-cloud-2.jpg",
+        "alt": "New Balance 2002R 'Rain Cloud' alternate angle"
+      }
+    ],
+    "description": "Archival 2010 running craftsmanship featuring premium grey nubuck and breathable mesh uppers over a full-length ABZORB and N-ergy cushioning sole.",
+    "detail": "Style Code: ML2002RA. Pigskin suede and mesh upper, ABZORB midsole, N-ergy shock-absorbing outsole.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6",
+      "10.5"
+    ],
+    "featured": true,
+    "addedAt": "2026-11-03",
+    "tags": [
+      "runners",
+      "grail"
+    ]
+  },
+  {
+    "id": "new-balance-2002r-protection-pack-mirage-grey",
+    "brand": "New Balance",
+    "name": "2002R 'Protection Pack - Mirage Grey'",
+    "category": "Sneakers",
+    "silhouette": "2002R",
+    "badge": "Popular",
+    "price": 26900,
+    "color": "Mirage Grey / Castlerock / Vintage Sail",
+    "image": "/assets/sneakers/new-balance-2002r-protection-pack-mirage-grey-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/new-balance-2002r-protection-pack-mirage-grey-1.jpg",
+        "alt": "New Balance 2002R 'Protection Pack - Mirage Grey' primary view"
+      },
+      {
+        "url": "/assets/sneakers/new-balance-2002r-protection-pack-mirage-grey-2.jpg",
+        "alt": "New Balance 2002R 'Protection Pack - Mirage Grey' alternate angle"
+      }
+    ],
+    "description": "Yue Wu’s deconstructed Protection Pack 2002R with jagged raw-edge suede panels, exposed foam tongue, and pre-distressed ABZORB tooling.",
+    "detail": "Style Code: M2002RDD. Layered pigskin suede and breathable mesh upper with Stability Web arch support.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "8.5"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-26",
+    "tags": [
+      "protection-pack",
+      "runners"
+    ]
+  },
+  {
+    "id": "new-balance-1906r-silver-metallic",
+    "brand": "New Balance",
+    "name": "1906R 'White Metallic Silver'",
+    "category": "Sneakers",
+    "silhouette": "1906R",
+    "badge": "Trending",
+    "price": 22900,
+    "color": "White / Metallic Silver / Black",
+    "image": "/assets/sneakers/new-balance-1906r-silver-metallic-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/new-balance-1906r-silver-metallic-1.jpg",
+        "alt": "New Balance 1906R 'White Metallic Silver' primary view"
+      },
+      {
+        "url": "/assets/sneakers/new-balance-1906r-silver-metallic-2.jpg",
+        "alt": "New Balance 1906R 'White Metallic Silver' alternate angle"
+      }
+    ],
+    "description": "Late-2000s technical runner aesthetics with open-holed diamond mesh, metallic silver synthetic cages, and N-Lock lacing system.",
+    "detail": "Style Code: M1906RRA. TPU heel cage, ACTEVA LITE midsole cushioning, and segmented ABZORB SBS heel pods.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": true,
+    "addedAt": "2026-11-01",
+    "tags": [
+      "y2k-runner",
+      "metallic"
+    ]
+  },
+  {
+    "id": "new-balance-990v6-miusa-grey",
+    "brand": "New Balance",
+    "name": "990v6 Made in USA 'Castlerock Grey'",
+    "category": "Sneakers",
+    "silhouette": "990v6",
+    "badge": "Iconic",
+    "price": 29900,
+    "color": "Grey / Castlerock / White",
+    "image": "/assets/sneakers/new-balance-990v6-miusa-grey-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/new-balance-990v6-miusa-grey-1.jpg",
+        "alt": "New Balance 990v6 Made in USA 'Castlerock Grey' primary view"
+      },
+      {
+        "url": "/assets/sneakers/new-balance-990v6-miusa-grey-2.jpg",
+        "alt": "New Balance 990v6 Made in USA 'Castlerock Grey' alternate angle"
+      }
+    ],
+    "description": "Crafted in New England, the sixth evolution of the legendary 990 series introduces FuelCell midsole foam beneath signature grey pigskin suede.",
+    "detail": "Style Code: M990GL6. Made in USA. Pigskin suede and mesh upper, FuelCell and ENCAP midsole cushioning.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "11"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-22",
+    "tags": [
+      "made-in-usa",
+      "dad-shoe"
+    ]
+  },
+  {
+    "id": "asics-gel-kayano-14-cream-black",
+    "brand": "ASICS",
+    "name": "Gel-Kayano 14 'Cream Black Metallic Plum'",
+    "category": "Sneakers",
+    "silhouette": "Gel-Kayano 14",
+    "badge": "Trending",
+    "price": 26900,
+    "color": "Cream / Black / Metallic Plum",
+    "image": "/assets/sneakers/asics-gel-kayano-14-cream-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/asics-gel-kayano-14-cream-black-1.jpg",
+        "alt": "ASICS Gel-Kayano 14 'Cream Black Metallic Plum' primary view"
+      },
+      {
+        "url": "/assets/sneakers/asics-gel-kayano-14-cream-black-2.jpg",
+        "alt": "ASICS Gel-Kayano 14 'Cream Black Metallic Plum' alternate angle"
+      }
+    ],
+    "description": "2008 runner resurgence at its peak. Breathable cream mesh meets metallic silver and black tiger stripes over visible GEL cushioning units.",
+    "detail": "Style Code: 1201A019-108. TRUSSTIC support system, original 2008 midsole tooling, and multi-layered synthetic leather overlays.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6",
+      "9.5"
+    ],
+    "featured": true,
+    "addedAt": "2026-11-03",
+    "tags": [
+      "y2k-runner",
+      "metallic"
+    ]
+  },
+  {
+    "id": "asics-gel-kayano-14-jjjjound-silver-white",
+    "brand": "ASICS",
+    "name": "JJJJound x Gel-Kayano 14 'Silver White'",
+    "category": "Sneakers",
+    "silhouette": "Gel-Kayano 14",
+    "badge": "Collab",
+    "price": 49900,
+    "color": "White / Metallic Silver / Cream",
+    "image": "/assets/sneakers/asics-gel-kayano-14-jjjjound-silver-white-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/asics-gel-kayano-14-jjjjound-silver-white-1.jpg",
+        "alt": "ASICS JJJJound x Gel-Kayano 14 'Silver White' primary view"
+      },
+      {
+        "url": "/assets/sneakers/asics-gel-kayano-14-jjjjound-silver-white-2.jpg",
+        "alt": "ASICS JJJJound x Gel-Kayano 14 'Silver White' alternate angle"
+      }
+    ],
+    "description": "Montreal design studio JJJJound strips the Gel-Kayano 14 down to a clinical white mesh, brushed metallic silver overlays, and subtle co-branded heel tabs.",
+    "detail": "Style Code: 1201A457-100. Limited edition JJJJound collaboration with custom sockliners and dual lace sets.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6",
+      "6.5",
+      "11"
+    ],
+    "featured": true,
+    "addedAt": "2026-11-01",
+    "tags": [
+      "collab",
+      "jjjjound",
+      "grail"
+    ]
+  },
+  {
+    "id": "asics-gt-2160-cream-pure-silver",
+    "brand": "ASICS",
+    "name": "GT-2160 'Cream Pure Silver'",
+    "category": "Sneakers",
+    "silhouette": "GT-2160",
+    "badge": "Popular",
+    "price": 19900,
+    "color": "Cream / Pure Silver / Blue",
+    "image": "/assets/sneakers/asics-gt-2160-cream-pure-silver-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/asics-gt-2160-cream-pure-silver-1.jpg",
+        "alt": "ASICS GT-2160 'Cream Pure Silver' primary view"
+      },
+      {
+        "url": "/assets/sneakers/asics-gt-2160-cream-pure-silver-2.jpg",
+        "alt": "ASICS GT-2160 'Cream Pure Silver' alternate angle"
+      }
+    ],
+    "description": "Paying homage to the technical design language of the GT-2000 series from the early 2010s with wavy forefoot sculpting and segmented midsole geometry.",
+    "detail": "Style Code: 1203A275-100. Rearfoot GEL technology inserts and breathable open mesh upper.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-28",
+    "tags": [
+      "y2k-runner",
+      "metallic"
+    ]
+  },
+  {
+    "id": "asics-gel-1130-black-pure-silver",
+    "brand": "ASICS",
+    "name": "Gel-1130 'Black Pure Silver'",
+    "category": "Sneakers",
+    "silhouette": "Gel-1130",
+    "badge": "Popular",
+    "price": 16900,
+    "color": "Black / Pure Silver / Anthracite",
+    "image": "/assets/sneakers/asics-gel-1130-black-pure-silver-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/asics-gel-1130-black-pure-silver-1.jpg",
+        "alt": "ASICS Gel-1130 'Black Pure Silver' primary view"
+      },
+      {
+        "url": "/assets/sneakers/asics-gel-1130-black-pure-silver-2.jpg",
+        "alt": "ASICS Gel-1130 'Black Pure Silver' alternate angle"
+      }
+    ],
+    "description": "Inspired by the ninth iteration of the GEL-1000 stability series from 2008, offering ultra-lightweight mesh comfort and bold silver striping.",
+    "detail": "Style Code: 1201A256-003. Heel GEL technology cushioning and TRUSSTIC stability unit for everyday street wear.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "7"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-27",
+    "tags": [
+      "y2k-runner",
+      "metallic"
+    ]
+  },
+  {
+    "id": "asics-gel-nyc-cream-oyster-grey",
+    "brand": "ASICS",
+    "name": "Gel-NYC 'Cream Oyster Grey'",
+    "category": "Sneakers",
+    "silhouette": "Gel-NYC",
+    "badge": "Trending",
+    "price": 21900,
+    "color": "Cream / Oyster Grey / Clay",
+    "image": "/assets/sneakers/asics-gel-nyc-cream-oyster-grey-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/asics-gel-nyc-cream-oyster-grey-1.jpg",
+        "alt": "ASICS Gel-NYC 'Cream Oyster Grey' primary view"
+      },
+      {
+        "url": "/assets/sneakers/asics-gel-nyc-cream-oyster-grey-2.jpg",
+        "alt": "ASICS Gel-NYC 'Cream Oyster Grey' alternate angle"
+      }
+    ],
+    "description": "Blending heritage uppers from the early-2000s GEL-NIMBUS 3 with the modern GEL-CUMULUS 16 tooling system in tonal suede and mesh.",
+    "detail": "Style Code: 1201A789-103. FluidRide midsole foam paired with forefoot and rearfoot GEL inserts.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5",
+      "10"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-29",
+    "tags": [
+      "runners"
+    ]
+  },
+  {
+    "id": "salomon-xt-6-white-lunar-rock",
+    "brand": "Salomon",
+    "name": "XT-6 'White Lunar Rock'",
+    "category": "Sneakers",
+    "silhouette": "XT-6",
+    "badge": "Trending",
+    "price": 26900,
+    "retailPrice": 29500,
+    "color": "White / White / Lunar Rock",
+    "image": "/assets/sneakers/salomon-xt-6-white-lunar-rock-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/salomon-xt-6-white-lunar-rock-1.jpg",
+        "alt": "Salomon XT-6 'White Lunar Rock' primary view"
+      },
+      {
+        "url": "/assets/sneakers/salomon-xt-6-white-lunar-rock-2.jpg",
+        "alt": "Salomon XT-6 'White Lunar Rock' alternate angle"
+      }
+    ],
+    "description": "Crisp monochromatic white and Lunar Rock grey take on Salomon’s flagship technical trail runner with Quicklace™ toggle closure and Agile Chassis™ System.",
+    "detail": "Style Code: L41252900. Quicklace™ one-pull tightening with lace pocket on tongue, dual-density EVA cushioning, Mud Contagrip® sole.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "7.5",
+      "11"
+    ],
+    "featured": true,
+    "addedAt": "2026-10-23",
+    "tags": [
+      "gorpcore",
+      "trail",
+      "sale"
+    ]
+  },
+  {
+    "id": "converse-cdg-play-chuck-70-low-black",
+    "brand": "Converse",
+    "name": "COMME des GARÇONS PLAY x Chuck 70 Low 'Black'",
+    "category": "Sneakers",
+    "silhouette": "Chuck 70",
+    "badge": "Collab",
+    "price": 19900,
+    "color": "Black / Egret / High Risk Red",
+    "image": "/assets/sneakers/converse-cdg-play-chuck-70-low-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/converse-cdg-play-chuck-70-low-black-1.jpg",
+        "alt": "Converse COMME des GARÇONS PLAY x Chuck 70 Low 'Black' primary view"
+      },
+      {
+        "url": "/assets/sneakers/converse-cdg-play-chuck-70-low-black-2.jpg",
+        "alt": "Converse COMME des GARÇONS PLAY x Chuck 70 Low 'Black' alternate angle"
+      }
+    ],
+    "description": "Rei Kawakubo’s COMME des GARÇONS PLAY heart-and-eyes bug emblem peeks above the glossy egret midsole of a heavyweight canvas Chuck 70.",
+    "detail": "Style Code: 150206C. 12oz heavyweight cotton canvas, OrthoLite cushioned footbed, vintage heel license plate.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-20",
+    "tags": [
+      "collab",
+      "canvas"
+    ]
+  },
+  {
+    "id": "vans-old-skool-black-white",
+    "brand": "Vans",
+    "name": "Old Skool 'Core Black White'",
+    "category": "Sneakers",
+    "silhouette": "Old Skool",
+    "badge": "Classic",
+    "price": 10900,
+    "color": "Black / True White",
+    "image": "/assets/sneakers/vans-old-skool-black-white-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/vans-old-skool-black-white-1.jpg",
+        "alt": "Vans Old Skool 'Core Black White' primary view"
+      },
+      {
+        "url": "/assets/sneakers/vans-old-skool-black-white-2.jpg",
+        "alt": "Vans Old Skool 'Core Black White' alternate angle"
+      }
+    ],
+    "description": "First known as the Vans #36 in 1977, the Old Skool debuted the iconic leather Jazz Stripe alongside durable suede-and-canvas skate construction.",
+    "detail": "Style Code: VN000D3HY28. Reinforced suede toe caps, padded supportive collars, and signature vulcanized rubber waffle outsole.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "10.5"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-16",
+    "tags": [
+      "skate",
+      "classic"
+    ]
+  },
+  {
+    "id": "onitsuka-tiger-mexico-66-kill-bill",
+    "brand": "Onitsuka Tiger",
+    "name": "Mexico 66 'Yellow Black' (Kill Bill)",
+    "category": "Sneakers",
+    "silhouette": "Mexico 66",
+    "badge": "Trending",
+    "price": 21900,
+    "color": "Yellow / Black",
+    "image": "/assets/sneakers/onitsuka-tiger-mexico-66-kill-bill-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/onitsuka-tiger-mexico-66-kill-bill-1.jpg",
+        "alt": "Onitsuka Tiger Mexico 66 'Yellow Black' (Kill Bill) primary view"
+      },
+      {
+        "url": "/assets/sneakers/onitsuka-tiger-mexico-66-kill-bill-2.jpg",
+        "alt": "Onitsuka Tiger Mexico 66 'Yellow Black' (Kill Bill) alternate angle"
+      }
+    ],
+    "description": "Sleek 1966 pre-Olympic track silhouette in unmistakable bumblebee yellow leather with black Onitsuka Tiger stripes and heel cross-flap.",
+    "detail": "Style Code: 1183C102-751. Supple full-grain leather upper, suede T-toe overlay, low-profile herringbone rubber outsole.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6",
+      "9.5"
+    ],
+    "featured": true,
+    "addedAt": "2026-11-02",
+    "tags": [
+      "terrace",
+      "retro"
+    ]
+  },
+  {
+    "id": "adidas-samba-og-core-black-gum",
+    "brand": "adidas Originals",
+    "name": "Samba OG 'Core Black Cloud White'",
+    "category": "Sneakers",
+    "silhouette": "Samba",
+    "badge": "Popular",
+    "price": 16900,
+    "color": "Core Black / Cloud White / Gum",
+    "image": "/assets/sneakers/adidas-samba-og-core-black-gum-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-samba-og-core-black-gum-1.jpg",
+        "alt": "adidas Originals Samba OG 'Core Black Cloud White' primary view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-samba-og-core-black-gum-2.jpg",
+        "alt": "adidas Originals Samba OG 'Core Black Cloud White' alternate angle"
+      }
+    ],
+    "description": "Pitch-to-pavement icon in black full-grain leather with serrated white Three Stripes, gold foil Samba lettering, and dark gum sole.",
+    "detail": "Style Code: B75807. Full-grain leather upper with suede T-toe overlay and gum rubber cupsole.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "7"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-25",
+    "tags": [
+      "terrace",
+      "classic"
+    ]
+  },
+  {
+    "id": "adidas-wales-bonner-samba-pony-leopard",
+    "brand": "adidas Originals",
+    "name": "Wales Bonner x Samba 'Pony Leo'",
+    "category": "Sneakers",
+    "silhouette": "Samba",
+    "badge": "Grail",
+    "price": 45900,
+    "color": "Leopard Print / Cream White / Mystery Brown",
+    "image": "/assets/sneakers/adidas-wales-bonner-samba-pony-leopard-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/adidas-wales-bonner-samba-pony-leopard-1.jpg",
+        "alt": "adidas Originals Wales Bonner x Samba 'Pony Leo' primary view"
+      },
+      {
+        "url": "/assets/sneakers/adidas-wales-bonner-samba-pony-leopard-2.jpg",
+        "alt": "adidas Originals Wales Bonner x Samba 'Pony Leo' alternate angle"
+      }
+    ],
+    "description": "Grace Wales Bonner’s runaway runway-to-street collaboration featuring faux pony-hair leopard print, contrast decorative stitching, and fold-over tongue.",
+    "detail": "Style Code: IE0578. Pony hair upper, satin sockliner, crocheted Three Stripes, and elongated fold-over tongue.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "featured": true,
+    "addedAt": "2026-11-01",
+    "tags": [
+      "collab",
+      "terrace",
+      "grail"
+    ]
+  },
+  {
+    "id": "nike-zoom-vomero-5-photon-dust",
+    "brand": "Nike",
+    "name": "Zoom Vomero 5 'Photon Dust Metallic Silver'",
+    "category": "Sneakers",
+    "silhouette": "Zoom Vomero 5",
+    "badge": "Trending",
+    "price": 22900,
+    "color": "Photon Dust / Metallic Silver / Summit White",
+    "image": "/assets/sneakers/nike-zoom-vomero-5-photon-dust-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/nike-zoom-vomero-5-photon-dust-1.jpg",
+        "alt": "Nike Zoom Vomero 5 'Photon Dust Metallic Silver' primary view"
+      },
+      {
+        "url": "/assets/sneakers/nike-zoom-vomero-5-photon-dust-2.jpg",
+        "alt": "Nike Zoom Vomero 5 'Photon Dust Metallic Silver' alternate angle"
+      }
+    ],
+    "description": "Early-2010s distance runner reborn for daily streetwear rotation, layering breathable mesh, ribbed plastic caging, and dual Zoom Air units.",
+    "detail": "Style Code: FD0884-025. Cushlon foam + Zoom Air cushioning, 3M reflective accents, and ventilated heel counter.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "6.5",
+      "9"
+    ],
+    "featured": true,
+    "addedAt": "2026-10-31",
+    "tags": [
+      "y2k-runner",
+      "metallic"
+    ]
+  },
+  {
+    "id": "nike-zoom-vomero-5-cobblestone",
+    "brand": "Nike",
+    "name": "Zoom Vomero 5 'Cobblestone Flat Pewter'",
+    "category": "Sneakers",
+    "silhouette": "Zoom Vomero 5",
+    "badge": "Popular",
+    "price": 21900,
+    "retailPrice": 24500,
+    "color": "Cobblestone / Light Bone / Flat Pewter",
+    "image": "/assets/sneakers/nike-zoom-vomero-5-cobblestone-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/nike-zoom-vomero-5-cobblestone-1.jpg",
+        "alt": "Nike Zoom Vomero 5 'Cobblestone Flat Pewter' primary view"
+      },
+      {
+        "url": "/assets/sneakers/nike-zoom-vomero-5-cobblestone-2.jpg",
+        "alt": "Nike Zoom Vomero 5 'Cobblestone Flat Pewter' alternate angle"
+      }
+    ],
+    "description": "Earthy grey-green tones and textured teched-out overlays make this Zoom Vomero 5 an effortless neutral anchor.",
+    "detail": "Style Code: FB8825-001. TecTuff® overlays, breathable mesh upper, and dual-zone Zoom Air cushioning.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "8"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-21",
+    "tags": [
+      "y2k-runner",
+      "sale"
+    ]
+  },
+  {
+    "id": "nike-air-max-plus-triple-black",
+    "brand": "Nike",
+    "name": "Air Max Plus 'Triple Black' (TN)",
+    "category": "Sneakers",
+    "silhouette": "Air Max Plus",
+    "badge": "Classic",
+    "price": 23900,
+    "color": "Black / Black / Metallic Silver",
+    "image": "/assets/sneakers/nike-air-max-plus-triple-black-1.jpg",
+    "images": [
+      {
+        "url": "/assets/sneakers/nike-air-max-plus-triple-black-1.jpg",
+        "alt": "Nike Air Max Plus 'Triple Black' (TN) primary view"
+      },
+      {
+        "url": "/assets/sneakers/nike-air-max-plus-triple-black-2.jpg",
+        "alt": "Nike Air Max Plus 'Triple Black' (TN) alternate angle"
+      }
+    ],
+    "description": "Sean McDowell’s aggressive 1998 Tuned Air icon in murdered-out Triple Black with glossy TPU palm-tree ribs and whale-tail midfoot shank.",
+    "detail": "Style Code: 604133-050. Tuned Air (TN) visible chambers in forefoot and heel, breathable mesh upper with moulded TPU cage.",
+    "sizes": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11"
+    ],
+    "unavailable": [
+      "7",
+      "10.5"
+    ],
+    "featured": false,
+    "addedAt": "2026-10-18",
+    "tags": [
+      "air-max",
+      "triple-black"
+    ]
   }
 ]
