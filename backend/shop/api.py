@@ -263,11 +263,97 @@ def catalog(request):
         products = products.filter(variants__size__iexact=size, variants__active=True)
     if stock:
         products = products.filter(variants__stock_on_hand__gt=F("variants__reserved_stock"), variants__active=True)
-    products = products.distinct()[:120]
+    products = products.distinct()[:300]
     return JsonResponse({
         "products": [_product_payload(product) for product in products],
         "store": _store_state(),
     })
+
+
+_VALID_SG_SECTORS = {f"{n:02d}" for n in range(1, 83) if n != 74}
+_ADDRESS_SEARCH_CACHE = {}
+
+
+def _is_valid_sg_postal(postal):
+    clean = str(postal or "").strip()
+    return bool(re.fullmatch(r"\d{6}", clean) and clean[:2] in _VALID_SG_SECTORS)
+
+
+def _normalize_sg_phone(raw_phone):
+    raw = str(raw_phone or "").strip()
+    if not raw:
+        return ""
+    compact = re.sub(r"[\s\-().]", "", raw)
+    if compact.startswith("+65"):
+        compact = compact[3:]
+    elif compact.startswith("0065"):
+        compact = compact[4:]
+    elif len(compact) == 10 and compact.startswith("65"):
+        compact = compact[2:]
+    if not re.fullmatch(r"[3689]\d{7}", compact):
+        raise ValueError("Enter a valid 8-digit Singapore contact number starting with 8, 9, 6, or 3.")
+    return f"+65 {compact[:4]} {compact[4:]}"
+
+
+@require_GET
+def address_search(request):
+    import time as _time
+    import urllib.error
+    import urllib.parse
+    import urllib.request
+
+    query = request.GET.get("q", "").strip()[:100]
+    if len(query) < 2:
+        return JsonResponse({"status": "idle", "results": []})
+    if query.isdigit():
+        if len(query) != 6 or query[:2] not in _VALID_SG_SECTORS:
+            return JsonResponse({"status": "invalid_sector", "results": []})
+
+    cache_key = query.upper()
+    cached = _ADDRESS_SEARCH_CACHE.get(cache_key)
+    if cached is not None:
+        return JsonResponse(cached)
+
+    if not _rate_limit(request, "address-search", 60, 60):
+        return _error("Too many address lookups. Please pause briefly.", 429)
+
+    url = (
+        "https://www.onemap.gov.sg/api/common/elastic/search?searchVal="
+        + urllib.parse.quote(query)
+        + "&returnGeom=N&getAddrDetails=Y&pageNum=1"
+    )
+    data = None
+    for attempt in range(2):
+        try:
+            req = urllib.request.Request(
+                url,
+                headers={"Accept": "application/json", "User-Agent": "SoleDistrictSG/2.0"},
+            )
+            with urllib.request.urlopen(req, timeout=5) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+            break
+        except urllib.error.HTTPError as exc:
+            if exc.code == 429 and attempt == 0:
+                _time.sleep(0.65)
+                continue
+            return JsonResponse({"status": "unavailable", "results": []})
+        except Exception:
+            return JsonResponse({"status": "unavailable", "results": []})
+
+    raw_results = data.get("results") if isinstance(data, dict) else []
+    if not isinstance(raw_results, list):
+        raw_results = []
+    if len(query) == 6 and query.isdigit():
+        raw_results = [r for r in raw_results if str(r.get("POSTAL", "")).strip() == query]
+
+    payload = {
+        "status": "ok" if raw_results else "not_found",
+        "results": raw_results[:8],
+    }
+    if len(_ADDRESS_SEARCH_CACHE) >= 400:
+        _ADDRESS_SEARCH_CACHE.pop(next(iter(_ADDRESS_SEARCH_CACHE)))
+    _ADDRESS_SEARCH_CACHE[cache_key] = payload
+    return JsonResponse(payload)
 
 
 @require_POST
@@ -924,9 +1010,10 @@ def addresses(request):
         line1 = str(body.get("line1", "")).strip()[:180]
         line2 = str(body.get("line2", "")).strip()[:180]
         postal = str(body.get("postal_code", "")).strip()
-        phone = str(body.get("phone", "")).strip()[:32]
-        if not recipient or not line1 or not re.fullmatch(r"\d{6}", postal):
-            return _error("Recipient, street address, and a valid 6-digit Singapore postal code are required.")
+        raw_phone = str(body.get("phone", "")).strip()[:32]
+        if not recipient or not line1 or not _is_valid_sg_postal(postal):
+            return _error("Recipient, street address, and a valid 6-digit Singapore postal code (sectors 01–73, 75–82) are required.")
+        phone = _normalize_sg_phone(raw_phone) if raw_phone else ""
         make_default = body.get("is_default", False)
         if not isinstance(make_default, bool):
             return _error("Default address must be true or false.")

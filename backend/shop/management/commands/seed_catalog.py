@@ -70,7 +70,7 @@ class Command(BaseCommand):
                     )
                     existing_urls.add(img_url)
 
-            prefix = re.sub(r"[^A-Z0-9]+", "", row["id"].upper())[:14]
+            prefix = f"{re.sub(r'[^A-Z0-9]+', '', row['id'].upper())[:40]}-{product.pk}"
             for size in row["sizes"]:
                 slug_size = re.sub(r"[^A-Z0-9]+", "-", size.upper()).strip("-")
                 quantity = 0 if size in row.get("unavailable", []) else 8

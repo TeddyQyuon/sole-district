@@ -5,6 +5,7 @@ urlpatterns = [
     path("health/", api.health, name="health"),
     path("csrf/", api.csrf_token, name="api-csrf"),
     path("catalog/", api.catalog, name="catalog"),
+    path("address/search/", api.address_search, name="address-search"),
     path("policies/", store.policies, name="policies"),
     path("contact/", store.contact, name="contact"),
     path("auth/me/", accounts.me, name="auth-me"),
