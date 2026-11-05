@@ -90,7 +90,7 @@ img { display: block; max-width: 100%; }
 .title-price-line { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
 .shoe-name { font-size: 13px; font-weight: 600; color: var(--ink); line-height: 1.35; }
 .shoe-price { font-size: 13px; font-weight: 700; color: var(--ink); white-space: nowrap; }
-.shoe-colorway { display: block; font-size: 11px; color: #83827a; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.shoe-colorway { display: block; min-width: 0; max-width: 100%; font-size: 11px; color: #83827a; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .edit { display: grid; grid-template-columns: .78fr 1.22fr; min-height: 440px; background: #e9e8e2; }
 .edit > div { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: clamp(36px, 6vw, 92px); }
 .edit h2 { margin: 15px 0; font-family: 'Barlow Condensed', sans-serif; font-size: clamp(54px, 6vw, 84px); line-height: .88; letter-spacing: -.035em; }
