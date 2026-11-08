@@ -94,13 +94,20 @@ export function cartLines(cart, products) {
 }
 
 let csrfValue = '';
+let csrfRequest;
 
-async function getCsrf() {
-  const response = await fetch('/api/csrf/', { credentials: 'same-origin' });
-  const data = await response.json();
-  if (!response.ok || !data.csrf) throw new Error('Could not start a secure store session.');
-  csrfValue = data.csrf;
-  return csrfValue;
+export async function getCsrf() {
+  if (csrfValue) return csrfValue;
+  if (!csrfRequest) {
+    csrfRequest = (async () => {
+      const response = await fetch('/api/csrf/', { credentials: 'same-origin', signal: AbortSignal.timeout(8000) });
+      const data = await response.json();
+      if (!response.ok || !data.csrf) throw new Error('Could not start a secure store session.');
+      csrfValue = data.csrf;
+      return csrfValue;
+    })().finally(() => { csrfRequest = undefined; });
+  }
+  return csrfRequest;
 }
 
 export async function api(path, options = {}) {
@@ -124,6 +131,7 @@ export async function api(path, options = {}) {
     throw new Error('The store is temporarily unavailable. Please try again shortly.');
   }
   if (response.status === 403 && data.csrf_error && !['GET', 'HEAD', 'OPTIONS'].includes(method)) {
+    csrfValue = '';
     csrfValue = await getCsrf();
     headers.set('X-CSRFToken', csrfValue);
     response = await request();
