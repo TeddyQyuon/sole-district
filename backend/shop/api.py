@@ -467,7 +467,7 @@ def _calculate_discount(subtotal_cents, promo_code):
         return 0
     code = promo_code.strip().upper()
     if code == "DISTRICT10":
-        return int(round(subtotal_cents * 0.10))
+        return (subtotal_cents + 5) // 10
     if code == "SOLE20" and subtotal_cents >= 10000:
         return 2000
     return 0
@@ -490,6 +490,10 @@ def _create_or_reuse_order(request, items, checkout_key, shipping_address=None, 
             raise ValueError("Your bag contains a repeated size. Refresh your bag and try again.")
         quantities[variant_key] = quantity
     fingerprint = _cart_fingerprint([[key, quantities[key]] for key in sorted(quantities)])
+    norm_promo = promo_code.strip().upper() if isinstance(promo_code, str) else ""
+    if norm_promo and norm_promo not in {"DISTRICT10", "SOLE20"}:
+        raise ValueError("This promo code is not recognized.")
+    clean_addr = _sanitize_shipping_address(shipping_address) if shipping_address else {}
     session_key = _session_key(request)
     existing = Order.objects.filter(checkout_key=checkout_key).first()
     if existing:
@@ -497,8 +501,12 @@ def _create_or_reuse_order(request, items, checkout_key, shipping_address=None, 
             raise ValueError("This checkout attempt was already used for a different bag. Start a new checkout.")
         if not _order_visible_to_request(existing, request):
             raise PermissionError("This checkout attempt belongs to another browser session.")
-        if shipping_address and not existing.shipping_address:
-            existing.shipping_address = _sanitize_shipping_address(shipping_address)
+        existing_discount = existing.subtotal_cents + existing.delivery_cents - existing.total_cents
+        existing_promo = existing.campaign_name if existing_discount > 0 else ""
+        if norm_promo != existing_promo or (clean_addr and existing.shipping_address and clean_addr != existing.shipping_address):
+            raise ValueError("This checkout attempt has a different promo code or delivery address. Start a new checkout.")
+        if clean_addr and not existing.shipping_address:
+            existing.shipping_address = clean_addr
             existing.save(update_fields=["shipping_address", "updated_at"])
         return existing, False
 
@@ -530,10 +538,10 @@ def _create_or_reuse_order(request, items, checkout_key, shipping_address=None, 
                     cost = int(weighted / count) if count else None
             order_lines.append((variant, quantity, unit_price, cost))
 
-        norm_promo = promo_code.strip().upper() if isinstance(promo_code, str) else ""
+        if norm_promo == "SOLE20" and subtotal < 10000:
+            raise ValueError("SOLE20 requires a bag minimum of S$100.")
         discount = _calculate_discount(subtotal, norm_promo)
         delivery = 0 if subtotal >= 15000 else 800
-        clean_addr = _sanitize_shipping_address(shipping_address) if shipping_address else {}
         customer_email = clean_addr.get("email") or (request.user.email if request.user.is_authenticated else "")
 
         order = Order.objects.create(
@@ -575,10 +583,11 @@ def _create_or_reuse_order(request, items, checkout_key, shipping_address=None, 
 
 
 def _stripe_checkout(order):
-    stripe.api_key = settings.STRIPE_SECRET_KEY
-    discount = _calculate_discount(order.subtotal_cents, order.campaign_name)
+    client = stripe.StripeClient(settings.STRIPE_SECRET_KEY)
+    # The saved server total is authoritative, including for retried sessions.
+    discount = order.subtotal_cents + order.delivery_cents - order.total_cents
     lines = []
-    items_list = list(order.items.select_related("product").all())
+    items_list = list(order.items.order_by("id"))
     remaining_discount = discount
     for i, item in enumerate(items_list):
         total_item_price = item.unit_price_cents * item.quantity
@@ -586,28 +595,34 @@ def _stripe_checkout(order):
             if i == len(items_list) - 1:
                 item_discount = remaining_discount
             else:
-                item_discount = int(round(discount * (total_item_price / order.subtotal_cents)))
+                item_discount = discount * total_item_price // order.subtotal_cents
                 item_discount = min(item_discount, remaining_discount)
             remaining_discount -= item_discount
-            adjusted_unit = max(0, (total_item_price - item_discount) // item.quantity)
+            adjusted_total = max(0, total_item_price - item_discount)
         else:
-            adjusted_unit = item.unit_price_cents
+            adjusted_total = total_item_price
 
         display_name = item.brand_name + " " + item.product_name + " · " + item.size
         if discount > 0:
             display_name += f" ({order.campaign_name} applied)"
 
-        lines.append({
-            "quantity": item.quantity,
-            "price_data": {
-                "currency": "sgd",
-                "unit_amount": adjusted_unit,
-                "product_data": {
-                    "name": display_name,
-                    "metadata": {"sku": item.sku},
+        # Split by one cent when a discount cannot divide evenly by quantity.
+        # Flooring every unit used to lose cents and fail webhook amount checks.
+        unit_amount, remainder = divmod(adjusted_total, item.quantity)
+        for quantity, amount in ((item.quantity - remainder, unit_amount), (remainder, unit_amount + 1)):
+            if not quantity:
+                continue
+            lines.append({
+                "quantity": quantity,
+                "price_data": {
+                    "currency": "sgd",
+                    "unit_amount": amount,
+                    "product_data": {
+                        "name": display_name,
+                        "metadata": {"sku": item.sku},
+                    },
                 },
-            },
-        })
+            })
     shipping_line = {
         "shipping_rate_data": {
             "type": "fixed_amount",
@@ -643,7 +658,7 @@ def _stripe_checkout(order):
     if order.customer_email:
         params["customer_email"] = order.customer_email
     idem = "sole-district-" + hashlib.sha256(order.checkout_key.encode()).hexdigest()
-    return stripe.checkout.Session.create(**params, idempotency_key=idem)
+    return client.v1.checkout.sessions.create(params, options={"idempotency_key": idem})
 
 
 @require_POST
@@ -675,15 +690,17 @@ def checkout(request):
     if order.stripe_session_url and order.stripe_session_id:
         if order.status not in {"pending", "payment_pending"} or order.stock_finalized_at:
             return _error("This checkout is closed. Start a new checkout from your bag.", 409)
-        return JsonResponse({"url": order.stripe_session_url, "order_id": str(order.public_id), "reference": order.reference})
+        return JsonResponse({"url": order.stripe_session_url, "order_id": str(order.public_id), "reference": order.reference, "total_cents": order.total_cents})
     try:
         session = _stripe_checkout(order)
+        if session.amount_total != order.total_cents:
+            raise ValueError("Stripe checkout total does not match the order.")
         order.stripe_session_id = session.id
         order.stripe_session_url = session.url
         if getattr(session, "customer_email", None):
             order.customer_email = session.customer_email
         order.save(update_fields=["stripe_session_id", "stripe_session_url", "customer_email", "updated_at"])
-        return JsonResponse({"url": session.url, "order_id": str(order.public_id), "reference": order.reference})
+        return JsonResponse({"url": session.url, "order_id": str(order.public_id), "reference": order.reference, "total_cents": order.total_cents})
     except stripe.error.StripeError:
         logger.warning("Stripe checkout request failed for order %s", order.reference)
         return _error("Stripe could not open checkout. Retry this same checkout attempt; your cart and stock reservation are being held safely.", 502, retry_same_attempt=True)

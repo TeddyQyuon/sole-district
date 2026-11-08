@@ -69,7 +69,7 @@ function Provider({ children }) {
           const merged = new Map();
           for (const item of items) {
             const matches = variants.filter((variant) => variant.id === item.variantId || variant.legacy_id === item.variantId || (variant.sku && item.variantId === 'sku:' + variant.sku));
-            const id = matches.length === 1 ? matches[0].id : item.variantId;
+            const id = matches.length === 1 ? (matches[0].legacy_id || matches[0].id) : item.variantId;
             const quantity = (merged.get(id)?.quantity || 0) + item.quantity;
             merged.set(id, { variantId: id, quantity: Math.min(10, quantity) });
           }
@@ -92,18 +92,19 @@ function Provider({ children }) {
   const add = (product, size) => {
     const variant = product.variants.find((item) => item.id === size) || product.variants.find((item) => item.size === size);
     if (!variant || variant.available < 1) return;
-    const prior = cart.find((item) => item.variantId === variant.id);
+    const cartKey = variant.legacy_id || variant.id;
+    const prior = cart.find((item) => item.variantId === cartKey);
     if ((prior?.quantity || 0) >= Math.min(variant.available, 10)) {
       setToast('You’ve reached the available quantity.');
       return;
     }
     setCart((items) => {
-      const existing = items.find((item) => item.variantId === variant.id);
+      const existing = items.find((item) => item.variantId === cartKey);
       return existing
-        ? items.map((item) => item.variantId === variant.id
+        ? items.map((item) => item.variantId === cartKey
           ? { ...item, quantity: Math.min(item.quantity + 1, variant.available, 10) }
           : item)
-        : [...items, { variantId: variant.id, quantity: 1 }];
+        : [...items, { variantId: cartKey, quantity: 1 }];
     });
     trackEvent('cart_added', { product_id: product.id });
     setBagOpen(true);
@@ -113,7 +114,7 @@ function Provider({ children }) {
     items.includes(id) ? items.filter((item) => item !== id) : [...items, id]
   ));
   const update = (variantId, quantity) => {
-    const variant = products.flatMap((product) => product.variants).find((item) => item.id === variantId);
+    const variant = products.flatMap((product) => product.variants).find((item) => item.id === variantId || item.legacy_id === variantId);
     setCart((items) => quantity <= 0
       ? items.filter((item) => item.variantId !== variantId)
       : items.map((item) => item.variantId === variantId
