@@ -1,0 +1,46 @@
+[
+  {
+    "file": "visa.png",
+    "source": "https://cdn.visa.com/v2/assets/images/logos/visa/blue/logo.png",
+    "brandPage": "https://www.visa.com.sg/",
+    "archiveMember": "visa.png",
+    "sha256": "0ebb1697ec9ed895955069d5aca347918d92cd59da740f98f772f468707e2361",
+    "reviewedAt": "2026-11-04",
+    "note": "Unmodified official provider artwork; native colors and proportions preserved."
+  },
+  {
+    "file": "mastercard.svg",
+    "source": "https://www.mastercard.com/content/dam/brandcenter/assets/downloads/mc_symbol_SVG.zip",
+    "brandPage": "https://www.mastercard.com/brandcenter/us/en/download-artwork.html",
+    "archiveMember": "mastercard/Mastercard Symbol - SVG/Artwork/ma_symbol.svg",
+    "sha256": "05df092590d7d56dd1531f25c8830ba2507d3d3aa2d19ad1649a59ce5a1a16f8",
+    "reviewedAt": "2026-11-04",
+    "note": "Unmodified official provider artwork; native colors and proportions preserved."
+  },
+  {
+    "file": "apple-pay.svg",
+    "source": "https://developer.apple.com/apple-pay/marketing/Apple-Pay-Mark.zip",
+    "brandPage": "https://developer.apple.com/apple-pay/marketing/",
+    "archiveMember": "apple/Apple Pay Mark/SVG/Apple_Pay_Mark_RGB_041619.svg",
+    "sha256": "66baf110b86c1f1ae01a0e28985970d3827465e6aba6be54d5142a6d1eaa803c",
+    "reviewedAt": "2026-11-04",
+    "note": "Unmodified official provider artwork; native colors and proportions preserved."
+  },
+  {
+    "file": "google-pay.svg",
+    "source": "https://developers.google.com/static/pay/api/download-assets/Google-Pay-Acceptance.zip",
+    "brandPage": "https://developers.google.com/pay/api/web/guides/brand-guidelines",
+    "archiveMember": "google/Google-Pay-Acceptance/Google-Pay-Acceptance/Google Pay Mark/google-pay-mark_800.svg",
+    "sha256": "9ddde73a0e3e8b16e7c518f00380c542c96dbec8b0f80363d5037d905f0bba9d",
+    "reviewedAt": "2026-11-04",
+    "note": "Unmodified official provider artwork; native colors and proportions preserved."
+  },
+  {
+    "file": "paynow.jpg",
+    "source": "https://abs.org.sg/images/default-album/paynow1.jpg",
+    "brandPage": "https://abs.org.sg/e-payments/pay-now",
+    "sha256": "ee2ec913363d9ad7845cc8e702684594a2c74cf6cbdefffc83b4264ec51f4704",
+    "reviewedAt": "2026-11-08",
+    "note": "Unmodified official PayNow artwork supplied by the Association of Banks in Singapore."
+  }
+]

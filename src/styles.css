@@ -227,6 +227,15 @@ img { display: block; max-width: 100%; }
 .payment-options p { max-width: 580px; color: var(--muted); font-size: 12px; line-height: 1.6; }
 .payment-method-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 15px 0 8px; }
 .payment-method-chips span { padding: 8px 11px; border: 1px solid var(--line); background: #fff; font-size: 10px; }
+.payment-brand-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 22px 0 16px; }
+.payment-brand { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; min-width: 0; padding: 18px 12px; background: #fff; border: 1px solid var(--line); border-radius: 8px; }
+.payment-brand-art { height: 64px; display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; }
+.payment-brand-art img { display: block; height: 40px; width: auto; max-width: 100%; object-fit: contain; }
+.card-brands img { height: auto; max-height: 28px; max-width: 44%; width: 46px; }
+.paynow-art img { height: auto; width: 144px; }
+.payment-brand > span { font-size: 11px; line-height: 1.5; text-align: center; color: var(--muted); }
+fieldset.promo-box { min-width: 0; padding: 0; border: 0; margin-inline: 0; }
+@media (max-width: 700px) { .payment-brand-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .payment-options small { color: var(--muted); font-size: 9px; line-height: 1.55; }
 .order-summary { position: sticky; top: 22px; padding: 22px; background: #f0efea; }
 .order-summary > div:not(.shipping-meter):not(.promo-box) { display: flex; justify-content: space-between; gap: 15px; margin: 13px 0; font-size: 11px; }

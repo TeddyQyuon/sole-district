@@ -9,11 +9,12 @@ import { Button, Dialog, LineItem, ProductCard, ProductGrid, useShop } from './A
 import { GuestAccess } from './Account';
 import { PublishedPolicy } from './StoreInformation';
 import { AddressAutocomplete } from './components/AddressAutocomplete';
+import { checkoutFingerprint, clearCheckoutAttempt, clearCheckoutDraft, getCheckoutKey, readCheckoutDraft, saveCheckoutDraft } from './checkoutState';
 import {
   getPostalSectorInfo, lookupSingaporeAddress, validateSingaporeAddress,
 } from './utils/singaporeAddress';
 import {
-  api, money, readStored, saveStored, shipping, sortVariantsBySize, trackEvent,
+  api, getCsrf, money, readStored, saveStored, shipping, sortVariantsBySize, trackEvent,
 } from './shop';
 import {
   ACCESSORY_SUBCATEGORIES, CLOTHING_SUBCATEGORIES, discountPercent, getAvailableSizeCount,
@@ -1473,20 +1474,6 @@ export function ProductPage() {
   );
 }
 
-function getCheckoutKey(lines) {
-  const fingerprint = JSON.stringify(lines.map((line) => [line.variantId, line.quantity]).sort());
-  const stored = sessionStorage.getItem('sd-checkout-attempt');
-  if (stored) {
-    try {
-      const value = JSON.parse(stored);
-      if (value.fingerprint === fingerprint) return value.key;
-    } catch {}
-  }
-  const key = crypto.randomUUID();
-  sessionStorage.setItem('sd-checkout-attempt', JSON.stringify({ fingerprint, key }));
-  return key;
-}
-
 export function Checkout() {
   const { lines, subtotal, store } = useShop();
   const [busy, setBusy] = useState(false);
@@ -1494,25 +1481,19 @@ export function Checkout() {
   const [cancelled, setCancelled] = useState(false);
   const [params] = useSearchParams();
   const cancellationSent = useRef(false);
+  const paying = useRef(false);
+  const [draft] = useState(readCheckoutDraft);
 
   // Address state
   const [savedAddresses, setSavedAddresses] = useState([]);
   const [selectedAddressIndex, setSelectedAddressIndex] = useState(0);
-  const [useNewAddress, setUseNewAddress] = useState(false);
-  const [deliveryAddress, setDeliveryAddress] = useState({
-    recipient: '',
-    phone: '',
-    line1: '',
-    line2: '',
-    postal_code: '',
-    building: '',
-    property_type: 'highrise',
-  });
+  const [useNewAddress, setUseNewAddress] = useState(draft.useNewAddress);
+  const [deliveryAddress, setDeliveryAddress] = useState(draft.deliveryAddress);
   const [addressValidState, setAddressValidState] = useState({ valid: false, errors: {} });
 
   // Promo code state
-  const [promoInput, setPromoInput] = useState('');
-  const [appliedPromo, setAppliedPromo] = useState('');
+  const [promoInput, setPromoInput] = useState(draft.promoInput);
+  const [appliedPromo, setAppliedPromo] = useState(draft.appliedPromo);
   const [promoError, setPromoError] = useState('');
 
   // Free delivery calculation (S$150 = 15,000 cents)
@@ -1531,6 +1512,13 @@ export function Checkout() {
 
   const finalTotal = Math.max(0, subtotal - promoDiscount) + delivery;
 
+  useEffect(() => {
+    saveCheckoutDraft({ deliveryAddress, promoInput, appliedPromo, useNewAddress,
+      selectedAddressId: savedAddresses[selectedAddressIndex]?.id || draft.selectedAddressId });
+  }, [deliveryAddress, promoInput, appliedPromo, useNewAddress, savedAddresses, selectedAddressIndex, draft]);
+
+  useEffect(() => { getCsrf().catch(() => {}); }, []);
+
   // Load saved addresses if authenticated
   useEffect(() => {
     let alive = true;
@@ -1540,7 +1528,8 @@ export function Checkout() {
         return api('auth/addresses/').then((data) => {
           if (!alive || !data.addresses?.length) return;
           setSavedAddresses(data.addresses);
-          const defaultIdx = data.addresses.findIndex((a) => a.is_default);
+          const restoredIdx = data.addresses.findIndex((a) => a.id === draft.selectedAddressId);
+          const defaultIdx = restoredIdx >= 0 ? restoredIdx : data.addresses.findIndex((a) => a.is_default);
           setSelectedAddressIndex(defaultIdx >= 0 ? defaultIdx : 0);
         });
       })
@@ -1553,7 +1542,7 @@ export function Checkout() {
     if (!orderId || cancellationSent.current) return;
     cancellationSent.current = true;
     api('checkout/cancel/', { method: 'POST', body: JSON.stringify({ order_id: orderId }) })
-      .then(() => setCancelled(true))
+      .then(() => { clearCheckoutAttempt(); setCancelled(true); })
       .catch((reason) => setError(reason.message));
   }, [params]);
 
@@ -1583,31 +1572,47 @@ export function Checkout() {
   };
 
   const pay = async () => {
-    if (busy || !lines.length) return;
+    if (paying.current || !lines.length) return;
     setError('');
 
     const isSaved = savedAddresses.length > 0 && !useNewAddress;
     const activeAddress = isSaved ? savedAddresses[selectedAddressIndex] : deliveryAddress;
 
-    const lookup = await lookupSingaporeAddress(activeAddress.postal_code);
-    const check = validateSingaporeAddress(activeAddress, {
-      requireContact: true,
-      requirePhone: !isSaved || Boolean(activeAddress.phone),
-      propertyType: activeAddress.property_type || (activeAddress.line2 ? 'highrise' : 'landed'),
-      postalLookupStatus: lookup.status,
-      verifiedMatches: lookup.results,
-    });
-
-    if (!check.valid) {
-      setError(Object.values(check.errors)[0] || 'Please provide a valid Singapore delivery address.');
+    if (appliedPromo === 'SOLE20' && subtotal < 10000) {
+      setError('SOLE20 requires a bag minimum of S$100. Add another piece or remove the code.');
       return;
     }
-
+    paying.current = true;
     setBusy(true);
     try {
-      const attemptKey = getCheckoutKey(lines);
+      // Fail fast on missing fields; a postal lookup should never delay this feedback.
+      const basic = validateSingaporeAddress(activeAddress, {
+        requireContact: true,
+        requirePhone: !isSaved || Boolean(activeAddress.phone),
+        propertyType: activeAddress.property_type || (activeAddress.line2 ? 'highrise' : 'landed'),
+      });
+      if (!basic.valid) throw new Error(Object.values(basic.errors)[0]);
+      const lookup = await lookupSingaporeAddress(activeAddress.postal_code, { signal: AbortSignal.timeout(4000) })
+        .catch((reason) => {
+          if (['AbortError', 'TimeoutError'].includes(reason.name)) return { status: 'offline', results: [] };
+          throw reason;
+        });
+      const check = validateSingaporeAddress(activeAddress, {
+        requireContact: true,
+        requirePhone: !isSaved || Boolean(activeAddress.phone),
+        propertyType: activeAddress.property_type || (activeAddress.line2 ? 'highrise' : 'landed'),
+        postalLookupStatus: lookup.status,
+        verifiedMatches: lookup.results,
+      });
+
+      if (!check.valid) {
+        throw new Error(Object.values(check.errors)[0] || 'Please provide a valid Singapore delivery address.');
+      }
+
+      const attemptKey = getCheckoutKey(checkoutFingerprint(lines, appliedPromo, activeAddress, finalTotal));
       const data = await api('checkout/', {
         method: 'POST',
+        signal: AbortSignal.timeout(25000),
         headers: { 'Idempotency-Key': attemptKey },
         body: JSON.stringify({
           items: lines.map((line) => ({ variant_id: line.variantId, quantity: line.quantity })),
@@ -1615,12 +1620,16 @@ export function Checkout() {
           promo_code: appliedPromo || undefined,
         }),
       });
+      if (data.total_cents !== finalTotal) throw new Error('Your bag total changed. Refresh to review the latest prices before paying. Your bag and promo code are saved.');
       const target = new URL(data.url);
       if (target.protocol !== 'https:' || target.hostname !== 'checkout.stripe.com') throw new Error('The payment link could not be verified.');
-      sessionStorage.setItem('sd-last-order-reference', data.reference);
+      try { sessionStorage.setItem('sd-last-order-reference', data.reference); } catch { /* Payment still works without storage. */ }
       window.location.assign(target.href);
     } catch (reason) {
-      setError(reason.message);
+      setError(['AbortError', 'TimeoutError'].includes(reason.name)
+        ? 'Checkout is taking longer than expected. Your bag, address and promo are saved. Try again to resume the same checkout.'
+        : reason.message);
+      paying.current = false;
       setBusy(false);
     }
   };
@@ -1731,9 +1740,14 @@ export function Checkout() {
           <div className="payment-options">
             <span className="eyebrow">PAY SECURELY WITH STRIPE</span>
             <h2>Choose at checkout</h2>
-            <p>Stripe presents the payment methods available to your account and device, including cards, PayNow QR, and Apple Pay or Google Pay when eligible.</p>
-            <div className="payment-method-chips"><span>Cards</span><span>PayNow QR</span><span>Apple Pay*</span><span>Google Pay*</span></div>
-            <small>*Wallet buttons depend on device, browser, wallet setup, and Stripe account settings.</small>
+            <p>Choose your payment method on the secure payment page.</p>
+            <div className="payment-brand-grid" aria-label="Payment methods available through Stripe">
+              <div className="payment-brand"><div className="payment-brand-art card-brands"><img src="/assets/payment-brands/visa.png" alt="Visa" /><img src="/assets/payment-brands/mastercard.svg" alt="Mastercard" /></div><span>Debit & credit cards</span></div>
+              <div className="payment-brand"><div className="payment-brand-art paynow-art"><img src="/assets/payment-brands/paynow.jpg" alt="PayNow" /></div><span>Scan to pay with QR</span></div>
+              <div className="payment-brand"><div className="payment-brand-art"><img src="/assets/payment-brands/apple-pay.svg" alt="Apple Pay" /></div><span>Express wallet</span></div>
+              <div className="payment-brand"><div className="payment-brand-art"><img src="/assets/payment-brands/google-pay.svg" alt="Google Pay" /></div><span>Express wallet</span></div>
+            </div>
+            <small>Available methods depend on your device and payment eligibility. Select PayNow on the payment page to generate your order’s QR code.</small>
           </div>
         </section>
 
@@ -1771,7 +1785,7 @@ export function Checkout() {
           <div className="total summary-line"><strong>Total</strong><strong>{money(finalTotal)}</strong></div>
 
           {/* Promo Code Box */}
-          <div className="promo-box">
+          <fieldset className="promo-box" disabled={busy}>
             {!appliedPromo ? (
               <form onSubmit={handleApplyPromo} className="promo-form">
                 <div className="promo-input-group">
@@ -1800,9 +1814,9 @@ export function Checkout() {
                 <button type="button" onClick={handleRemovePromo} className="text-button remove-btn">Remove</button>
               </div>
             )}
-          </div>
+          </fieldset>
 
-          <p className="summary-footnote">Amounts shown in SGD. Shipping is calculated using the current store rule. Tax settings are not configured.</p>
+          <p className="summary-footnote">All amounts in SGD. Your discount is included in the secure payment total.</p>
           {!store.checkout_ready && <div className="checkout-notice">Preview only. Payments are disabled until Stripe is configured and the catalogue is verified.</div>}
           {error && <p className="form-error" role="alert">{error}</p>}
           <Button disabled={busy || !store.checkout_ready || lines.some((line) => line.product.sellable === false)} onClick={pay}>
@@ -1835,7 +1849,7 @@ export function Complete() {
           cleared.current = true;
           const purchased = new Map(data.items.map((item) => [item.variant_id, item.quantity]));
           setCart((items) => items.map((item) => ({ ...item, quantity: item.quantity - (purchased.get(item.variantId) || 0) })).filter((item) => item.quantity > 0));
-          sessionStorage.removeItem('sd-checkout-attempt');
+          clearCheckoutDraft();
         } else if (['pending', 'payment_pending'].includes(data.status)) {
           timer = window.setTimeout(load, 4000);
         }

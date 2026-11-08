@@ -116,6 +116,7 @@ class StoreApiTests(TestCase):
             id="cs_test_checkout",
             url="https://checkout.stripe.com/c/pay/cs_test_checkout",
             customer_email="",
+            amount_total=12800,
         )
         payload = {
             "items": [{"variant_id": "test-runner-1:8", "quantity": 1, "price_cents": 1}],
@@ -131,6 +132,75 @@ class StoreApiTests(TestCase):
         self.assertEqual(order.total_cents, 12800)
         self.assertEqual(self.variant.refresh_from_db() or self.variant.reserved_stock, 1)
         self.assertEqual(create_session.call_count, 1)
+
+    @override_settings(STRIPE_SECRET_KEY="sk_test_example", STRIPE_WEBHOOK_SECRET="whsec_example", STRIPE_CHECKOUT_ENABLED=True)
+    @patch("shop.api.stripe.StripeClient")
+    def test_promos_reach_stripe_with_the_same_total_as_the_order(self, client_class):
+        self.product.price_cents = 31900
+        self.product.save(update_fields=["price_cents"])
+        create = client_class.return_value.v1.checkout.sessions.create
+        for index, (code, expected) in enumerate([(None, 31900), ("SOLE20", 29900), ("DISTRICT10", 28710)]):
+            with self.subTest(code=code):
+                create.return_value = SimpleNamespace(id=f"cs_test_promo_{index}", url="https://checkout.stripe.com/c/pay/test", amount_total=expected)
+                payload = {"items": [{"variant_id": "test-runner-1:8", "quantity": 1}], "promo_code": code}
+                response = self.client.post("/api/checkout/", data=json.dumps(payload), content_type="application/json", HTTP_IDEMPOTENCY_KEY=f"checkout-promo-total-test-{index}")
+                self.assertEqual(response.status_code, 200, response.content)
+                self.assertEqual(response.json()["total_cents"], expected)
+                params = create.call_args.args[0]
+                amount = sum(row["quantity"] * row["price_data"]["unit_amount"] for row in params["line_items"])
+                amount += params["shipping_options"][0]["shipping_rate_data"]["fixed_amount"]["amount"]
+                self.assertEqual(amount, expected)
+                self.assertNotIn("payment_method_types", params)
+                if code:
+                    self.assertIn(code, params["line_items"][0]["price_data"]["product_data"]["name"])
+
+    @override_settings(STRIPE_SECRET_KEY="sk_test_example", STRIPE_WEBHOOK_SECRET="whsec_example", STRIPE_CHECKOUT_ENABLED=True)
+    @patch("shop.api._stripe_checkout")
+    def test_same_attempt_cannot_reuse_a_full_price_session_after_adding_promo(self, create):
+        create.return_value = SimpleNamespace(id="cs_test_original", url="https://checkout.stripe.com/c/pay/original", amount_total=12800)
+        payload = {"items": [{"variant_id": "test-runner-1:8", "quantity": 1}]}
+        headers = {"HTTP_IDEMPOTENCY_KEY": "checkout-promo-reuse-regression"}
+        first = self.client.post("/api/checkout/", data=json.dumps(payload), content_type="application/json", **headers)
+        self.assertEqual(first.status_code, 200)
+        payload["promo_code"] = "SOLE20"
+        changed = self.client.post("/api/checkout/", data=json.dumps(payload), content_type="application/json", **headers)
+        self.assertEqual(changed.status_code, 400)
+        self.assertNotIn("url", changed.json())
+        self.assertEqual(create.call_count, 1)
+
+    @override_settings(STRIPE_SECRET_KEY="sk_test_example", STRIPE_WEBHOOK_SECRET="whsec_example", STRIPE_CHECKOUT_ENABLED=True)
+    @patch("shop.api.stripe.StripeClient")
+    def test_discount_with_three_units_preserves_every_cent(self, client_class):
+        self.product.price_cents = 10005
+        self.product.save(update_fields=["price_cents"])
+        create = client_class.return_value.v1.checkout.sessions.create
+        create.return_value = SimpleNamespace(id="cs_test_rounding", url="https://checkout.stripe.com/c/pay/rounding", amount_total=27013)
+        response = self.client.post("/api/checkout/", data=json.dumps({"items": [{"variant_id": "test-runner-1:8", "quantity": 3}], "promo_code": "DISTRICT10"}), content_type="application/json", HTTP_IDEMPOTENCY_KEY="checkout-promo-rounding-test")
+        self.assertEqual(response.status_code, 200, response.content)
+        lines = create.call_args.args[0]["line_items"]
+        self.assertEqual(sum(row["quantity"] for row in lines), 3)
+        self.assertEqual(sum(row["quantity"] * row["price_data"]["unit_amount"] for row in lines), 27013)
+        self.assertEqual(Order.objects.get().total_cents, 27013)
+
+    @override_settings(STRIPE_SECRET_KEY="sk_test_example", STRIPE_WEBHOOK_SECRET="whsec_example", STRIPE_CHECKOUT_ENABLED=True)
+    @patch("shop.api._stripe_checkout")
+    def test_stripe_amount_mismatch_never_redirects_the_buyer(self, create):
+        create.return_value = SimpleNamespace(id="cs_test_wrong_total", url="https://checkout.stripe.com/c/pay/wrong", amount_total=12800)
+        response = self.client.post("/api/checkout/", data=json.dumps({"items": [{"variant_id": "test-runner-1:8", "quantity": 1}], "promo_code": "SOLE20"}), content_type="application/json", HTTP_IDEMPOTENCY_KEY="checkout-promo-mismatch-test")
+        self.assertEqual(response.status_code, 502)
+        self.assertNotIn("url", response.json())
+        self.assertEqual(Order.objects.get().stripe_session_url, "")
+
+    @override_settings(STRIPE_SECRET_KEY="sk_test_example", STRIPE_WEBHOOK_SECRET="whsec_example", STRIPE_CHECKOUT_ENABLED=True)
+    @patch("shop.api._stripe_checkout")
+    def test_invalid_or_ineligible_promo_cannot_silently_charge_full_price(self, create):
+        self.product.price_cents = 9900
+        self.product.save(update_fields=["price_cents"])
+        for code in ["UNKNOWN", "SOLE20"]:
+            response = self.client.post("/api/checkout/", data=json.dumps({"items": [{"variant_id": "test-runner-1:8", "quantity": 1}], "promo_code": code}), content_type="application/json", HTTP_IDEMPOTENCY_KEY=f"checkout-invalid-promo-{code}")
+            self.assertEqual(response.status_code, 400)
+        create.assert_not_called()
+        self.assertEqual(Order.objects.count(), 0)
 
     @override_settings(
         STRIPE_SECRET_KEY="sk_test_example",
