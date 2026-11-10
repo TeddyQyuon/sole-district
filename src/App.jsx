@@ -1,4 +1,4 @@
-import { lazy, Suspense, createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { BrowserRouter, Link, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import {
   ArrowRight, CaretDown, Check, Heart, List, MagnifyingGlass, Minus, Plus, Sparkle, Bag as BagIcon, Trash, User, X,
@@ -44,13 +44,14 @@ function Provider({ children }) {
     const saved = readStored('sd-wishlist', []);
     return Array.isArray(saved) ? saved.filter((item) => typeof item === 'string') : [];
   });
+  const [catalogLoading, setCatalogLoading] = useState(true);
   const [bagOpen, setBagOpen] = useState(false);
   const [toast, setToast] = useState('');
   const [store, setStore] = useState({ checkout_ready: false, preview: true, sample_catalogue: true });
 
   useEffect(() => {
     let active = true;
-    api('catalog/').then((data) => {
+    api('catalog/', { signal: AbortSignal.timeout(12000) }).then((data) => {
       if (!active) return;
       if (Array.isArray(data.products) && data.products.length > 0) {
         const backendMap = new Map(data.products.map((p) => [p.id, p]));
@@ -77,11 +78,13 @@ function Provider({ children }) {
         });
       }
       setStore(data.store);
-    }).catch(() => {});
+    }).catch(() => {}).finally(() => {
+      if (active) setCatalogLoading(false);
+    });
     return () => { active = false; };
   }, []);
 
-  useEffect(() => { saveStored('sd-cart', cart); }, [cart]);
+  useLayoutEffect(() => { saveStored('sd-cart', cart); }, [cart]);
   useEffect(() => { saveStored('sd-wishlist', wishlist); }, [wishlist]);
   useEffect(() => {
     if (!toast) return undefined;
@@ -128,7 +131,7 @@ function Provider({ children }) {
   return (
     <Shop.Provider value={{
       products, setProducts, cart, setCart, wishlist, toggleWish, add, update,
-      lines, count, subtotal, bagOpen, setBagOpen, store, setStore, setToast,
+      lines, count, subtotal, catalogLoading, bagOpen, setBagOpen, store, setStore, setToast,
     }}>
       {children}
       {toast && <div role="status" className="toast"><Check size={18} weight="bold" />{toast}</div>}
