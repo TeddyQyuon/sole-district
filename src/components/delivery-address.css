@@ -1,0 +1,172 @@
+.checkout-delivery-card {
+  padding: 28px;
+  border-color: #e2e1db;
+  border-radius: 12px;
+  box-shadow: 0 3px 16px #17171503;
+}
+.checkout-delivery-card .step-card-header {
+  margin-bottom: 24px;
+  padding-bottom: 22px;
+  border-color: #eeede8;
+}
+.checkout-delivery-card .step-badge {
+  width: 42px;
+  height: 42px;
+  border: 1px solid #e5e4dd;
+  border-radius: 12px;
+  color: var(--ink);
+  background: #f7f7f3;
+}
+.checkout-delivery-card .step-card-header h2 { font-size: 22px; font-weight: 600; }
+.delivery-card-subtitle { margin: 5px 0 0; font-size: 13px; color: #6b6b64; line-height: 1.5; }
+.delivery-address-form { display: grid; gap: 22px; width: 100%; min-width: 0; text-align: left; }
+.delivery-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 16px; }
+.delivery-field { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.delivery-field label, .delivery-field-label, .delivery-lookup-heading label {
+  display: block;
+  margin: 0;
+  color: #30302c;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.delivery-address-form input {
+  width: 100%;
+  min-width: 0;
+  height: 48px;
+  margin: 0;
+  padding: 0 14px;
+  border: 1px solid #d9d9d1;
+  border-radius: 7px;
+  background: #fff;
+  color: #20201d;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  transition: border-color .15s, box-shadow .15s;
+}
+.delivery-address-form input::placeholder { color: #8a8a82; opacity: 1; }
+.delivery-address-form input:hover:not(:disabled) { border-color: #aaa99f; }
+.delivery-address-form input:focus { outline: none; border-color: #65665a; box-shadow: 0 0 0 3px #63665314; }
+.delivery-address-form button:focus-visible { outline: 2px solid #606849; outline-offset: 3px; }
+.delivery-address-form :disabled { cursor: not-allowed; opacity: .6; }
+.delivery-input-prefix { position: relative; }
+.delivery-input-prefix > span {
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  left: 14px;
+  display: flex;
+  align-items: center;
+  padding-right: 12px;
+  border-right: 1px solid #e5e5df;
+  color: #51514a;
+  font-size: 13px;
+}
+.delivery-input-prefix input { padding-left: 63px; }
+.delivery-lookup { padding: 18px; border: 1px solid #eaeae3; border-radius: 9px; background: #f8f8f5; min-width: 0; }
+.delivery-lookup-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.delivery-lookup-heading label { font-weight: 600; }
+.delivery-lookup-status { display: inline-flex; align-items: center; gap: 5px; color: #67695d; font-size: 11px; white-space: nowrap; }
+.delivery-search-shell { position: relative; }
+.delivery-search-shell > svg { position: absolute; top: 15px; left: 13px; color: #77796d; pointer-events: none; }
+.delivery-search-shell input { padding-left: 41px; padding-right: 42px; }
+.delivery-clear {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: #77796d;
+}
+.delivery-clear:hover { background: #f1f1ec; }
+.delivery-search-spinner { position: absolute; right: 16px; top: 16px; width: 16px; height: 16px; border: 2px solid #e3e3db; border-top-color: #42473a; border-radius: 50%; animation: spin .7s linear infinite; }
+.delivery-address-form .delivery-hint { display: block; margin: 8px 0 0; font-size: 12px; font-weight: 400; line-height: 1.5; color: #74746c; overflow-wrap: anywhere; }
+.delivery-field > .delivery-hint { margin: 0; }
+.delivery-results {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 70;
+  max-height: 264px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 5px;
+  list-style: none;
+  border: 1px solid #deded5;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 8px 24px #17171514;
+}
+.delivery-results li { display: flex; gap: 10px; align-items: center; min-height: 54px; padding: 10px; border-radius: 5px; cursor: pointer; }
+.delivery-results li.highlighted, .delivery-results li:hover { background: #f2f4eb; }
+.delivery-results li > svg { color: #757a61; flex: 0 0 auto; }
+.delivery-results li > div { min-width: 0; }
+.delivery-results strong { display: block; font-size: 13px; font-weight: 500; overflow-wrap: anywhere; }
+.delivery-results li span { display: block; margin-top: 3px; font-size: 11px; color: #707067; overflow-wrap: anywhere; }
+.delivery-street { grid-column: 1 / -1; min-width: 0; }
+.delivery-property { display: grid; gap: 9px; }
+.delivery-property-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.delivery-property-options button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid #e0e0d8;
+  border-radius: 7px;
+  background: #fff;
+  color: #66665e;
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.35;
+}
+.delivery-property-options button:hover { border-color: #929586; }
+.delivery-property-options button[aria-pressed="true"] { border-color: #7d826c; background: #f4f6ee; color: #34392a; box-shadow: inset 0 0 0 .3px #7d826c; }
+.delivery-property-check { margin-left: auto; color: #697249; flex-shrink: 0; }
+.delivery-form-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 17px; border-top: 1px solid #eeeee8; }
+.delivery-form-footer > span { display: inline-flex; align-items: center; gap: 6px; color: #797970; font-size: 11px; line-height: 1.5; }
+.delivery-form-footer > span svg { flex-shrink: 0; }
+.delivery-form-footer button, .delivery-street-fix button { min-height: 44px; padding: 0; border: 0; background: transparent; color: #494f37; font: inherit; font-size: 12px; font-weight: 500; text-decoration: underline; text-underline-offset: 3px; }
+.delivery-form-footer button { white-space: nowrap; }
+.delivery-address-form .delivery-error { margin: 0; color: #a3312f; font-size: 12px; font-weight: 400; line-height: 1.5; overflow-wrap: anywhere; }
+.delivery-address-form .delivery-success { margin: 0; color: #4c6539; font-size: 12px; }
+.delivery-address-form .has-error input { border-color: #c56661; background: #fffdfc; }
+.delivery-street-fix { margin-top: 8px; }
+.delivery-street-fix button { display: flex; gap: 5px; align-items: center; }
+.delivery-building-options { display: flex; flex-wrap: wrap; gap: 6px; font-size: 12px; }
+.delivery-building-options > span { flex: 0 0 100%; color: #6b6b62; }
+.delivery-building-options button { min-height: 44px; padding: 7px 12px; border: 1px solid #deded5; border-radius: 6px; background: #fff; color: #525447; font: inherit; }
+.delivery-building-options button[aria-pressed="true"] { border-color: #7d826c; background: #f4f6ee; }
+.checkout-delivery-card .courier-badge { margin-top: 22px; padding: 16px 0 0; border: 0; border-top: 1px solid #eeeee8; border-radius: 0; background: transparent; gap: 10px; }
+.checkout-delivery-card .courier-badge svg { color: #74786a; }
+.checkout-delivery-card .courier-badge strong { font-size: 12px; font-weight: 500; }
+.checkout-delivery-card .courier-badge p { margin-top: 3px; font-size: 12px; color: #77776e; }
+@media (max-width: 600px) {
+  .checkout-delivery-card { padding: 20px 18px; border-radius: 10px; }
+  .checkout-delivery-card .step-card-header h2 { font-size: 20px; }
+  .delivery-card-subtitle { font-size: 12px; }
+  .delivery-address-form { gap: 20px; }
+  .delivery-contact { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .delivery-grid { column-gap: 12px; }
+  .delivery-address-form input { font-size: 16px; }
+  .delivery-lookup { padding: 14px; }
+  .delivery-property-options { gap: 6px; }
+  .delivery-property-options button { flex-direction: column; gap: 4px; padding: 9px 4px; font-size: 11px; }
+  .delivery-property-check { display: none; }
+  .delivery-form-footer { align-items: center; gap: 8px; }
+  .delivery-form-footer > span { max-width: 180px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .delivery-address-form input { transition: none; }
+  .delivery-search-spinner { animation: none; }
+}

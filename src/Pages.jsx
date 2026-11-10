@@ -1646,26 +1646,26 @@ export function Checkout() {
       
       <div className="checkout-layout">
         <section className="checkout-items">
-          {/* STEP 1: Singapore Delivery Address & OneMap Validator */}
-          <div className="checkout-step-card">
+          {/* Delivery address */}
+          <div className="checkout-step-card checkout-delivery-card">
             <div className="step-card-header sg-checkout-header">
               <div className="step-header-left">
                 <div className="step-badge"><MapPin size={20} weight="bold" /></div>
                 <div>
-                  <span className="eyebrow">DESTINATION</span>
-                  <h2>Singapore Delivery Address</h2>
+                  <h2>Delivery address</h2>
+                  <p className="delivery-card-subtitle">Where should we send your order?</p>
                 </div>
               </div>
               {!(savedAddresses.length > 0 && !useNewAddress) && addressValidState.valid && (
                 <span className="sg-header-ready-pill">
-                  <CheckCircle size={14} weight="fill" /> Dispatch Ready
+                  <CheckCircle size={14} weight="fill" /> Ready
                 </span>
               )}
             </div>
 
             {savedAddresses.length > 0 && !useNewAddress ? (
               <div className="saved-addresses-selector">
-                <p className="step-subhead">Choose a saved delivery address for Singapore courier dispatch:</p>
+                <p className="step-subhead">Choose a saved delivery address:</p>
                 <div className="address-chip-grid">
                   {savedAddresses.map((addr, idx) => {
                     const sec = getPostalSectorInfo(addr.postal_code);
@@ -1718,8 +1718,8 @@ export function Checkout() {
             <div className="courier-badge">
               <Truck size={22} weight="duotone" />
               <div>
-                <strong>Tracked Singapore Courier (2–4 Business Days)</strong>
-                <p>Dispatched with district verification tag. Doorstep delivery with SMS tracking notifications.</p>
+                <strong>Singapore delivery</strong>
+                <p>Tracked courier · 2–4 business days</p>
               </div>
             </div>
           </div>
