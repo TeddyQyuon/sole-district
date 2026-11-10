@@ -13,3 +13,22 @@ backend/**/*.pyc
 __pycache__/
 *.pyc
 *.log
+
+# Generated files and local agent/editor state
+.DS_Store
+Thumbs.db
+.ipynb_checkpoints/
+.idea/
+.kiro/
+.codex/
+.cursor/
+AGENTS.md
+CLAUDE.md
+*_UPGRADE.md
+build/
+.next/
+CLAUDE-*-BUILD-PROMPT.md
+PLAN.md
+STARTER-STATUS.md
+design-qa.md
+design-reference/
