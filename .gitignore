@@ -27,3 +27,8 @@ CLAUDE.md
 *_UPGRADE.md
 build/
 .next/
+CLAUDE-*-BUILD-PROMPT.md
+PLAN.md
+STARTER-STATUS.md
+design-qa.md
+design-reference/
