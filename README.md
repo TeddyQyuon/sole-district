@@ -61,7 +61,7 @@ PostgreSQL is needed to exercise database row-lock concurrency. Use a disposable
 
 ## Developer notes
 
-- [Deployment guide](docs/VERCEL_RELEASE.md)
+- [Vercel service configuration](vercel.json).
 - [Commerce configuration and operational requirements](docs/COMMERCE_ACTIVATION.md)
 - Artwork provenance: `public/assets/payment-brands/sources.json`.
 

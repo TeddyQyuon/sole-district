@@ -39,20 +39,20 @@ export function AddressAutocomplete({
   const [searchInput, setSearchInput] = useState('');
   const [results, setResults] = useState([]);
   const [verifiedMatches, setVerifiedMatches] = useState([]);
-  const [postalLookupStatus, setPostalLookupStatus] = useState(null); // 'verified' | 'not_found' | 'invalid_sector' | 'offline' | 'partial_digits' | null
+  const [postalLookupStatus, setPostalLookupStatus] = useState(null);
   const [lookupMessage, setLookupMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIdx, setHighlightedIdx] = useState(-1);
   const [touched, setTouched] = useState({});
-  const [checkFeedback, setCheckFeedback] = useState(null); // { ok: boolean, text: string }
+  const [checkFeedback, setCheckFeedback] = useState(null);
 
   const unitRef = useRef(null);
   const containerRef = useRef(null);
   const suppressSearchRef = useRef(false);
   const lastVerifiedPostalRef = useRef('');
 
-  // Reset internal lookup state when parent resets the form (e.g. after saving in Account) or switches address ID
+  // Clear lookup and validation state when the address is reset.
   useEffect(() => {
     if (!value.postal_code && !value.line1 && !value.recipient) {
       setSearchInput('');
@@ -66,8 +66,7 @@ export function AddressAutocomplete({
     }
   }, [value.id, value.postal_code, value.line1, value.recipient]);
 
-  // Whenever value.postal_code becomes a valid 6-digit Singapore postal code (e.g. typed directly in Postal Code box or loaded on Edit),
-  // verify it against OneMap automatically so we know if it truly exists and whether Street Address matches!
+  // Verify complete postal codes, including addresses loaded for editing.
   useEffect(() => {
     const postal = String(value.postal_code || '').trim();
     if (!postal) {
@@ -106,7 +105,7 @@ export function AddressAutocomplete({
         setLookupMessage(res.message || '');
         if (res.status === 'verified' && res.results.length > 0) {
           setVerifiedMatches(res.results);
-          // Auto-fill street ONLY if line1 is currently empty
+          // Preserve a manually entered street.
           if (!String(value.line1 || '').trim()) {
             const top = res.results[0];
             onChange({
@@ -146,7 +145,7 @@ export function AddressAutocomplete({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Live search bar lookup (smartly gated: waits for all 6 digits on numeric input, or 3+ chars on building/road text)
+  // Wait for a complete postal code or at least three letters before searching.
   useEffect(() => {
     if (suppressSearchRef.current) {
       suppressSearchRef.current = false;
@@ -186,7 +185,7 @@ export function AddressAutocomplete({
           setResults(outcome.results);
           setHighlightedIdx(0);
 
-          // If user typed an exact 6-digit postal code with a single unambiguous building, select immediately
+          // Select a unique postal-code result automatically.
           if (/^[0-9]{6}$/.test(clean) && outcome.results.length === 1) {
             handleSelectResult(outcome.results[0], outcome.results);
           } else {
@@ -198,7 +197,7 @@ export function AddressAutocomplete({
           if (/^[0-9]{6,}$/.test(clean)) {
             setPostalLookupStatus(outcome.status);
             setLookupMessage(outcome.message);
-            // Sync invalid postal into postal_code field so validation clearly highlights why it failed
+            // Show postal search errors beside the postal field.
             if (clean.length === 6 && value.postal_code !== clean) {
               onChange({ ...value, postal_code: clean });
               setTouched((prev) => ({ ...prev, postal_code: true }));
@@ -269,7 +268,6 @@ export function AddressAutocomplete({
     setTouched((prev) => (prev[field] ? prev : { ...prev, [field]: true }));
   };
 
-  // Real-time validation computation
   const validation = useMemo(
     () =>
       validateSingaporeAddress(value, {
@@ -330,13 +328,7 @@ export function AddressAutocomplete({
       line2: true,
     });
     if (validation.valid) {
-      const distLabel = validation.postalInfo?.district
-        ? `${validation.postalInfo.district} · ${validation.postalInfo.area}`
-        : 'Singapore';
-      setCheckFeedback({
-        ok: true,
-        text: `Address verified & ready for courier dispatch (${distLabel}).`,
-      });
+      setCheckFeedback({ ok: true, text: 'Your delivery details are ready.' });
     } else {
       const firstErr = Object.values(validation.errors)[0];
       setCheckFeedback({
@@ -517,7 +509,7 @@ export function AddressAutocomplete({
         <button type="button" disabled={disabled || loading} onClick={handleRunInteractiveCheck}>Check address</button>
       </div>
       {checkFeedback && <p className={checkFeedback.ok ? 'delivery-success' : 'delivery-error'} role={checkFeedback.ok ? 'status' : 'alert'}>
-        {checkFeedback.ok ? 'Your delivery details are ready.' : checkFeedback.text}
+        {checkFeedback.text}
       </p>}
     </div>
   );
