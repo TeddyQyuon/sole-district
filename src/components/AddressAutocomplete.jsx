@@ -1,38 +1,28 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useId } from 'react';
 import {
   MagnifyingGlass,
   MapPin,
   CheckCircle,
-  WarningCircle,
   Buildings,
   Briefcase,
   HouseLine,
-  Phone,
   ShieldCheck,
   X,
   ArrowCounterClockwise,
-  Sparkle,
 } from '@phosphor-icons/react';
 import {
   lookupSingaporeAddress,
   getPostalSectorInfo,
   validateSingaporePhone,
-  validateSingaporeUnit,
   normalizeUnitNumber,
   validateSingaporeAddress,
   checkStreetPostalConsistency,
 } from '../utils/singaporeAddress';
 
-const SAMPLE_POSTALS = [
-  { code: '238801', label: '238801 · ION Orchard' },
-  { code: '018956', label: '018956 · Marina Bay' },
-  { code: '569830', label: '569830 · Ang Mo Kio' },
-];
-
 const PROPERTY_TYPES = [
-  { id: 'highrise', label: 'HDB / Condo / Apt', icon: Buildings },
-  { id: 'commercial', label: 'Office / Campus', icon: Briefcase },
-  { id: 'landed', label: 'Landed House', icon: HouseLine },
+  { id: 'highrise', label: 'Apartment', icon: Buildings },
+  { id: 'commercial', label: 'Office', icon: Briefcase },
+  { id: 'landed', label: 'Landed house', icon: HouseLine },
 ];
 
 export function AddressAutocomplete({
@@ -44,6 +34,7 @@ export function AddressAutocomplete({
   requirePhone = true,
   className = '',
 }) {
+  const fieldId = useId();
   const propertyType = value.property_type || 'highrise';
   const [searchInput, setSearchInput] = useState('');
   const [results, setResults] = useState([]);
@@ -296,11 +287,6 @@ export function AddressAutocomplete({
     [value.phone, requirePhone],
   );
 
-  const unitCheck = useMemo(
-    () => validateSingaporeUnit(value.line2, { propertyType }),
-    [value.line2, propertyType],
-  );
-
   const streetConsistency = useMemo(
     () =>
       postalLookupStatus === 'verified' && verifiedMatches.length > 0
@@ -360,453 +346,179 @@ export function AddressAutocomplete({
     }
   };
 
-  const postalInfo = validation.postalInfo;
   const isPostalVerified = postalLookupStatus === 'verified' && streetConsistency.consistent && !validation.errors.postal_code;
   const isPostalRejected =
     postalLookupStatus === 'not_found' ||
     postalLookupStatus === 'invalid_sector' ||
     (touched.postal_code && Boolean(validation.errors.postal_code));
 
-  return (
-    <div className={`address-autocomplete-container sg-validator-v2 ${className}`} ref={containerRef}>
-      {/* Top Validator Status Strip */}
-      <div className="sg-validator-status-bar">
-        <div className="sg-validator-status-left">
-          <ShieldCheck size={17} weight="duotone" />
-          <span>Singapore Postal &amp; OneMap Registry Validator</span>
-        </div>
-        <div className="sg-validator-badges">
-          {loading ? (
-            <span className="sg-status-pill pill-checking">Checking OneMap…</span>
-          ) : isPostalVerified ? (
-            <span className="sg-status-pill pill-verified">
-              <CheckCircle size={14} weight="fill" /> OneMap Verified
-              {postalInfo?.district ? ` · ${postalInfo.district}` : ''}
-            </span>
-          ) : isPostalRejected ? (
-            <span className="sg-status-pill pill-invalid">
-              <WarningCircle size={14} weight="fill" /> Invalid Address / Postal
-            </span>
-          ) : postalLookupStatus === 'offline' && postalInfo?.validSector ? (
-            <span className="sg-status-pill pill-manual">
-              Sector {postalInfo.district} · Manual Check
-            </span>
-          ) : (
-            <span className="sg-status-pill pill-neutral">Awaiting 6-Digit Postal</span>
-          )}
-        </div>
-      </div>
-
-      {/* Step A: Quick OneMap Postal Code / Building Finder */}
-      <div className="address-search-group">
-        <label htmlFor="sg-onemap-finder">
-          <div className="label-with-badge">
-            <span>Quick Find by 6-Digit Postal Code or Building</span>
-            <span className="sg-finder-hint">Auto-fills road &amp; district</span>
-          </div>
-        </label>
-        <div className="search-input-wrapper sg-finder-box">
-          <MagnifyingGlass size={18} className="search-icon" />
+  const renderField = (key, label, { hint, prefix, onBlur, ...inputProps } = {}) => {
+    const error = (touched[key] || (key === 'postal_code' && isPostalRejected)) && validation.errors[key];
+    const id = `${fieldId}-${key}`;
+    return (
+      <div className={`delivery-field ${error ? 'has-error' : ''}`}>
+        <label htmlFor={id}>{label}</label>
+        <div className={prefix ? 'delivery-input-prefix' : undefined}>
+          {prefix && <span aria-hidden="true">{prefix}</span>}
           <input
-            id="sg-onemap-finder"
-            type="text"
-            autoComplete="off"
-            placeholder="Type 6-digit postal code (e.g. 238801) or building name (e.g. ION Orchard)…"
-            value={searchInput}
+            {...inputProps}
+            id={id}
+            name={key}
             disabled={disabled}
-            onChange={(e) => {
-              setSearchInput(e.target.value);
-              setCheckFeedback(null);
+            value={key === 'phone' ? (value.phone || '').replace(/^\+65\s*/, '') : value[key] || ''}
+            aria-invalid={Boolean(error)}
+            aria-describedby={error || hint ? `${id}-hint` : undefined}
+            onBlur={() => { markTouched(key); onBlur?.(); }}
+            onChange={(event) => {
+              let text = event.target.value;
+              if (key === 'postal_code') {
+                text = text.replace(/\D/g, '').slice(0, 6);
+                lastVerifiedPostalRef.current = '';
+              }
+              if (key === 'phone') text = text.replace(/[^\d\s\-+]/g, '').slice(0, 14);
+              updateField(key, text);
             }}
-            onFocus={() => {
-              if (results.length > 0) setIsOpen(true);
-            }}
-            onKeyDown={handleSearchKeyDown}
           />
-          {loading && <span className="search-spinner" aria-label="Searching OneMap…" />}
-          {!loading && searchInput && (
-            <button
-              type="button"
-              className="sg-clear-search-btn"
-              aria-label="Clear search"
-              onClick={() => {
-                setSearchInput('');
-                setResults([]);
-                setIsOpen(false);
-              }}
-            >
-              <X size={15} />
-            </button>
-          )}
         </div>
-
-        {/* Helper while typing partial digits vs quick sample chips */}
-        {/^[0-9]{1,5}$/.test(searchInput.trim()) ? (
-          <div className="sg-typing-progress" role="status">
-            <span>Enter all 6 digits to query Singapore’s postal registry ({searchInput.trim().length}/6 digits)</span>
-          </div>
-        ) : !searchInput && !value.postal_code ? (
-          <div className="sg-sample-chips">
-            <span className="sg-sample-label"><Sparkle size={12} weight="fill" /> Try verified code:</span>
-            {SAMPLE_POSTALS.map((sample) => (
-              <button
-                key={sample.code}
-                type="button"
-                className="sg-sample-chip"
-                disabled={disabled}
-                onClick={() => setSearchInput(sample.code)}
-              >
-                {sample.label}
-              </button>
-            ))}
-          </div>
-        ) : null}
-
-        {/* Live Lookup Alert Banner (Not Found / Invalid Sector / Offline) */}
-        {(postalLookupStatus === 'not_found' || postalLookupStatus === 'invalid_sector' || postalLookupStatus === 'search_empty') && lookupMessage && (
-          <div className="sg-validation-banner banner-error" role="alert">
-            <WarningCircle size={18} weight="fill" />
-            <div>
-              <strong>Address Could Not Be Verified</strong>
-              <p>{lookupMessage}</p>
-            </div>
-          </div>
-        )}
-
-        {postalLookupStatus === 'offline' && lookupMessage && (
-          <div className="sg-validation-banner banner-warn" role="status">
-            <WarningCircle size={18} weight="duotone" />
-            <div>
-              <strong>Offline Postal Sector Check</strong>
-              <p>{lookupMessage}</p>
-            </div>
-          </div>
-        )}
-
-        {/* Dropdown Recommendations */}
-        {isOpen && results.length > 0 && (
-          <ul className="address-dropdown-list" role="listbox" aria-label="Matching Singapore addresses">
-            {results.map((item, index) => (
-              <li
-                key={`${item.postalCode}-${item.building}-${index}`}
-                role="option"
-                aria-selected={highlightedIdx === index}
-                className={`address-dropdown-item ${highlightedIdx === index ? 'highlighted' : ''}`}
-                onMouseEnter={() => setHighlightedIdx(index)}
-                onClick={() => handleSelectResult(item, results)}
-              >
-                <MapPin size={18} weight="fill" className="dropdown-pin" />
-                <div className="dropdown-copy">
-                  <div className="dropdown-title-row">
-                    <strong>{item.building || item.line1}</strong>
-                    {item.postalCode && <span className="dropdown-postal-tag">S({item.postalCode})</span>}
-                  </div>
-                  <small>
-                    {item.line1}
-                    {item.district ? ` · ${item.district} (${item.area})` : ''}
-                  </small>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
+        {(error || hint) && <small id={`${id}-hint`} className={error ? 'delivery-error' : 'delivery-hint'}>{error || hint}</small>}
       </div>
+    );
+  };
 
-      {/* Multi-building / wing selector when a valid postal code maps to several blocks/wings */}
-      {postalLookupStatus === 'verified' && verifiedMatches.length > 1 && (
-        <div className="sg-multi-building-bar">
-          <span>Select building / wing at S({value.postal_code}):</span>
-          <div className="sg-building-pills">
-            {verifiedMatches.slice(0, 5).map((m, idx) => {
-              const label = m.building || m.line1;
-              const active = (value.building || '') === (m.building || '') && value.line1 === m.line1;
-              return (
-                <button
-                  key={`${label}-${idx}`}
-                  type="button"
-                  className={`sg-building-pill ${active ? 'active' : ''}`}
-                  onClick={() => handleSelectResult(m, verifiedMatches)}
-                >
-                  {label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* Step B: Contact Details (Recipient & +65 Phone Validator) */}
+  return (
+    <div className={`delivery-address-form ${className}`} ref={containerRef}>
       {showContact && (
-        <div className="address-contact-row">
-          <div className={`sg-field ${touched.recipient && validation.errors.recipient ? 'has-error' : touched.recipient && value.recipient ? 'is-valid' : ''}`}>
-            <label>
-              <div className="sg-field-label-row">
-                <span>Recipient full name *</span>
-                {value.recipient && !validation.errors.recipient && (
-                  <CheckCircle size={14} weight="fill" className="sg-inline-ok" />
-                )}
-              </div>
-              <input
-                type="text"
-                name="recipient"
-                required
-                autoComplete="name"
-                placeholder="e.g. Tan Wei Ming"
-                value={value.recipient || ''}
-                disabled={disabled}
-                onBlur={() => markTouched('recipient')}
-                onChange={(e) => updateField('recipient', e.target.value)}
-              />
-            </label>
-            {touched.recipient && validation.errors.recipient && (
-              <span className="sg-field-error" role="alert">{validation.errors.recipient}</span>
-            )}
-          </div>
-
-          <div className={`sg-field ${touched.phone && validation.errors.phone ? 'has-error' : phoneCheck.valid && value.phone ? 'is-valid' : ''}`}>
-            <label>
-              <div className="sg-field-label-row">
-                <span>Singapore mobile / phone {requirePhone ? '*' : ''}</span>
-                {phoneCheck.valid && value.phone && (
-                  <span className="sg-line-type-tag">{phoneCheck.lineType} ✓</span>
-                )}
-              </div>
-              <div className="sg-phone-input-wrap">
-                <span className="sg-phone-prefix" aria-hidden="true">
-                  <Phone size={13} weight="bold" /> +65
-                </span>
-                <input
-                  type="tel"
-                  name="phone"
-                  required={requirePhone}
-                  autoComplete="tel-national"
-                  placeholder="9123 4567"
-                  value={value.phone ? value.phone.replace(/^\+?65\s*/, '') : ''}
-                  disabled={disabled}
-                  onBlur={() => {
-                    markTouched('phone');
-                    if (phoneCheck.valid && phoneCheck.formatted) {
-                      updateField('phone', phoneCheck.formatted);
-                    }
-                  }}
-                  onChange={(e) => {
-                    const cleaned = e.target.value.replace(/[^\d\s\-+]/g, '').slice(0, 14);
-                    updateField('phone', cleaned);
-                  }}
-                />
-              </div>
-            </label>
-            {touched.phone && validation.errors.phone && (
-              <span className="sg-field-error" role="alert">{validation.errors.phone}</span>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Step C: Property Type Segmented Selector */}
-      <div className="sg-property-type-group" role="group" aria-label="Property type">
-        <span className="sg-property-type-label">Property type</span>
-        <div className="sg-property-pills">
-          {PROPERTY_TYPES.map((pt) => {
-            const Icon = pt.icon;
-            const selected = propertyType === pt.id;
-            return (
-              <button
-                key={pt.id}
-                type="button"
-                disabled={disabled}
-                aria-pressed={selected}
-                className={`sg-prop-pill ${selected ? 'active' : ''}`}
-                onClick={() => updateField('property_type', pt.id)}
-              >
-                <Icon size={15} weight={selected ? 'fill' : 'regular'} />
-                <span>{pt.label}</span>
-              </button>
-            );
+        <div className="delivery-grid delivery-contact">
+          {renderField('recipient', 'Full name', {
+            autoComplete: 'shipping name', placeholder: 'Name of recipient', required: true,
+          })}
+          {renderField('phone', 'Phone number', {
+            type: 'tel', autoComplete: 'shipping tel-national', placeholder: '8123 4567',
+            prefix: '+65', required: requirePhone,
+            onBlur: () => {
+              if (phoneCheck.valid && phoneCheck.formatted) updateField('phone', phoneCheck.formatted);
+            },
           })}
         </div>
-      </div>
+      )}
 
-      {/* Step D: Postal Code + Street Address + Unit/Floor */}
-      <div className="sg-address-grid-v2">
-        {/* 6-Digit Postal Code */}
-        <div className={`sg-field postal-field ${isPostalRejected ? 'has-error' : isPostalVerified ? 'is-valid' : ''}`}>
-          <label>
-            <div className="sg-field-label-row">
-              <span>Postal code *</span>
-              {postalInfo?.validSector && !validation.errors.postal_code && (
-                <span className="sg-district-mini">{postalInfo.district}</span>
-              )}
-            </div>
-            <div className="sg-postal-input-wrap">
-              <span className="sg-postal-prefix">S(</span>
-              <input
-                type="text"
-                inputMode="numeric"
-                required
-                maxLength={6}
-                placeholder="238801"
-                value={value.postal_code || ''}
-                disabled={disabled}
-                onBlur={() => markTouched('postal_code')}
-                onChange={(e) => {
-                  const digits = e.target.value.replace(/[^0-9]/g, '').slice(0, 6);
-                  lastVerifiedPostalRef.current = '';
-                  updateField('postal_code', digits);
-                  if (digits.length === 6) {
-                    markTouched('postal_code');
-                  }
-                }}
-              />
-              <span className="sg-postal-suffix">)</span>
-            </div>
-          </label>
-          {(touched.postal_code || isPostalRejected) && validation.errors.postal_code ? (
-            <span className="sg-field-error" role="alert">{validation.errors.postal_code}</span>
-          ) : postalInfo?.validSector && postalLookupStatus === 'verified' ? (
-            <span className="sg-field-hint ok">{postalInfo.district} · {postalInfo.area}</span>
-          ) : null}
+      <div className="delivery-lookup">
+        <div className="delivery-lookup-heading">
+          <label htmlFor={`${fieldId}-search`}>Find your address</label>
+          <span className="delivery-lookup-status" role="status">
+            {loading ? 'Searching…' : isPostalVerified ? <><CheckCircle size={14} weight="fill" /> Address found</> : 'Singapore'}
+          </span>
         </div>
-
-        {/* Street Address */}
-        <div className={`sg-field street-field ${touched.line1 && validation.errors.line1 ? 'has-error' : value.line1 && !validation.errors.line1 ? 'is-valid' : ''}`}>
-          <label>
-            <div className="sg-field-label-row">
-              <span>Street address (House / Blk &amp; Road) *</span>
-              {value.building && <span className="sg-building-badge">{value.building}</span>}
-            </div>
-            <input
-              type="text"
-              required
-              autoComplete="address-line1"
-              placeholder="e.g. 2 Orchard Turn"
-              value={value.line1 || ''}
-              disabled={disabled}
-              onBlur={() => markTouched('line1')}
-              onChange={(e) => updateField('line1', e.target.value)}
-            />
-          </label>
-          {!streetConsistency.consistent && streetConsistency.expectedStreet ? (
-            <div className="sg-mismatch-inline" role="alert">
-              <span>
-                Does not match S({value.postal_code}): expected <strong>{streetConsistency.expectedStreet}</strong>
-              </span>
-              <button
-                type="button"
-                className="sg-fix-street-btn"
-                onClick={() => {
-                  const top = verifiedMatches[0];
-                  updateField('line1', top.line1);
-                }}
-              >
-                <ArrowCounterClockwise size={13} /> Use official road
-              </button>
-            </div>
-          ) : touched.line1 && validation.errors.line1 ? (
-            <span className="sg-field-error" role="alert">{validation.errors.line1}</span>
-          ) : null}
-        </div>
-
-        {/* Unit / Floor */}
-        <div className={`sg-field unit-field ${touched.line2 && validation.errors.line2 ? 'has-error' : (propertyType === 'landed' || (unitCheck.valid && value.line2)) ? 'is-valid' : ''}`}>
-          <label>
-            <div className="sg-field-label-row">
-              <span>{propertyType === 'landed' ? 'Unit / Floor (optional)' : 'Unit / Floor *'}</span>
-              {propertyType === 'landed' && <span className="sg-optional-tag">Landed</span>}
-            </div>
-            <input
-              ref={unitRef}
-              type="text"
-              autoComplete="address-line2"
-              placeholder={
-                propertyType === 'landed'
-                  ? 'Optional (e.g. Gate B)'
-                  : propertyType === 'commercial'
-                    ? '#03-12 or Level 4'
-                    : '#08-124'
-              }
-              value={value.line2 || ''}
-              disabled={disabled}
-              onBlur={() => {
-                markTouched('line2');
-                if (value.line2) {
-                  const norm = normalizeUnitNumber(value.line2);
-                  if (norm !== value.line2) updateField('line2', norm);
-                }
-              }}
-              onChange={(e) => updateField('line2', e.target.value)}
-            />
-          </label>
-          {touched.line2 && validation.errors.line2 ? (
-            <span className="sg-field-error" role="alert">{validation.errors.line2}</span>
-          ) : (
-            <span className="sg-field-hint">
-              {propertyType === 'landed'
-                ? 'Ground / landed delivery — no unit # needed'
-                : 'Auto-formats e.g. 08-124 → #08-124'}
-            </span>
+        <div className="delivery-search-shell">
+          <MagnifyingGlass size={19} aria-hidden="true" />
+          <input
+            id={`${fieldId}-search`}
+            type="text"
+            role="combobox"
+            aria-autocomplete="list"
+            aria-expanded={!disabled && isOpen && results.length > 0}
+            aria-controls={!disabled && isOpen && results.length > 0 ? `${fieldId}-results` : undefined}
+            aria-activedescendant={!disabled && isOpen && highlightedIdx >= 0 ? `${fieldId}-result-${highlightedIdx}` : undefined}
+            aria-describedby={`${fieldId}-search-hint`}
+            autoComplete="off"
+            placeholder="Postal code or building name"
+            value={searchInput}
+            disabled={disabled}
+            onChange={(e) => { setSearchInput(e.target.value); setCheckFeedback(null); }}
+            onFocus={() => { if (results.length > 0) setIsOpen(true); }}
+            onKeyDown={handleSearchKeyDown}
+          />
+          {loading ? <span className="delivery-search-spinner" aria-hidden="true" /> : searchInput && (
+            <button type="button" className="delivery-clear" aria-label="Clear address search" disabled={disabled}
+              onClick={() => { setSearchInput(''); setResults([]); setIsOpen(false); }}><X size={16} /></button>
+          )}
+          {!disabled && isOpen && results.length > 0 && (
+            <ul id={`${fieldId}-results`} className="delivery-results" role="listbox" aria-label="Matching addresses">
+              {results.map((item, index) => (
+                <li key={`${item.postalCode}-${item.building}-${index}`} id={`${fieldId}-result-${index}`}
+                  role="option" aria-selected={highlightedIdx === index}
+                  className={highlightedIdx === index ? 'highlighted' : ''}
+                  onMouseEnter={() => setHighlightedIdx(index)}
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => handleSelectResult(item, results)}>
+                  <MapPin size={18} aria-hidden="true" />
+                  <div><strong>{item.building || item.line1}</strong><span>{item.line1} · Singapore {item.postalCode}</span></div>
+                </li>
+              ))}
+            </ul>
           )}
         </div>
+        <p id={`${fieldId}-search-hint`} className="delivery-hint">
+          {/^[0-9]{1,5}$/.test(searchInput.trim())
+            ? `Enter all 6 digits (${searchInput.trim().length}/6).`
+            : 'Search to autofill, or enter your address below.'}
+        </p>
+        {['not_found', 'invalid_sector', 'search_empty', 'offline'].includes(postalLookupStatus) && lookupMessage && (
+          <p className={postalLookupStatus === 'offline' ? 'delivery-hint' : 'delivery-error'} role="status">{lookupMessage}</p>
+        )}
       </div>
 
-      {/* Step E: Live Formatted Courier Dispatch Label Preview & Verify Button */}
-      <div className={`sg-dispatch-preview-card ${validation.valid && isPostalVerified ? 'ready' : ''}`}>
-        <div className="sg-dispatch-preview-info">
-          <div className="sg-dispatch-eyebrow">
-            <span>SINGAPORE COURIER PARCEL LABEL PREVIEW</span>
-            {postalInfo?.district && !validation.errors.postal_code && (
-              <span className="sg-route-code">ROUTE: SG-{postalInfo.district}</span>
-            )}
-          </div>
-          {value.line1 || value.postal_code || value.recipient ? (
-            <div className="sg-dispatch-lines">
-              <strong>
-                {value.recipient || 'Recipient Name'}
-                {phoneCheck.valid && phoneCheck.formatted ? ` · ${phoneCheck.formatted}` : value.phone ? ` · ${value.phone}` : ''}
-              </strong>
-              <span>
-                {[
-                  value.line1,
-                  value.line2 ? normalizeUnitNumber(value.line2) : '',
-                  value.building && (!value.line1 || !value.line1.toLowerCase().includes(value.building.toLowerCase()))
-                    ? value.building
-                    : '',
-                ]
-                  .filter(Boolean)
-                  .join(', ') || 'Street address pending'}
-              </span>
-              <span className="sg-dispatch-postal">
-                SINGAPORE {value.postal_code || '______'}
-                {postalInfo?.area && !validation.errors.postal_code ? ` (${postalInfo.area})` : ''}
-              </span>
-            </div>
-          ) : (
-            <p className="sg-dispatch-placeholder">
-              Enter your 6-digit Singapore postal code above to auto-populate and validate your courier label.
-            </p>
-          )}
-        </div>
-
-        <button
-          type="button"
-          className={`sg-verify-btn ${validation.valid ? 'btn-valid' : ''}`}
-          disabled={disabled || loading}
-          onClick={handleRunInteractiveCheck}
-        >
-          <CheckCircle size={16} weight={validation.valid ? 'fill' : 'regular'} />
-          <span>{validation.valid ? 'Verified ✓' : 'Validate Address'}</span>
-        </button>
-      </div>
-
-      {checkFeedback && (
-        <div
-          className={`sg-check-feedback ${checkFeedback.ok ? 'ok' : 'err'}`}
-          role={checkFeedback.ok ? 'status' : 'alert'}
-        >
-          {checkFeedback.ok ? <CheckCircle size={16} weight="fill" /> : <WarningCircle size={16} weight="fill" />}
-          <span>{checkFeedback.text}</span>
+      {verifiedMatches.length > 1 && (
+        <div className="delivery-building-options">
+          <span>Choose your building</span>
+          {verifiedMatches.map((item, index) => (
+            <button key={index} type="button" disabled={disabled}
+              aria-pressed={value.line1 === item.line1 && value.building === item.building}
+              onClick={() => handleSelectResult(item, verifiedMatches)}>{item.building || item.line1}</button>
+          ))}
         </div>
       )}
+
+      <div className="delivery-grid delivery-address-fields">
+        <div className="delivery-street">
+          {renderField('line1', 'Street address', {
+            autoComplete: 'shipping address-line1', placeholder: 'Block / house number and street', required: true,
+          })}
+          {!streetConsistency.consistent && streetConsistency.expectedStreet && (
+            <div className="delivery-street-fix">
+              <p className="delivery-error">Use the street for this postal code: {streetConsistency.expectedStreet}</p>
+              <button type="button" disabled={disabled} onClick={() => updateField('line1', verifiedMatches[0].line1)}>
+                <ArrowCounterClockwise size={14} /> Use suggested street
+              </button>
+            </div>
+          )}
+          {value.building && <span className="delivery-hint">{value.building}</span>}
+        </div>
+        {renderField('postal_code', 'Postal code', {
+          inputMode: 'numeric', autoComplete: 'shipping postal-code', maxLength: 6,
+          placeholder: '6-digit postal code', required: true,
+        })}
+        {renderField('line2', propertyType === 'landed' ? 'Unit number (optional)' : 'Unit number', {
+          ref: unitRef, autoComplete: 'shipping address-line2',
+          placeholder: propertyType === 'landed' ? 'Unit / floor, if applicable' : '#08-124',
+          required: propertyType !== 'landed',
+          onBlur: () => {
+            const unit = normalizeUnitNumber(value.line2);
+            if (unit && unit !== value.line2) updateField('line2', unit);
+          },
+        })}
+      </div>
+
+      <div className="delivery-property" role="group" aria-label="Property type">
+        <span className="delivery-field-label">Property type</span>
+        <div className="delivery-property-options">
+          {PROPERTY_TYPES.map(({ id, label, icon: Icon }) => (
+            <button key={id} type="button" disabled={disabled} aria-pressed={propertyType === id}
+              onClick={() => updateField('property_type', id)}>
+              <Icon size={17} aria-hidden="true" /><span>{label}</span>
+              {propertyType === id && <CheckCircle size={14} weight="fill" className="delivery-property-check" aria-hidden="true" />}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="delivery-form-footer">
+        <span><ShieldCheck size={16} aria-hidden="true" />Your details are used for delivery.</span>
+        <button type="button" disabled={disabled || loading} onClick={handleRunInteractiveCheck}>Check address</button>
+      </div>
+      {checkFeedback && <p className={checkFeedback.ok ? 'delivery-success' : 'delivery-error'} role={checkFeedback.ok ? 'status' : 'alert'}>
+        {checkFeedback.ok ? 'Your delivery details are ready.' : checkFeedback.text}
+      </p>}
     </div>
   );
 }
