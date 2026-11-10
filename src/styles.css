@@ -4849,3 +4849,47 @@ fieldset.promo-box { min-width: 0; padding: 0; border: 0; margin-inline: 0; }
     transform: none !important;
   }
 }
+
+/* Delivery details */
+.sg-checkout-header h2 { margin: 0; }
+.sg-checkout-header p { margin: 5px 0 0; color: var(--muted, #565650); font-size: .82rem; }
+.checkout-address-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.checkout-address-street { grid-column: 1 / -1; }
+.checkout-address-fields label { display: grid; gap: 7px; font-size: .86rem; font-weight: 600; }
+.checkout-address-fields input,
+.checkout-address-fields select {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 12px;
+  border: 1px solid #aaa99f;
+  border-radius: 8px;
+  color: inherit;
+  background: #fff;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 400;
+}
+.checkout-address-fields :is(input, select, button):focus-visible { outline: 2px solid #4c6910; outline-offset: 2px; }
+.checkout-address-suggestions { display: grid; gap: 6px; margin-top: 8px; }
+.checkout-address-suggestions button {
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid #ced9a6;
+  border-radius: 8px;
+  color: #283309;
+  background: #f0f6db;
+  text-align: left;
+}
+@media (max-width: 540px) {
+  .checkout-address-fields { grid-template-columns: minmax(0, 1fr); gap: 13px; }
+}
+.checkout-address-fields [aria-invalid="true"] { border-color: #a12d2d; }
+.checkout-address-fields small { color: #a12d2d; }

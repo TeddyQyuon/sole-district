@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import {
   ArrowLeft, ArrowRight, ArrowUpRight, CaretDown, CaretLeft, CaretRight, Check, CheckCircle,
@@ -8,7 +8,7 @@ import {
 import { Button, Dialog, LineItem, ProductCard, ProductGrid, useShop } from './App';
 import { GuestAccess } from './Account';
 import { PublishedPolicy } from './StoreInformation';
-import { AddressAutocomplete } from './components/AddressAutocomplete';
+import { CheckoutAddress } from './components/CheckoutAddress';
 import { checkoutFingerprint, clearCheckoutAttempt, clearCheckoutDraft, getCheckoutKey, readCheckoutDraft, saveCheckoutDraft } from './checkoutState';
 import {
   getPostalSectorInfo, lookupSingaporeAddress, validateSingaporeAddress,
@@ -1475,13 +1475,17 @@ export function ProductPage() {
 }
 
 export function Checkout() {
-  const { lines, subtotal, store } = useShop();
+  const { cart, catalogLoading, lines, subtotal, store } = useShop();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [cancelled, setCancelled] = useState(false);
-  const [params] = useSearchParams();
-  const cancellationSent = useRef(false);
-  const paying = useRef(false);
+  const [params, setParams] = useSearchParams();
+  const closedOrder = useRef(null);
+  const openOrder = useRef(null);
+  const paymentRequest = useRef(null);
+  const [returning, setReturning] = useState(false);
+  const [returnError, setReturnError] = useState('');
+  const [returnRetry, setReturnRetry] = useState(0);
   const [draft] = useState(readCheckoutDraft);
 
   // Address state
@@ -1489,7 +1493,7 @@ export function Checkout() {
   const [selectedAddressIndex, setSelectedAddressIndex] = useState(0);
   const [useNewAddress, setUseNewAddress] = useState(draft.useNewAddress);
   const [deliveryAddress, setDeliveryAddress] = useState(draft.deliveryAddress);
-  const [addressValidState, setAddressValidState] = useState({ valid: false, errors: {} });
+  const [addressErrors, setAddressErrors] = useState({});
 
   // Promo code state
   const [promoInput, setPromoInput] = useState(draft.promoInput);
@@ -1512,7 +1516,7 @@ export function Checkout() {
 
   const finalTotal = Math.max(0, subtotal - promoDiscount) + delivery;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     saveCheckoutDraft({ deliveryAddress, promoInput, appliedPromo, useNewAddress,
       selectedAddressId: savedAddresses[selectedAddressIndex]?.id || draft.selectedAddressId });
   }, [deliveryAddress, promoInput, appliedPromo, useNewAddress, savedAddresses, selectedAddressIndex, draft]);
@@ -1537,14 +1541,62 @@ export function Checkout() {
     return () => { alive = false; };
   }, []);
 
+  const cancelledOrder = params.get('cancelled');
   useEffect(() => {
-    const orderId = params.get('cancelled');
-    if (!orderId || cancellationSent.current) return;
-    cancellationSent.current = true;
-    api('checkout/cancel/', { method: 'POST', body: JSON.stringify({ order_id: orderId }) })
-      .then(() => { clearCheckoutAttempt(); setCancelled(true); })
-      .catch((reason) => setError(reason.message));
-  }, [params]);
+    let active = true;
+    let pending = false;
+    const resume = () => {
+      paymentRequest.current?.abort();
+      paymentRequest.current = null;
+      setBusy(false);
+      let orderId = openOrder.current;
+      try { orderId ||= sessionStorage.getItem('sd-open-stripe-order'); } catch { /* URL fallback. */ }
+      orderId ||= cancelledOrder;
+      if (!orderId || pending || closedOrder.current === orderId) return;
+      pending = true;
+      setReturning(true);
+      setReturnError('');
+      api('checkout/cancel/', {
+        method: 'POST',
+        signal: AbortSignal.timeout(25000),
+        body: JSON.stringify({ order_id: orderId }),
+      }).then(() => {
+        if (!active) return;
+        closedOrder.current = orderId;
+        openOrder.current = null;
+        try { sessionStorage.removeItem('sd-open-stripe-order'); } catch { /* Storage is optional. */ }
+        clearCheckoutAttempt();
+        setCancelled(true);
+        if (cancelledOrder) {
+          setParams((current) => {
+            const next = new URLSearchParams(current);
+            next.delete('cancelled');
+            return next;
+          }, { replace: true });
+        }
+      }).catch((reason) => {
+        if (active) setReturnError(reason.message);
+      }).finally(() => {
+        pending = false;
+        if (active) setReturning(false);
+      });
+    };
+    const onPageShow = (event) => { if (event.persisted) resume(); };
+    window.addEventListener('pageshow', onPageShow);
+    resume();
+    return () => {
+      active = false;
+      window.removeEventListener('pageshow', onPageShow);
+      paymentRequest.current?.abort();
+      paymentRequest.current = null;
+    };
+  }, [cancelledOrder, returnRetry, setParams]);
+
+  const isSaved = savedAddresses.length > 0 && !useNewAddress;
+  const activeAddress = isSaved ? savedAddresses[selectedAddressIndex] : deliveryAddress;
+  const fingerprint = checkoutFingerprint(lines, appliedPromo, activeAddress, finalTotal);
+  const currentFingerprint = useRef(fingerprint);
+  useLayoutEffect(() => { currentFingerprint.current = fingerprint; }, [fingerprint]);
 
   const handleApplyPromo = (e) => {
     e.preventDefault();
@@ -1572,17 +1624,16 @@ export function Checkout() {
   };
 
   const pay = async () => {
-    if (paying.current || !lines.length) return;
+    if (paymentRequest.current || returning || returnError || !lines.length) return;
     setError('');
-
-    const isSaved = savedAddresses.length > 0 && !useNewAddress;
-    const activeAddress = isSaved ? savedAddresses[selectedAddressIndex] : deliveryAddress;
+    setAddressErrors({});
 
     if (appliedPromo === 'SOLE20' && subtotal < 10000) {
       setError('SOLE20 requires a bag minimum of S$100. Add another piece or remove the code.');
       return;
     }
-    paying.current = true;
+    const request = new AbortController();
+    paymentRequest.current = request;
     setBusy(true);
     try {
       // Fail fast on missing fields; a postal lookup should never delay this feedback.
@@ -1591,8 +1642,11 @@ export function Checkout() {
         requirePhone: !isSaved || Boolean(activeAddress.phone),
         propertyType: activeAddress.property_type || (activeAddress.line2 ? 'highrise' : 'landed'),
       });
-      if (!basic.valid) throw new Error(Object.values(basic.errors)[0]);
-      const lookup = await lookupSingaporeAddress(activeAddress.postal_code, { signal: AbortSignal.timeout(4000) })
+      if (!basic.valid) {
+        if (!isSaved) setAddressErrors(basic.errors);
+        throw new Error(Object.values(basic.errors)[0]);
+      }
+      const lookup = await lookupSingaporeAddress(activeAddress.postal_code, { signal: AbortSignal.any([request.signal, AbortSignal.timeout(4000)]) })
         .catch((reason) => {
           if (['AbortError', 'TimeoutError'].includes(reason.name)) return { status: 'offline', results: [] };
           throw reason;
@@ -1606,13 +1660,16 @@ export function Checkout() {
       });
 
       if (!check.valid) {
+        if (!isSaved) setAddressErrors(check.errors);
         throw new Error(Object.values(check.errors)[0] || 'Please provide a valid Singapore delivery address.');
       }
 
-      const attemptKey = getCheckoutKey(checkoutFingerprint(lines, appliedPromo, activeAddress, finalTotal));
+      request.signal.throwIfAborted();
+      if (currentFingerprint.current !== fingerprint) throw new Error('Your bag changed. Review the updated total and continue to payment.');
+      const attemptKey = getCheckoutKey(fingerprint);
       const data = await api('checkout/', {
         method: 'POST',
-        signal: AbortSignal.timeout(25000),
+        signal: AbortSignal.any([request.signal, AbortSignal.timeout(25000)]),
         headers: { 'Idempotency-Key': attemptKey },
         body: JSON.stringify({
           items: lines.map((line) => ({ variant_id: line.variantId, quantity: line.quantity })),
@@ -1620,20 +1677,41 @@ export function Checkout() {
           promo_code: appliedPromo || undefined,
         }),
       });
+      if (request.signal.aborted) return;
+      if (currentFingerprint.current !== fingerprint) {
+        openOrder.current = data.order_id;
+        try { sessionStorage.setItem('sd-open-stripe-order', data.order_id); } catch { /* Storage is optional. */ }
+        setReturnRetry((retry) => retry + 1);
+        throw new Error('Your bag changed. Review the updated total and continue to payment.');
+      }
       if (data.total_cents !== finalTotal) throw new Error('Your bag total changed. Refresh to review the latest prices before paying. Your bag and promo code are saved.');
       const target = new URL(data.url);
       if (target.protocol !== 'https:' || target.hostname !== 'checkout.stripe.com') throw new Error('The payment link could not be verified.');
-      try { sessionStorage.setItem('sd-last-order-reference', data.reference); } catch { /* Payment still works without storage. */ }
+      openOrder.current = data.order_id;
+      try {
+        sessionStorage.setItem('sd-last-order-reference', data.reference);
+        sessionStorage.setItem('sd-open-stripe-order', data.order_id);
+      } catch { /* Payment still works without storage. */ }
       window.location.assign(target.href);
     } catch (reason) {
+      if (request.signal.aborted) return;
       setError(['AbortError', 'TimeoutError'].includes(reason.name)
         ? 'Checkout is taking longer than expected. Your bag, address and promo are saved. Try again to resume the same checkout.'
         : reason.message);
-      paying.current = false;
-      setBusy(false);
+    } finally {
+      if (paymentRequest.current === request) {
+        paymentRequest.current = null;
+        setBusy(false);
+      }
     }
   };
 
+  if (cart.length > 0 && lines.length < cart.length && catalogLoading) {
+    return <div className="section empty checkout-empty" role="status"><h1>Restoring your bag…</h1></div>;
+  }
+  if (!lines.length && cart.length > 0) {
+    return <div className="section empty checkout-empty"><h1>Your bag is saved.</h1><p>We couldn’t load your items right now.</p><Button onClick={() => window.location.reload()}>Try again</Button></div>;
+  }
   if (!lines.length) return <div className="section empty checkout-empty"><h1>Your bag is empty.</h1><p>Choose a piece before reviewing checkout.</p><Button to="/shop">Explore the collection</Button></div>;
   return (
     <div className="section checkout-page">
@@ -1652,15 +1730,10 @@ export function Checkout() {
               <div className="step-header-left">
                 <div className="step-badge"><MapPin size={20} weight="bold" /></div>
                 <div>
-                  <span className="eyebrow">DESTINATION</span>
-                  <h2>Singapore Delivery Address</h2>
+                  <h2>Delivery address</h2>
+                  <p>Singapore only · Tracked delivery in 2–4 business days</p>
                 </div>
               </div>
-              {!(savedAddresses.length > 0 && !useNewAddress) && addressValidState.valid && (
-                <span className="sg-header-ready-pill">
-                  <CheckCircle size={14} weight="fill" /> Dispatch Ready
-                </span>
-              )}
             </div>
 
             {savedAddresses.length > 0 && !useNewAddress ? (
@@ -1704,24 +1777,12 @@ export function Checkout() {
                     ← Use saved address
                   </button>
                 )}
-                <AddressAutocomplete
-                  value={deliveryAddress}
-                  onChange={setDeliveryAddress}
-                  onValidityChange={setAddressValidState}
-                  disabled={busy}
-                  showContact={true}
-                  requirePhone={true}
-                />
+                <CheckoutAddress value={deliveryAddress} errors={addressErrors} disabled={busy} onChange={(value) => {
+                  setDeliveryAddress(value);
+                  setAddressErrors({});
+                }} />
               </div>
             )}
-
-            <div className="courier-badge">
-              <Truck size={22} weight="duotone" />
-              <div>
-                <strong>Tracked Singapore Courier (2–4 Business Days)</strong>
-                <p>Dispatched with district verification tag. Doorstep delivery with SMS tracking notifications.</p>
-              </div>
-            </div>
           </div>
 
           {/* STEP 2: Review Bag */}
@@ -1819,8 +1880,9 @@ export function Checkout() {
           <p className="summary-footnote">All amounts in SGD. Your discount is included in the secure payment total.</p>
           {!store.checkout_ready && <div className="checkout-notice">Preview only. Payments are disabled until Stripe is configured and the catalogue is verified.</div>}
           {error && <p className="form-error" role="alert">{error}</p>}
-          <Button disabled={busy || !store.checkout_ready || lines.some((line) => line.product.sellable === false)} onClick={pay}>
-            {busy ? 'Opening secure checkout…' : 'Continue to secure payment'} <ArrowRight size={20} />
+          {returnError && <p className="form-error" role="alert">{returnError} <button type="button" className="text-button" onClick={() => setReturnRetry((retry) => retry + 1)}>Retry</button></p>}
+          <Button disabled={busy || returning || Boolean(returnError) || lines.length < cart.length || !store.checkout_ready || lines.some((line) => line.product.sellable === false)} onClick={pay}>
+            {returning ? 'Closing previous checkout…' : busy ? 'Opening secure checkout…' : 'Continue to secure payment'} <ArrowRight size={20} />
           </Button>
           <span className="payment-note"><LockSimple size={15} />Payment details stay on Stripe.</span>
           <Link className="underlined" to="/help/returns">Delivery & returns</Link>
@@ -1850,6 +1912,7 @@ export function Complete() {
           const purchased = new Map(data.items.map((item) => [item.variant_id, item.quantity]));
           setCart((items) => items.map((item) => ({ ...item, quantity: item.quantity - (purchased.get(item.variantId) || 0) })).filter((item) => item.quantity > 0));
           clearCheckoutDraft();
+          try { sessionStorage.removeItem('sd-open-stripe-order'); } catch { /* Storage is optional. */ }
         } else if (['pending', 'payment_pending'].includes(data.status)) {
           timer = window.setTimeout(load, 4000);
         }
