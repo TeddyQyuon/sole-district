@@ -17,9 +17,7 @@ mocks; no real payment or refund has been verified.
 2. Generate and securely configure `DJANGO_SECRET_KEY`. Set `DEBUG=false`,
    `ALLOWED_HOSTS`, `CSRF_TRUSTED_ORIGINS`, `FRONTEND_ORIGIN` and `DATABASE_URL`.
    Keep both `STRIPE_CHECKOUT_ENABLED` and `LIVE_COMMERCE_ENABLED` false.
-3. Replace `vercel.json` with the supplied `vercel.services.json.example`.
-   Vercel Services is a beta feature; it deploys the Vite and Django services
-   together. Delete `api/unavailable.js` when activating the backend.
+3. Configure `vercel.json` to deploy the Vite and Django services together.
 4. Deploy and verify the catalogue API, same-origin CSRF/session cookies,
    customer accounts, protected staff routes and database persistence.
 5. Create the owner's staff account through a secure management session.
